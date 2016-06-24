@@ -14,3 +14,5 @@ variableName.Key = "CRYPTOTRICK";
 string cipherText = variableName.Encrypt(clearText);
 string clearText = variableName.Decrypt(cipherText);
 ```
+
+Not all ciphers have a "Key", some have arrays and other such things.
