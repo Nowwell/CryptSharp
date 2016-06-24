@@ -32,7 +32,7 @@ namespace CryptSharp.Ciphers
                     double outchar = 0;
                     for (int j = 0; j < inv.GetLength(1); j++)
                     {
-                        outchar += (double)alphabet.indexOf(cipherText[i + j]) * inv[k, j];
+                        outchar += (double)alphabet.IndexOf(cipherText[i + j]) * inv[k, j];
                     }
                     clear.Append(alphabet[(((int)outchar % alphabet.Length) + alphabet.Length) % alphabet.Length]);
                 }
@@ -251,7 +251,7 @@ namespace CryptSharp.Ciphers
                     double outchar = 0;
                     for (int j = 0; j < Key.GetLength(1); j++)
                     {
-                        outchar += (double)alphabet.indexOf(clearText[i + j]) * Key[k, j];
+                        outchar += (double)alphabet.IndexOf(clearText[i + j]) * Key[k, j];
                     }
                     cipher.Append(alphabet[(int)outchar % alphabet.Length]);
                 } 

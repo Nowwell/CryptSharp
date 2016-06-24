@@ -41,7 +41,7 @@ namespace CryptSharp.Ciphers
                 int m = 0;
                 for (int j = 0; j < max; j ++)
                 {
-                    int c = Square.indexOf(cipherText[i + j]);
+                    int c = Square.IndexOf(cipherText[i + j]);
                     int row = c / 5;
                     int col = c % 5;
 
@@ -89,7 +89,7 @@ namespace CryptSharp.Ciphers
 
             for (int k = 0; k < clearText.Length; k++)
             {
-                int i = Square.indexOf(clearText[k]);
+                int i = Square.IndexOf(clearText[k]);
                 rowIndices[k] = i / 5;
                 colIndices[k] = i % 5;
             }

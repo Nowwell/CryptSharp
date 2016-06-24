@@ -30,7 +30,7 @@ namespace CryptSharp.Ciphers
             StringBuilder cipher = new StringBuilder();
             foreach (char c in clearText)
             {
-                cipher.Append(alphabet[(A * alphabet.indexOf(c) + B) % M]);
+                cipher.Append(alphabet[(A * alphabet.IndexOf(c) + B) % M]);
             }
 
             return cipher.ToString();
@@ -43,7 +43,7 @@ namespace CryptSharp.Ciphers
             StringBuilder cipher = new StringBuilder();
             foreach (char c in cipherText)
             {
-                int index = ((alphabet.indexOf(c) - B) * Ainv) % M;
+                int index = ((alphabet.IndexOf(c) - B) * Ainv) % M;
                 if( index < 0 ) index += M;
                 cipher.Append(alphabet[index]);
             }

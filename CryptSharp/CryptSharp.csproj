@@ -57,6 +57,7 @@
     <Compile Include="Ciphers\Hill.cs" />
     <Compile Include="Ciphers\Playfair.cs" />
     <Compile Include="Ciphers\Skip.cs" />
+    <Compile Include="Ciphers\Trifid.cs" />
     <Compile Include="Ciphers\Untested\DataEncryptionStandard.cs" />
     <Compile Include="Ciphers\Homophonic.cs" />
     <Compile Include="Ciphers\ICipher.cs" />

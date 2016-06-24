@@ -23,10 +23,10 @@ namespace CryptSharp.Ciphers
             {
                 char a = cipherText[i];
                 char b = cipherText[i + 1];
-                int row1 = alphabet.indexOf(a) / 5;
-                int col1 = alphabet.indexOf(a) % 5;
-                int row2 = alphabet.indexOf(b) / 5;
-                int col2 = alphabet.indexOf(b) % 5;
+                int row1 = alphabet.IndexOf(a) / 5;
+                int col1 = alphabet.IndexOf(a) % 5;
+                int row2 = alphabet.IndexOf(b) / 5;
+                int col2 = alphabet.IndexOf(b) % 5;
                 if (row1 == row2)
                 {
                     if (col1 == 0) c = alphabet[row1 * 5 + 4];
@@ -73,10 +73,10 @@ namespace CryptSharp.Ciphers
                 char a = clearText[i];
                 char b = clearText[i + 1];
                 if (a == b) b = 'X';
-                int row1 = alphabet.indexOf(a) / 5;
-                int col1 = alphabet.indexOf(a) % 5;
-                int row2 = alphabet.indexOf(b) / 5;
-                int col2 = alphabet.indexOf(b) % 5;
+                int row1 = alphabet.IndexOf(a) / 5;
+                int col1 = alphabet.IndexOf(a) % 5;
+                int row2 = alphabet.IndexOf(b) / 5;
+                int col2 = alphabet.IndexOf(b) % 5;
                 if (row1 == row2)
                 {
                     if (col1 == 4) c = alphabet[row1 * 5];

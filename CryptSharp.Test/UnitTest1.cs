@@ -21,10 +21,18 @@ namespace CryptSharp.Test
             affine.A = 3;
             affine.B = 7;
 
-            cipher = affine.Encrypt("DEFENDTHEEASTWALLOFTHECASTLE");
-            clear  = affine.Decrypt(cipher);
+            cipher = "";
+            clear = "";
+            generated = "";
+            for (int i = 0; i < 25; i++)
+            {
+                generated = affine.GenerateRandomString();
 
-            Assert.AreEqual("DEFENDTHEEASTWALLOFTHECASTLE", clear);
+                cipher = affine.Encrypt(generated);
+                clear = affine.Decrypt(cipher);
+
+                Assert.AreEqual(generated, clear);
+            }
         }
 
         [TestMethod]
@@ -486,20 +494,41 @@ namespace CryptSharp.Test
             //char[] ch = new string(Utility.KeyedEnglishAlphabet("KRYPTOS")).Replace("J", "").ToCharArray();
             Bifid bifid = new Bifid(ch);
             bifid.Square = "phqgmeaylnofdxkrcvszwbuti".ToUpper().ToCharArray();
-            bifid.Group = 5;
 
-            for (int i = 0; i < 25; i++)
+            for (bifid.Group = 1; bifid.Group < 25; bifid.Group++)
             {
-                generated = bifid.GenerateRandomString().Replace("J", "I");
 
-                cipher = bifid.Encrypt(generated);
-                clear = bifid.Decrypt(cipher);
+                for (int i = 0; i < 25; i++)
+                {
+                    generated = bifid.GenerateRandomString().Replace("J", "I");
 
-                Assert.AreEqual(generated, clear);
+                    cipher = bifid.Encrypt(generated);
+                    clear = bifid.Decrypt(cipher);
+
+                    Assert.AreEqual(generated, clear);
+                }
             }
         }
 
 
+        [TestMethod]
+        public void TrifidTest()
+        {
+            char[] ch = (new string(Utility.EnglishAlphabet()) + '.').ToCharArray();
+            Trifid trifid = new Trifid(ch);
+            trifid.Squares = "EPSDUCVWYM.ZLKXNBTFGORIJHAQ".ToUpper().ToCharArray();
+            trifid.Group = 5;
+
+            for (int i = 0; i < 25; i++)
+            {
+                generated = "DEFENDTHEEASTWALLOFTHECASTLE.";// trifid.GenerateRandomString();
+
+                cipher = trifid.Encrypt(generated);
+                clear = trifid.Decrypt(cipher);
+
+                Assert.AreEqual(generated, clear);
+            }
+        }
 
 
         [TestMethod]

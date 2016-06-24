@@ -54,10 +54,10 @@ namespace CryptSharp.Ciphers
 
             for (int i = 0; i < clearText.Length; i += 2)
             {
-                int c1 = alphabet.indexOf(clearText[i]) % 5;
-                int r1 = alphabet.indexOf(clearText[i]) / 5;
-                int c2 = alphabet.indexOf(clearText[i + 1]) % 5;
-                int r2 = alphabet.indexOf(clearText[i + 1]) / 5;
+                int c1 = alphabet.IndexOf(clearText[i]) % 5;
+                int r1 = alphabet.IndexOf(clearText[i]) / 5;
+                int c2 = alphabet.IndexOf(clearText[i + 1]) % 5;
+                int r2 = alphabet.IndexOf(clearText[i + 1]) / 5;
                 cipher.Append(KeySquare1[5 * r1 + c2]);
                 cipher.Append(KeySquare2[5 * r2 + c1]);
             }
