@@ -479,7 +479,25 @@ namespace CryptSharp.Test
             }
         }
 
+        [TestMethod]
+        public void BifidTest()
+        {
+            char[] ch = new string(Utility.EnglishAlphabet()).Replace("J", "").ToCharArray();
+            //char[] ch = new string(Utility.KeyedEnglishAlphabet("KRYPTOS")).Replace("J", "").ToCharArray();
+            Bifid bifid = new Bifid(ch);
+            bifid.Square = "phqgmeaylnofdxkrcvszwbuti".ToUpper().ToCharArray();
+            bifid.Group = 5;
 
+            for (int i = 0; i < 25; i++)
+            {
+                generated = bifid.GenerateRandomString().Replace("J", "I");
+
+                cipher = bifid.Encrypt(generated);
+                clear = bifid.Decrypt(cipher);
+
+                Assert.AreEqual(generated, clear);
+            }
+        }
 
 
 

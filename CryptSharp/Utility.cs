@@ -70,7 +70,6 @@ namespace CryptSharp
             return alphabet.ToString().ToCharArray();
         }
 
-
         public static string[] EnglishAlphabetAsStrings(bool lowerCase = false)
         {
             if (lowerCase)
@@ -235,21 +234,20 @@ namespace CryptSharp
             return token;
         }
 
-        //public static string ScrambleAlphabet(char[] alphabet)
-        //{
-        //    List<char> letters = new List<char>(alphabet);
-        //    StringBuilder scramble = new StringBuilder();
-        //    for (int i = 0; i < alphabet.Length - 1; i++)
-        //    {
-        //        int x = RandomInt();
-        //        scramble.Append(letters[x % letters.Count]);
-        //        letters.RemoveAt(x % letters.Count);
-        //    }
-        //    scramble.Append(letters[0]);
+        public static string ScrambleAlphabet(char[] alphabet)
+        {
+            List<char> letters = new List<char>(alphabet);
+            StringBuilder scramble = new StringBuilder();
+            for (int i = 0; i < alphabet.Length - 1; i++)
+            {
+                int x = RandomInt();
+                scramble.Append(letters[x % letters.Count]);
+                letters.RemoveAt(x % letters.Count);
+            }
+            scramble.Append(letters[0]);
 
-        //    return scramble.ToString();
-        //}
-
+            return scramble.ToString();
+        }
 
         public static bool IsPrime(long n)
         {
