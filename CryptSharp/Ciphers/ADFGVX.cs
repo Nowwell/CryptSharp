@@ -23,7 +23,15 @@ namespace CryptSharp.Ciphers
 
         public string Decrypt(string cipherText)
         {
-            throw new NotImplementedException();
+            Polybius poly = new Polybius(alphabet);
+            poly.RowHeaders = new char[] { 'A', 'D', 'F', 'G', 'V', 'X' };
+            poly.ColumnHeaders = new char[] { 'A', 'D', 'F', 'G', 'V', 'X' };
+            poly.Square = Square;
+
+            Columnar column = new Columnar(alphabet);
+            column.Key = Key;
+
+            return poly.Decrypt(column.Decrypt(cipherText));
         }
 
         public void DecryptFile(string clearTextFilename, string cipherTextFilename)

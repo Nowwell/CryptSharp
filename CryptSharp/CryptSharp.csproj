@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ciphers\ADFGVX.cs" />
+    <Compile Include="Ciphers\ADFGX.cs" />
     <Compile Include="Ciphers\Affine.cs" />
     <Compile Include="Ciphers\Amsco.cs" />
     <Compile Include="Ciphers\Atbash.cs" />
