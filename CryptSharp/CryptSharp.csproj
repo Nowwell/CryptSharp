@@ -51,6 +51,7 @@
     <Compile Include="Ciphers\Atbash.cs" />
     <Compile Include="Ciphers\Baconian.cs" />
     <Compile Include="CipherBase.cs" />
+    <Compile Include="Ciphers\Bifid.cs" />
     <Compile Include="Ciphers\Columnar.cs" />
     <Compile Include="Ciphers\FourSquare.cs" />
     <Compile Include="Ciphers\Hill.cs" />

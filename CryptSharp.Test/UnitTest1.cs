@@ -443,6 +443,48 @@ namespace CryptSharp.Test
         }
 
         [TestMethod]
+        public void ADFGVXTest()
+        {
+            ADFGVX adfgvx = new ADFGVX(Utility.EnglishAlphabet());
+            adfgvx.Square = "phqg0iu7me4ay5lno8jfd9xk6rc2vs4tz1wb3".ToUpper().ToCharArray();
+            adfgvx.Key = "GERMAN";
+
+            for (int i = 0; i < 25; i++)
+            {
+                generated = adfgvx.GenerateRandomString();
+
+                cipher = adfgvx.Encrypt(generated);
+                clear = adfgvx.Decrypt(cipher);
+
+                Assert.AreEqual(generated, clear);
+            }
+        }
+
+        [TestMethod]
+        public void ADFGXTest()
+        {
+            char[] ch = new string(Utility.KeyedEnglishAlphabet("KRYPTOS")).Replace("J", "").ToCharArray();
+            ADFGX adfgx = new ADFGX(ch);
+            adfgx.Square = "phqgiumeaylnofdxkrcvstzwb".ToUpper().ToCharArray();
+            adfgx.Key = "GERMAN";
+
+            for (int i = 0; i < 25; i++)
+            {
+                generated = adfgx.GenerateRandomString().Replace("J", "I");
+
+                cipher = adfgx.Encrypt(generated);
+                clear = adfgx.Decrypt(cipher);
+
+                Assert.AreEqual(generated, clear);
+            }
+        }
+
+
+
+
+
+
+        [TestMethod]
         public void TestDES()
         {
             //System.Security.Cryptography.DESCryptoServiceProvider des = new System.Security.Cryptography.DESCryptoServiceProvider();
