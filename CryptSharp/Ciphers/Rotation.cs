@@ -27,7 +27,7 @@ namespace CryptSharp.Ciphers
             StringBuilder cipher = new StringBuilder();
             foreach (char c in clearText)
             {
-                cipher.Append(alphabet[(alphabet.indexOf(c) + key) % alphabetLength]);
+                cipher.Append(alphabet[(alphabet.IndexOf(c) + key) % alphabetLength]);
             }
 
             return cipher.ToString();
@@ -41,7 +41,7 @@ namespace CryptSharp.Ciphers
             StringBuilder cipher = new StringBuilder();
             foreach (char c in cipherText)
             {
-                cipher.Append(alphabet[(alphabet.indexOf(c) - key + 2 * alphabetLength) % alphabetLength]);
+                cipher.Append(alphabet[(alphabet.IndexOf(c) - key + 2 * alphabetLength) % alphabetLength]);
             }
 
             return cipher.ToString();

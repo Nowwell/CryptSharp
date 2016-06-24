@@ -30,18 +30,18 @@ namespace CryptSharp.Ciphers
             {
                 for (int i = 0; i < Key.Length; i++)
                 {
-                    output[i] = alphabet[(alphabet.indexOf(Key[i % Key.Length]) - alphabet.indexOf(output[i]) + alphabet.Length) % alphabet.Length];
+                    output[i] = alphabet[(alphabet.IndexOf(Key[i % Key.Length]) - alphabet.IndexOf(output[i]) + alphabet.Length) % alphabet.Length];
                 }
                 for (int i = Key.Length; i < clearText.Length; i++)
                 {
-                    output[i] = alphabet[(alphabet.indexOf(clearText[i - Key.Length]) - alphabet.indexOf(output[i]) + alphabet.Length) % alphabet.Length];
+                    output[i] = alphabet[(alphabet.IndexOf(clearText[i - Key.Length]) - alphabet.IndexOf(output[i]) + alphabet.Length) % alphabet.Length];
                 }
             }
             else
             {
                 for (int i = 0; i < clearText.Length; i++)
                 {
-                    output[i] = alphabet[(alphabet.indexOf(Key[i % Key.Length]) - alphabet.indexOf(output[i]) + alphabet.Length) % alphabet.Length];
+                    output[i] = alphabet[(alphabet.IndexOf(Key[i % Key.Length]) - alphabet.IndexOf(output[i]) + alphabet.Length) % alphabet.Length];
                 }
             }
             return output.ToString();
@@ -59,18 +59,18 @@ namespace CryptSharp.Ciphers
             {
                 for (int i = 0; i < Key.Length; i++)
                 {
-                    output[i] = alphabet[(alphabet.indexOf(Key[i % Key.Length]) - alphabet.indexOf(output[i]) + alphabet.Length) % alphabet.Length];
+                    output[i] = alphabet[(alphabet.IndexOf(Key[i % Key.Length]) - alphabet.IndexOf(output[i]) + alphabet.Length) % alphabet.Length];
                 }
                 for (int i = Key.Length; i < cipherText.Length; i++)
                 {
-                    output[i] = alphabet[(alphabet.indexOf(output[i - Key.Length]) - alphabet.indexOf(output[i]) + alphabet.Length) % alphabet.Length];
+                    output[i] = alphabet[(alphabet.IndexOf(output[i - Key.Length]) - alphabet.IndexOf(output[i]) + alphabet.Length) % alphabet.Length];
                 }
             }
             else
             {
                 for (int i = 0; i < cipherText.Length; i++)
                 {
-                    output[i] = alphabet[(alphabet.indexOf(Key[i % Key.Length]) - alphabet.indexOf(output[i]) + alphabet.Length) % alphabet.Length];
+                    output[i] = alphabet[(alphabet.IndexOf(Key[i % Key.Length]) - alphabet.IndexOf(output[i]) + alphabet.Length) % alphabet.Length];
                 }
             }
             return output.ToString();

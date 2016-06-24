@@ -8,7 +8,7 @@ namespace CryptSharp
 {
     public static class CharArrayExtensions
     {
-        public static int indexOf(this char[] array, char c)
+        public static int IndexOf(this char[] array, char c)
         {
             for (int i = 0; i < array.Length; i++)
             {
