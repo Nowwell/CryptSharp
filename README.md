@@ -4,9 +4,9 @@ Classical ciphers for C#
 Among the implemented Ciphers are FourSquare, Hill, Vigenere and many others
 
 There are 3 (incomplete) projects within this solution.
-1. CryptSharp - a dll that contains some classical ciphers
-2. CryptSharp.Test- a project to test the ciphers
-3. Cryptalize - a desktop app to analyze classical ciphers and hopefully be a game to generate some for learning
+- CryptSharp - a dll that contains some classical ciphers
+- CryptSharp.Test- a project to test the ciphers
+- Cryptalize - a desktop app to analyze classical ciphers and hopefully be a game to generate some cipher text for fun to break
 
 Utility
 -------
