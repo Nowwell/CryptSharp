@@ -3,3 +3,6 @@
 ################################################################################
 
 /Cryptalyze/obj/Debug
+/CryptSharp/obj/Debug
+/CryptSharp.Test/obj/Debug
+/CryptSharpAnalysis/obj/Debug

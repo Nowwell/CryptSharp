@@ -12,14 +12,14 @@ namespace CryptSharp.Ciphers
         {
             Key = alphabet[0].ToString();
         }
-        public ADFGVX(char[] Alphabet, string key, string square) : base(Alphabet)
+        public ADFGVX(char[] Alphabet, string key, char[] square) : base(Alphabet)
         {
             Key = key;
             Square = square;
         }
 
         public string Key { get; set; }
-        public string Square { get; set; }
+        public char[] Square { get; set; }
 
         public string Decrypt(string cipherText)
         {
@@ -33,7 +33,15 @@ namespace CryptSharp.Ciphers
 
         public string Encrypt(string clearText)
         {
-            throw new NotImplementedException();
+            Polybius poly = new Polybius(alphabet);
+            poly.RowHeaders = new char[] { 'A', 'D', 'F', 'G', 'V', 'X' };
+            poly.ColumnHeaders = new char[] { 'A', 'D', 'F', 'G', 'V', 'X' };
+            poly.Square = Square;
+
+            Columnar column = new Columnar(alphabet);
+            column.Key = Key;
+
+            return column.Encrypt(poly.Encrypt(clearText));
         }
 
         public void EncryptFile(string clearTextFilename, string cipherTextFilename)
