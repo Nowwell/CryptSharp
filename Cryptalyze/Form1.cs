@@ -75,7 +75,7 @@ namespace Cryptalyze
 
             foreach (char c in tbCipher.Text.ToUpper())
             {
-                if (tbUsedAlphabet.Text.IndexOf(c) > 0)
+                if (tbUsedAlphabet.Text.IndexOf(c) >= 0)
                 {
                     cipher.Append(c.ToString());
                 }
