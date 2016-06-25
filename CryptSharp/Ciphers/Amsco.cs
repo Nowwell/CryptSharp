@@ -27,21 +27,17 @@ namespace CryptSharp.Ciphers
             }
             oto.KeyedBy = KeyedBy.Value;
 
-            int numPositions = 0;
-            if ((cipherText.Length & 0x01) > 0)
-            {
-                //odd
-                numPositions = (2 * cipherText.Length) / 3;
-            }
-            else
-            {
-                //even
-                numPositions = (2 * cipherText.Length) / 3 + 1;
-            }
 
             int lastChar = cipherText.Length % 3;//r=0, 2 means no special consideration when decrypting, mod = 1 means single should be double char
+
+            int numPositions = 2 * (cipherText.Length / 3);
+            if (lastChar != 0) numPositions++;
+
+
             int numRows = numPositions / Key.Length;
             int remainder = numPositions % Key.Length;
+
+
 
             string[,] pieces = new string[numRows + 1, Key.Length];
 

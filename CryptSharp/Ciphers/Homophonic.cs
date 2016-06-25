@@ -97,5 +97,37 @@ namespace CryptSharp.Ciphers
         {
             throw new NotImplementedException();
         }
+
+        public string GenerateRandomString(int length = 0)
+        {
+            string generated = Utility.Random(1024).ToUpper();
+            int i = length;
+
+            StringBuilder toEncrypt = new StringBuilder();
+            foreach (char c in generated)
+            {
+                if (IsInAlphabet(c))
+                {
+                    toEncrypt.Append(c);
+                }
+                if (length != 0 && i == 0)
+                {
+                    break;
+                }
+                i--;
+            }
+
+            return toEncrypt.ToString();
+        }
+
+        public bool IsInAlphabet(char c)
+        {
+            foreach (char ch in Alphabet.Keys)
+            {
+                if (ch == c) return true;
+                //if (Alphabet[ch].Contains(c)) return true;
+            }
+            return false;
+        }
     }
 }

@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptSharp", "CryptSharp\Cr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptSharp.Test", "CryptSharp.Test\CryptSharp.Test.csproj", "{7D2A44A5-64B8-48F6-85ED-36CBDEE57B4C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptSharpAnalysis", "CryptSharpAnalysis\CryptSharpAnalysis.csproj", "{B61ED973-BFEF-4A0C-8E4F-D4C572E9B0CC}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cryptalyze", "Cryptalyze\Cryptalyze.csproj", "{A1F72F1C-44C0-428E-859B-F46A8BA6645E}"
 EndProject
 Global
@@ -25,10 +23,6 @@ Global
 		{7D2A44A5-64B8-48F6-85ED-36CBDEE57B4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D2A44A5-64B8-48F6-85ED-36CBDEE57B4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D2A44A5-64B8-48F6-85ED-36CBDEE57B4C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B61ED973-BFEF-4A0C-8E4F-D4C572E9B0CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B61ED973-BFEF-4A0C-8E4F-D4C572E9B0CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B61ED973-BFEF-4A0C-8E4F-D4C572E9B0CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B61ED973-BFEF-4A0C-8E4F-D4C572E9B0CC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A1F72F1C-44C0-428E-859B-F46A8BA6645E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A1F72F1C-44C0-428E-859B-F46A8BA6645E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1F72F1C-44C0-428E-859B-F46A8BA6645E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -36,23 +30,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 5
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://fife.visualstudio.com/defaultcollection
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = CryptSharp.Test\\CryptSharp.Test.csproj
-		SccProjectName1 = CryptSharp.Test
-		SccLocalPath1 = CryptSharp.Test
-		SccProjectUniqueName2 = CryptSharp\\CryptSharp.csproj
-		SccProjectName2 = CryptSharp
-		SccLocalPath2 = CryptSharp
-		SccProjectUniqueName3 = CryptSharpAnalysis\\CryptSharpAnalysis.csproj
-		SccProjectName3 = CryptSharpAnalysis
-		SccLocalPath3 = CryptSharpAnalysis
-		SccProjectUniqueName4 = Cryptalyze\\Cryptalyze.csproj
-		SccProjectName4 = Cryptalyze
-		SccLocalPath4 = Cryptalyze
 	EndGlobalSection
 EndGlobal
