@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
+using System.IO;
 
 namespace CryptSharp
 {
@@ -247,6 +248,32 @@ namespace CryptSharp
             scramble.Append(letters[0]);
 
             return scramble.ToString();
+        }
+
+        public static Dictionary<char, List<string>> LoadDictionary(string filename = @"texts\dictionary.txt")
+        {
+            Dictionary<char, List<string>> dictionary = new Dictionary<char, List<string>>();
+            using (StreamReader file = new StreamReader(filename))
+            {
+                while (!file.EndOfStream)
+                {
+                    string line = file.ReadLine().ToUpper();
+                    if (line.Length <= 11 && line.Length > 0)
+                    {
+
+                        if (dictionary.ContainsKey(line[0]))
+                        {
+                            dictionary[line[0]].Add(line);
+                        }
+                        else
+                        {
+                            dictionary.Add(line[0], new List<string>());
+                            dictionary[line[0]].Add(line);
+                        }
+                    }
+                }
+            }
+            return dictionary;
         }
 
         public static bool IsPrime(long n)

@@ -4,6 +4,7 @@ using System.Linq;
 using CryptSharp;
 using CryptSharp.Ciphers;
 using System.Text;
+using System.Collections.Generic;
 
 namespace CryptSharp.Test
 {
@@ -13,7 +14,9 @@ namespace CryptSharp.Test
         string cipher = "";
         string clear = "";
         string generated = "";
-            
+
+        Dictionary<char, List<string>> dictionary = Utility.LoadDictionary();
+
         [TestMethod]
         public void AffineTest()
         {
@@ -166,7 +169,7 @@ namespace CryptSharp.Test
 
             cipher = "";
             clear = "";
-            generated = "WHICHWRISTWATCHESARESWISSWRISTWATCHES";
+            generated = "";
             for (int i = 0; i < 25; i++)
             {
                 System.Collections.Generic.Dictionary<char, int> repeats = new System.Collections.Generic.Dictionary<char, int>();
@@ -200,22 +203,18 @@ namespace CryptSharp.Test
         public void PolybiusTest()
         {
             Polybius polybius = new Polybius(Utility.EnglishAlphabet());
-            polybius.Square = "phqgiumeaylnofdxkrcvstzwb".ToUpper().ToCharArray();
             polybius.RowHeaders = new char[] { 'A', 'B', 'C', 'D', 'E' };
             polybius.ColumnHeaders = new char[] { 'A', 'B', 'C', 'D', 'E' };
 
             for (int i = 0; i < 25; i++)
             {
+                polybius.Square = polybius.ScrambledAlphabet().Replace("J", "").ToCharArray();
+                
                 //the letter J is not in the Polybius square.  Standard sub is J -> I
                 generated = polybius.GenerateRandomString().Replace("J", "I");
 
                 cipher = polybius.Encrypt(generated);
                 clear = polybius.Decrypt(cipher);
-
-                int z = generated.Length;
-                int x = cipher.Length;
-                int y = clear.Length;
-
 
                 Assert.AreEqual(generated, clear);
             }
@@ -282,13 +281,13 @@ namespace CryptSharp.Test
         public void SubstitutionTest()
         {
             Substitution substitution = new Substitution(Utility.KeyedEnglishAlphabet("KRYPTOS"));
-            substitution.Key = "phqgiumeaylnofdxjkrcvstzwb".ToUpper().ToCharArray();
 
             cipher = "";
             clear = "";
             generated = "";
             for (int i = 0; i < 25; i++)
             {
+                substitution.Key = substitution.ScrambledAlphabet().ToCharArray();
                 generated = substitution.GenerateRandomString();
 
                 cipher = substitution.Encrypt(generated);
@@ -309,6 +308,7 @@ namespace CryptSharp.Test
             generated = "";
             for (int i = 0; i < 25; i++)
             {
+
                 generated = porta.GenerateRandomString();
 
                 cipher = porta.Encrypt(generated);
@@ -324,18 +324,18 @@ namespace CryptSharp.Test
             Homophonic homophonic = new Homophonic();
             homophonic.GenerateGenericAlphabet();
 
-            //cipher = "";
-            //clear = "";
-            //generated = "";
-            //for (int i = 0; i < 25; i++)
-            //{
-            //    generated = homophonic.GenerateRandomString();
+            cipher = "";
+            clear = "";
+            generated = "";
+            for (int i = 0; i < 25; i++)
+            {
+                generated = homophonic.GenerateRandomString();
 
-            //    cipher = homophonic.Encrypt(generated);
-            //    clear = homophonic.Decrypt(cipher);
+                cipher = homophonic.Encrypt(generated);
+                clear = homophonic.Decrypt(cipher);
 
-            //    Assert.AreEqual(generated, clear);
-            //}
+                Assert.AreEqual(generated, clear);
+            }
         }
 
         [TestMethod]
@@ -347,14 +347,17 @@ namespace CryptSharp.Test
             cipher = "";
             clear = "";
             generated = "";
-            for (int i = 0; i < 25; i++)
+            for (int j = 1; j < 50; j++)
             {
-                generated = amsco.GenerateRandomString();
+                for (int i = 0; i < 25; i++)
+                {
+                    generated = amsco.GenerateRandomString().Substring(0, j);
 
-                cipher = amsco.Encrypt(generated);
-                clear = amsco.Decrypt(cipher);
+                    cipher = amsco.Encrypt(generated);
+                    clear = amsco.Decrypt(cipher);
 
-                Assert.AreEqual(generated, clear);
+                    Assert.AreEqual(generated, clear);
+                }
             }
         }
 
@@ -491,15 +494,14 @@ namespace CryptSharp.Test
         public void BifidTest()
         {
             char[] ch = new string(Utility.EnglishAlphabet()).Replace("J", "").ToCharArray();
-            //char[] ch = new string(Utility.KeyedEnglishAlphabet("KRYPTOS")).Replace("J", "").ToCharArray();
             Bifid bifid = new Bifid(ch);
-            bifid.Square = "phqgmeaylnofdxkrcvszwbuti".ToUpper().ToCharArray();
 
             for (bifid.Group = 1; bifid.Group < 25; bifid.Group++)
             {
 
                 for (int i = 0; i < 25; i++)
                 {
+                    bifid.Square = bifid.ScrambledAlphabet().ToCharArray();
                     generated = bifid.GenerateRandomString().Replace("J", "I");
 
                     cipher = bifid.Encrypt(generated);
@@ -510,27 +512,27 @@ namespace CryptSharp.Test
             }
         }
 
-
         [TestMethod]
         public void TrifidTest()
         {
             char[] ch = (new string(Utility.EnglishAlphabet()) + '.').ToCharArray();
             Trifid trifid = new Trifid(ch);
-            trifid.Squares = "EPSDUCVWYM.ZLKXNBTFGORIJHAQ".ToUpper().ToCharArray();
-            trifid.Group = 5;
 
-            for (int i = 0; i < 25; i++)
+            for (trifid.Group = 1; trifid.Group < 25; trifid.Group++)
             {
-                generated = "DEFENDTHEEASTWALLOFTHECASTLE.";// trifid.GenerateRandomString();
+                for (int i = 0; i < 25; i++)
+                {
+                    trifid.Squares = trifid.ScrambledAlphabet().ToCharArray();
+                    generated = trifid.GenerateRandomString();
 
-                cipher = trifid.Encrypt(generated);
-                clear = trifid.Decrypt(cipher);
+                    cipher = trifid.Encrypt(generated);
+                    clear = trifid.Decrypt(cipher);
 
-                Assert.AreEqual(generated, clear);
+                    Assert.AreEqual(generated, clear);
+                }
             }
         }
-
-
+        
         [TestMethod]
         public void TestDES()
         {
