@@ -26,21 +26,22 @@ namespace CryptSharp.Ciphers
 
         public string GenerateRandomString(int length = 0)
         {
+            StringBuilder toEncrypt = new StringBuilder();
+
             string generated = Utility.Random(1024).ToUpper();
             int i = length;
 
-            StringBuilder toEncrypt = new StringBuilder();
             foreach (char c in generated)
             {
                 if (IsInAlphabet(c))
                 {
                     toEncrypt.Append(c);
+                    i--;
                 }
                 if (length != 0 && i == 0)
                 {
                     break;
                 }
-                i--;
             }
 
             return toEncrypt.ToString();

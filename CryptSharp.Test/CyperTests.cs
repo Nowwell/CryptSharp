@@ -9,7 +9,7 @@ using System.Collections.Generic;
 namespace CryptSharp.Test
 {
     [TestClass]
-    public class UnitTest1
+    public class CyperTests
     {
         string cipher = "";
         string clear = "";
@@ -587,7 +587,7 @@ namespace CryptSharp.Test
 
 
 
-             byte[] data = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x41 };
+            byte[] data = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x41 };
             DES myDes = new DES();
             myDes.Key = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 };
 
