@@ -32,9 +32,9 @@ namespace CryptSharp.Ciphers.MultiGraph
 
         public int Key { get; set; }
 
-        public string Encrypt(string[] clearText)
+        public string[] Encrypt(string[] clearText)
         {
-            StringBuilder cipher = new StringBuilder();
+            List<string> cipher = new List<string>();
 
             int line;
             for (line = 0; line < Key - 1; line++)
@@ -42,7 +42,7 @@ namespace CryptSharp.Ciphers.MultiGraph
                 int skip = (Key - line - 1);
                 for (int i = line, j = 0; i < clearText.Length; j++)
                 {
-                    cipher.Append(clearText[i]);
+                    cipher.Add(clearText[i]);
 
                     if (line == 0 || (j & 1) == 0)
                     {
@@ -58,18 +58,18 @@ namespace CryptSharp.Ciphers.MultiGraph
             }
             for (int i = line; i < clearText.Length; i += 2 * (Key - 1))
             {
-                cipher.Append(clearText[i]);
+                cipher.Add(clearText[i]);
             }
 
-            return cipher.ToString();
+            return cipher.ToArray();
         }
-        public string Encrypt(string clearText, char wordSeparator, char charSeparator)
+        public string[] Encrypt(string clearText, char wordSeparator, char charSeparator)
         {
             string[] plainText = clearText.Replace("\r", "").Replace("\n", "").Split(new char[] { wordSeparator, charSeparator }, StringSplitOptions.RemoveEmptyEntries);
             return Encrypt(plainText);
         }
 
-        public string Decrypt(string[] cipherText)
+        public string[] Decrypt(string[] cipherText)
         {
             string[] clear = new string[cipherText.Length];
 
@@ -98,9 +98,9 @@ namespace CryptSharp.Ciphers.MultiGraph
                 clear[i] = cipherText[k++];
             }
 
-            return string.Join("", clear);
+            return clear;
         }
-        public string Decrypt(string cipherText, char wordSeparator, char charSeparator)
+        public string[] Decrypt(string cipherText, char wordSeparator, char charSeparator)
         {
             string[] plainText = cipherText.Replace("\r", "").Replace("\n", "").Split(new char[] { wordSeparator, charSeparator }, StringSplitOptions.RemoveEmptyEntries);
             return Decrypt(plainText);

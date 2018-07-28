@@ -194,7 +194,8 @@ namespace CryptSharp
 
         public static T[] Random<T>(int numBytes = 32)
         {
-            if (typeof(T) != typeof(char) && typeof(T) == typeof(string))
+            if (typeof(T) != typeof(char) && typeof(T) != typeof(string) &&
+                typeof(T) != typeof(System.Char) && typeof(T) != typeof(System.String))
             {
                 throw new Exception("Invalid generic type for function Utility.Random<T>: " + typeof(T).ToString());
             }
@@ -207,11 +208,11 @@ namespace CryptSharp
             string randomString = Convert.ToBase64String(tokenData);
 
             char[] data = randomString.ToCharArray();
-            if (typeof(T) == typeof(char))
+            if (typeof(T) == typeof(char) || typeof(T) == typeof(Char))
             {
                 token = data as T[];
             }
-            else if (typeof(T) == typeof(string))
+            else if (typeof(T) == typeof(string) || typeof(T) == typeof(String))
             {
                 string[] tostr = new string[data.Length];
                 for (int i = 0; i < data.Length; i++)

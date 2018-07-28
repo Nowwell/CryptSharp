@@ -53,26 +53,42 @@ namespace CryptSharp.Ciphers.MultiGraph
             SubstitutionTable.Add(alphabet[25], "babbb");
         }
 
-        public string Encrypt(string[] clearText)
+        public string[] Encrypt(string[] clearText)
         {
-            StringBuilder cipher = new StringBuilder();
+            List<string> cipher = new List<string>();
 
             foreach (string s in clearText)
             {
-                cipher.Append(SubstitutionTable[s]);
+                cipher.Add(SubstitutionTable[s]);
             }
-            return cipher.ToString();
+            return cipher.ToArray();
         }
-        public string Encrypt(string clearText, char wordSeparator, char charSeparator)
+        public string[] Encrypt(string clearText, char wordSeparator, char charSeparator)
         {
             throw new NotImplementedException();
         }
 
-        public string Decrypt(string[] cipherText)
+        public string[] Decrypt(string[] cipherText)
         {
-            throw new NotImplementedException();
+            int len = SubstitutionTable[alphabet[0]].Length;
+
+            List<string> output = new List<string>();
+            for (int i = 0; i < cipherText.Length; i += len)
+            {
+                string code = cipherText[i];
+
+                foreach (string c in alphabet)
+                {
+                    if (SubstitutionTable[c] == code)
+                    {
+                        output.Add(c);
+                        break;
+                    }
+                }
+            }
+            return output.ToArray();
         }
-        public string Decrypt(string cipherText, char wordSeparator, char charSeparator)
+        public string[] Decrypt(string cipherText, char wordSeparator, char charSeparator)
         {
             throw new NotImplementedException();
         }

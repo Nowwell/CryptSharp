@@ -23,9 +23,9 @@ namespace CryptSharp.Ciphers.MultiGraph
         public string[] ColumnHeaders { get; set; }
         public string[] RowHeaders { get; set; }
 
-        public string Encrypt(string[] clearText)
+        public string[] Encrypt(string[] clearText)
         {
-            StringBuilder cipher = new StringBuilder();
+            List<string> cipher = new List<string>();
             foreach (string s in clearText)
             {
                 for (int i = 0; i < Square.Length; i++)
@@ -35,24 +35,24 @@ namespace CryptSharp.Ciphers.MultiGraph
                         int row = Square.Length / ColumnHeaders.Length;
                         int col = Square.Length % ColumnHeaders.Length;
 
-                        cipher.Append(RowHeaders[row]);
-                        cipher.Append(ColumnHeaders[col]);
+                        cipher.Add(RowHeaders[row]);
+                        cipher.Add(ColumnHeaders[col]);
                         break;
                     }
                 }
             }
-            return cipher.ToString();
+            return cipher.ToArray();
         }
-        public string Encrypt(string clearText, char wordSeparator, char charSeparator)
+        public string[] Encrypt(string clearText, char wordSeparator, char charSeparator)
         {
             throw new NotImplementedException();
         }
 
-        public string Decrypt(string[] cipherText)
+        public string[] Decrypt(string[] cipherText)
         {
             throw new NotImplementedException();
         }
-        public string Decrypt(string cipherText, char wordSeparator, char charSeparator)
+        public string[] Decrypt(string cipherText, char wordSeparator, char charSeparator)
         {
             throw new NotImplementedException();
         }

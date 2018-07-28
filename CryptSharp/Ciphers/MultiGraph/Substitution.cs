@@ -21,7 +21,7 @@ namespace CryptSharp.Ciphers.MultiGraph
 
         public string[] Key { get; set; }
 
-        public string Encrypt(string[] clearText)
+        public string[] Encrypt(string[] clearText)
         {
             Dictionary<string, int> keyIndexPositions = new Dictionary<string, int>();
             for (int i = 0; i < Key.Length; i++)
@@ -29,23 +29,23 @@ namespace CryptSharp.Ciphers.MultiGraph
                 charIndexPositions.Add(Key[i], i);
             }
 
-            StringBuilder cipher = new StringBuilder();
+            List<string> cipher = new List<string>();
             foreach (string s in clearText)
             {
-                cipher.Append(alphabet[keyIndexPositions[s]]);
+                cipher.Add(alphabet[keyIndexPositions[s]]);
             }
-            return cipher.ToString();
+            return cipher.ToArray();
         }
-        public string Encrypt(string clearText, char wordSeparator, char charSeparator)
+        public string[] Encrypt(string clearText, char wordSeparator, char charSeparator)
         {
             throw new NotImplementedException();
         }
 
-        public string Decrypt(string[] cipherText)
+        public string[] Decrypt(string[] cipherText)
         {
             throw new NotImplementedException();
         }
-        public string Decrypt(string cipherText, char wordSeparator, char charSeparator)
+        public string[] Decrypt(string cipherText, char wordSeparator, char charSeparator)
         {
             throw new NotImplementedException();
         }

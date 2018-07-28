@@ -8,9 +8,9 @@ namespace CryptSharp.Test
     [TestClass]
     public class MultiGraphCyperTests
     {
-        string cipher = "";
-        string clear = "";
-        string generated = "";
+        string[] cipher;
+        string[] clear;
+        string[] generated;
 
         Dictionary<char, List<string>> dictionary = Utility.LoadDictionary();
 
@@ -21,17 +21,14 @@ namespace CryptSharp.Test
             affine.A = 3;
             affine.B = 7;
 
-            cipher = "";
-            clear = "";
-            generated = "";
             for (int i = 0; i < 25; i++)
             {
-                generated = affine.GenerateRandomString();
+                generated = affine.GenerateRandomLetters();
 
-                cipher = affine.Encrypt(new string[] { generated });
-                clear = affine.Decrypt(new string[] { cipher });
+                cipher = affine.Encrypt(generated);
+                clear = affine.Decrypt(cipher);
 
-                Assert.AreEqual(generated, clear);
+                CollectionAssert.AreEqual(generated, clear);
             }
         }
 
@@ -40,17 +37,14 @@ namespace CryptSharp.Test
         {
             Atbash atbash = new Atbash(Utility.KeyedEnglishAlphabet("KRYPTOS").ToStringArray());
 
-            cipher = "";
-            clear = "";
-            generated = "";
             for (int i = 0; i < 25; i++)
             {
-                generated = atbash.GenerateRandomString();
+                generated = atbash.GenerateRandomLetters();
 
-                cipher = atbash.Encrypt(new string[] { generated });
-                clear = atbash.Decrypt(new string[] { cipher });
+                cipher = atbash.Encrypt(generated);
+                clear = atbash.Decrypt(cipher);
 
-                Assert.AreEqual(generated, clear);
+                CollectionAssert.AreEqual(generated, clear);
             }
         }
 
@@ -60,17 +54,26 @@ namespace CryptSharp.Test
             Baconian baconian = new Baconian(Utility.EnglishAlphabet().ToStringArray());
             baconian.GenerateGenericSubTable();
 
-            cipher = "";
-            clear = "";
-            generated = "";
             for (int i = 0; i < 25; i++)
             {
-                generated = baconian.GenerateRandomString();
+                generated = baconian.GenerateRandomLetters();
 
-                cipher = baconian.Encrypt(new string[] { generated });
-                clear = baconian.Decrypt(new string[] { cipher });
+                cipher = baconian.Encrypt(generated);
+                clear = baconian.Decrypt(cipher);
 
-                Assert.AreEqual(generated.Replace("J", "I").Replace("V", "U"), clear);
+                for (int j = 0; j < generated.Length; j++)
+                {
+                    if (generated[j] == "J")
+                    {
+                        generated[j] = "I";
+                    }
+                    if (generated[j] == "V")
+                    {
+                        generated[j] = "U";
+                    }
+                }
+
+                CollectionAssert.AreEqual(generated, clear);
             }
         }
 
@@ -95,12 +98,19 @@ namespace CryptSharp.Test
                 polybius.Square = scrambled.ToArray();
 
                 //the letter J is not in the Polybius square.  Standard sub is J -> I
-                generated = polybius.GenerateRandomString().Replace("J", "I");
+                string[] generated = polybius.GenerateRandomLetters();
+                for(int j = 0; j< generated.Length; j++)
+                {
+                    if (generated[j] == "J")
+                    {
+                        generated[j] = "I";
+                    }
+                }
 
-                cipher = polybius.Encrypt(new string[] { generated });
-                clear = polybius.Decrypt(new string[] { cipher });
+                cipher = polybius.Encrypt(generated);
+                clear = polybius.Decrypt(cipher);
 
-                Assert.AreEqual(generated, clear);
+                CollectionAssert.AreEqual(generated, clear);
             }
         }
 
@@ -108,10 +118,6 @@ namespace CryptSharp.Test
         public void Multigraph_RailFenceTest()
         {
             RailFence railfence = new RailFence(Utility.KeyedEnglishAlphabet("KRYPTOS").ToStringArray());
-
-            cipher = "";
-            clear = "";
-            generated = "";
 
             byte[] tokenData = new byte[2];
             using (System.Security.Cryptography.RandomNumberGenerator rng = new System.Security.Cryptography.RNGCryptoServiceProvider())
@@ -122,12 +128,12 @@ namespace CryptSharp.Test
 
                 for (int i = 0; i < 25; i++)
                 {
-                    generated = railfence.GenerateRandomString();
+                    generated = railfence.GenerateRandomLetters();
 
-                    cipher = railfence.Encrypt(new string[] { generated });
-                    clear = railfence.Decrypt(new string[] { cipher });
+                    cipher = railfence.Encrypt(generated);
+                    clear = railfence.Decrypt(cipher);
 
-                    Assert.AreEqual(generated, clear);
+                    CollectionAssert.AreEqual(generated, clear);
                 }
             }
         }
@@ -137,9 +143,6 @@ namespace CryptSharp.Test
         {
             Rotation rotation = new Rotation(Utility.KeyedEnglishAlphabet("KRYPTOS").ToStringArray());
 
-            cipher = "";
-            clear = "";
-            generated = "";
 
             byte[] tokenData = new byte[2];
             using (System.Security.Cryptography.RandomNumberGenerator rng = new System.Security.Cryptography.RNGCryptoServiceProvider())
@@ -151,12 +154,12 @@ namespace CryptSharp.Test
 
                 for (int i = 0; i < 25; i++)
                 {
-                    generated = rotation.GenerateRandomString();
+                    generated = rotation.GenerateRandomLetters();
 
-                    cipher = rotation.Encrypt(new string[] { generated });
-                    clear = rotation.Decrypt(new string[] { cipher });
+                    cipher = rotation.Encrypt(generated);
+                    clear = rotation.Decrypt(cipher);
 
-                    Assert.AreEqual(generated, clear);
+                    CollectionAssert.AreEqual(generated, clear);
                 }
             }
         }
@@ -166,18 +169,15 @@ namespace CryptSharp.Test
         {
             Substitution substitution = new Substitution(Utility.KeyedEnglishAlphabet("KRYPTOS").ToStringArray());
 
-            cipher = "";
-            clear = "";
-            generated = "";
             for (int i = 0; i < 25; i++)
             {
                 substitution.Key = substitution.ScrambledAlphabet();
-                generated = substitution.GenerateRandomString();
+                generated = substitution.GenerateRandomLetters();
 
-                cipher = substitution.Encrypt(new string[] { generated });
-                clear = substitution.Decrypt(new string[] { cipher });
+                cipher = substitution.Encrypt(generated);
+                clear = substitution.Decrypt(cipher);
 
-                Assert.AreEqual(generated, clear);
+                CollectionAssert.AreEqual(generated, clear);
             }
         }
     }

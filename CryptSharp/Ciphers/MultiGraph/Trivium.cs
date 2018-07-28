@@ -13,12 +13,12 @@ namespace CryptSharp.Ciphers.MultiGraph
 
         }
 
-        public string Decrypt(string[] cipherText)
+        public string[] Decrypt(string[] cipherText)
         {
             throw new NotImplementedException();
         }
 
-        public string Decrypt(string cipherText, char wordSeparator, char charSeparator)
+        public string[] Decrypt(string cipherText, char wordSeparator, char charSeparator)
         {
             throw new NotImplementedException();
         }
@@ -28,12 +28,12 @@ namespace CryptSharp.Ciphers.MultiGraph
             throw new NotImplementedException();
         }
 
-        public string Encrypt(string[] clearText)
+        public string[] Encrypt(string[] clearText)
         {
             throw new NotImplementedException();
         }
 
-        public string Encrypt(string clearText, char wordSeparator, char charSeparator)
+        public string[] Encrypt(string clearText, char wordSeparator, char charSeparator)
         {
             throw new NotImplementedException();
         }

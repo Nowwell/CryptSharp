@@ -22,7 +22,7 @@ namespace CryptSharp.Test
             Random r = new Random((int)DateTime.Now.Ticks);
             for (int i = 0; i < 25; i++)
             {
-                int len = r.Next(0, 100);
+                int len = r.Next(1, 100);
                 string x = affine.GenerateRandomString(len);
                 Assert.AreEqual(len, x.Length);
             }

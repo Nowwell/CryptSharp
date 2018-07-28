@@ -43,6 +43,29 @@ namespace CryptSharp.Ciphers
             return toEncrypt.ToString();
         }
 
+        public string[] GenerateRandomLetters(int length = 0)
+        {
+            List<T> toEncrypt = new List<T>();
+
+            T[] generated = Utility.Random<T>(1024);
+            int i = length;
+
+            foreach (T c in generated)
+            {
+                if (IsInAlphabet(c))
+                {
+                    toEncrypt.Add(c);
+                    i--;
+                }
+                if (length != 0 && i == 0)
+                {
+                    break;
+                }
+            }
+
+            return toEncrypt.ToArray() as string[];
+        }
+
         public T[] ScrambledAlphabet()
         {
             List<T> copy = new List<T>(alphabet);
