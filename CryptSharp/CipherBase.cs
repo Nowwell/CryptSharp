@@ -6,20 +6,16 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers
 {
-    public class CipherBase
+    public class CipherBase<T>
     {
-        public CipherBase()
-        {
-        }
-
-        public CipherBase(char[] Alphabet)
+        public CipherBase(T[] Alphabet)
         {
             alphabet = Alphabet;
         }
 
-        protected char[] alphabet;
+        protected T[] alphabet;
 
-        public bool IsInAlphabet(char c)
+        public bool IsInAlphabet(T c)
         {
             return alphabet.Contains(c);
         }
@@ -28,10 +24,10 @@ namespace CryptSharp.Ciphers
         {
             StringBuilder toEncrypt = new StringBuilder();
 
-            string generated = Utility.Random(1024).ToUpper();
+            T[] generated = Utility.Random<T>(1024);
             int i = length;
 
-            foreach (char c in generated)
+            foreach (T c in generated)
             {
                 if (IsInAlphabet(c))
                 {
@@ -47,10 +43,9 @@ namespace CryptSharp.Ciphers
             return toEncrypt.ToString();
         }
 
-        //Untested
         public string ScrambledAlphabet()
         {
-            string copy = new string(alphabet);
+            T[] copy = alphabet.Clone() as T[];
 
             StringBuilder sb = new StringBuilder();
             byte[] tokenData = new byte[2];
@@ -64,7 +59,7 @@ namespace CryptSharp.Ciphers
 
                     sb.Append(copy[value]);
 
-                    copy = copy.Replace(copy[value].ToString(), "");
+                    copy[value] = default(T);
                 }
             }
             return sb.ToString();

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers
 {
-    public class Porta : CipherBase, ICipher
+    public class Porta : CipherBase<char>, ICipher
     {
         public Porta(char[] Alphabet) : base(Alphabet)
         {

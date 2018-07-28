@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers
 {
-    public class Affine : CipherBase, ICipher
+    public class Affine : CipherBase<char>, ICipher
     {
         public Affine(char[] Alphabet) : base(Alphabet)
         {

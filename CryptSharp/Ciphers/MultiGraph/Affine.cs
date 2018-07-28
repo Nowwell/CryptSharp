@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers.MultiGraph
 {
-    public class Affine : ICipher
+    public class Affine : CipherBase<string>, ICipher
     {
-        protected string[] alphabet;
+        //protected string[] alphabet;
         protected Dictionary<string, int> charIndexPositions = new Dictionary<string, int>();
-        public Affine(string[] Alphabet)
+        public Affine(string[] Alphabet) : base(Alphabet)
         {
             alphabet = Alphabet;
             A = 3;
@@ -22,7 +22,8 @@ namespace CryptSharp.Ciphers.MultiGraph
                 charIndexPositions.Add(alphabet[i], i);
             }
         }
-        public Affine(string[] Alphabet, int a, int b, int m)
+
+        public Affine(string[] Alphabet, int a, int b, int m) : base(Alphabet)
         {
             alphabet = Alphabet;
             A = a;

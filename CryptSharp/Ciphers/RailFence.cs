@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers
 {
-    public class RailFence : CipherBase, ICipher
+    public class RailFence : CipherBase<char>, ICipher
     {
         public RailFence(char[] Alphabet) : base(Alphabet)
         {

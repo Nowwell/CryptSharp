@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers
 {
-    public class Amsco : CipherBase, ICipher
+    public class Amsco : CipherBase<char>, ICipher
     {
         public Amsco(char[] Alphabet) : base(Alphabet)
         {

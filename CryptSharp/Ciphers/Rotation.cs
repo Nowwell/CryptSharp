@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers
 {
-    public class Rotation: CipherBase, ICipher
+    public class Rotation: CipherBase<char>, ICipher
     {
         public Rotation(char[] Alphabet) : base(Alphabet)
         {

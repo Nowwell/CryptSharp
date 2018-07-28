@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers
 {
-    public class Trifid : CipherBase, ICipher
+    public class Trifid : CipherBase<char>, ICipher
     {
         public Trifid(char[] Alphabet) : base(Alphabet)
         {

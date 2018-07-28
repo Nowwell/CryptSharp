@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers
 {
-    public class Atbash : CipherBase, ICipher
+    public class Atbash : CipherBase<char>, ICipher
     {
         public Atbash(char[] Alphabet) : base(Alphabet)
         {

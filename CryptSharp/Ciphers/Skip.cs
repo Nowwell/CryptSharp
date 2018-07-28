@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers
 {
-    public class Skip : CipherBase, ICipher
+    public class Skip : CipherBase<char>, ICipher
     {
         public Skip(char[] Alphabet) : base(Alphabet)
         {

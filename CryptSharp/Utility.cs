@@ -193,6 +193,41 @@ namespace CryptSharp
             }
             return token;
         }
+        
+        public static T[] Random<T>(int numBytes = 32)
+        {
+            if(typeof(T) != typeof(char) && typeof(T) == typeof(string))
+            {
+                throw new Exception("Invalid generic type for function Utility.Random<T>: " + typeof(T).ToString());
+            }
+
+            T[] token = new T[numBytes];
+            using (RandomNumberGenerator rng = new RNGCryptoServiceProvider())
+            {
+                byte[] tokenData = new byte[numBytes];
+                rng.GetBytes(tokenData);
+
+                string randomString = Convert.ToBase64String(tokenData);
+
+                char[] data = randomString.ToCharArray();
+                if (typeof(T) == typeof(char))
+                {
+                    token = data as T[];
+                }
+                else if (typeof(T) == typeof(string))
+                {
+                    string[] tostr = new string[data.Length];
+                    for(int i=0; i<data.Length; i++)
+                    {
+                        tostr[i] = data[i].ToString();
+                    }
+
+                    token = tostr as T[];
+                }
+            }
+            return token;
+        }
+
         public static int RandomInt()
         {
             int token = 0;
