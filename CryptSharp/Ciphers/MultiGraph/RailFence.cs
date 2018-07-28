@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers.MultiGraph
 {
-    public class RailFence : ICipher
+    public class RailFence : CipherBase<string>, ICipher
     {
-        protected string[] alphabet;
         protected Dictionary<string, int> charIndexPositions = new Dictionary<string, int>();
-        public RailFence(string[] Alphabet)
+        public RailFence(string[] Alphabet) : base(Alphabet)
         {
             alphabet = Alphabet;
             Key = 3;
@@ -20,7 +19,7 @@ namespace CryptSharp.Ciphers.MultiGraph
                 charIndexPositions.Add(alphabet[i], i);
             }
         }
-        public RailFence(string[] Alphabet, int key)
+        public RailFence(string[] Alphabet, int key) : base(Alphabet)
         {
             alphabet = Alphabet;
             Key = key;

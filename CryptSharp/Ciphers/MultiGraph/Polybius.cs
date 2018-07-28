@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers.MultiGraph
 {
-    public class Polybius : ICipher
+    public class Polybius : CipherBase<string>, ICipher
     {
-        protected string[] alphabet;
         protected Dictionary<string, int> charIndexPositions = new Dictionary<string, int>();
-        public Polybius(string[] Alphabet)
+        public Polybius(string[] Alphabet) : base(Alphabet)
         {
             alphabet = Alphabet;
 

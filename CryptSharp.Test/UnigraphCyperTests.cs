@@ -9,7 +9,7 @@ using System.Collections.Generic;
 namespace CryptSharp.Test
 {
     [TestClass]
-    public class CyperTests
+    public class UnigraphCyperTests
     {
         string cipher = "";
         string clear = "";

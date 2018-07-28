@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers.MultiGraph
 {
-    public class Substitution : ICipher
+    public class Substitution : CipherBase<string>, ICipher
     {
-        protected string[] alphabet;
         protected Dictionary<string, int> charIndexPositions = new Dictionary<string, int>();
-        public Substitution(string[] Alphabet)
+        public Substitution(string[] Alphabet) : base(Alphabet)
         {
             alphabet = Alphabet;
 

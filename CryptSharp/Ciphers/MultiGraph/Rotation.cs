@@ -6,24 +6,24 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers.MultiGraph
 {
-    public class Rotation : ICipher
+    public class Rotation : CipherBase<string>, ICipher
     {
-        protected string[] alphabet;
         protected Dictionary<string, int> charIndexPositions = new Dictionary<string, int>();
-        public Rotation(string[] Alphabet)
+
+        public Rotation(string[] Alphabet) : base(Alphabet)
         {
             alphabet = Alphabet;
-            Rotate = 0;
+            Key = 0;
 
             for (int i = 0; i < alphabet.Length; i++)
             {
                 charIndexPositions.Add(alphabet[i], i);
             }
         }
-        public Rotation(string[] Alphabet, int rotation)
+        public Rotation(string[] Alphabet, int rotation) : base(Alphabet)
         {
             alphabet = Alphabet;
-            Rotate = rotation;
+            Key = rotation;
 
             for (int i = 0; i < alphabet.Length; i++)
             {
@@ -31,7 +31,7 @@ namespace CryptSharp.Ciphers.MultiGraph
             }
         }
 
-        public int Rotate { get; set; }
+        public int Key { get; set; }
 
         public string Encrypt(string[] clearText)
         {
@@ -40,7 +40,7 @@ namespace CryptSharp.Ciphers.MultiGraph
             StringBuilder cipher = new StringBuilder();
             foreach (string c in clearText)
             {
-                cipher.Append(alphabet[(charIndexPositions[c] + Rotate) % alphabetLength]);
+                cipher.Append(alphabet[(charIndexPositions[c] + Key) % alphabetLength]);
             }
 
             return cipher.ToString();
@@ -58,7 +58,7 @@ namespace CryptSharp.Ciphers.MultiGraph
             StringBuilder cipher = new StringBuilder();
             foreach (string c in cipherText)
             {
-                cipher.Append(alphabet[(charIndexPositions[c] - Rotate + alphabetLength) % alphabetLength]);
+                cipher.Append(alphabet[(charIndexPositions[c] - Key + alphabetLength) % alphabetLength]);
             }
 
             return cipher.ToString();

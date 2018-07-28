@@ -87,7 +87,7 @@ namespace CryptSharp.Ciphers
             return det;
         }
         // The double matrix inversion routine:
-        static Boolean InvertMatrix(double[,] A, out double[,] invA)
+        static bool InvertMatrix(double[,] A, out double[,] invA)
         {
             // There are faster ways to do this, but for simplicity
             // and to get something working quickly, I'll just write a 
@@ -95,7 +95,7 @@ namespace CryptSharp.Ciphers
             // at speeding things up later.
 
             // Keep a record to see if there is a sensible inverse:
-            Boolean bNotIllConditioned = true;
+            bool bNotIllConditioned = true;
 
             // If the matrix is not square, there is no inverse:
             if (A.GetLength(0) != A.GetLength(1))

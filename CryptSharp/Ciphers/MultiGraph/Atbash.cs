@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers.MultiGraph
 {
-    public class Atbash : ICipher
+    public class Atbash : CipherBase<string>, ICipher
     {
-        protected string[] alphabet;
         protected Dictionary<string, int> charIndexPositions = new Dictionary<string, int>();
 
-        public Atbash(string[] Alphabet)
+        public Atbash(string[] Alphabet) : base(Alphabet)
         {
             alphabet = Alphabet;
 
