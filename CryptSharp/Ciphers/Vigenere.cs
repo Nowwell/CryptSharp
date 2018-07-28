@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers
 {
-    public class Vigenere : CipherBase, ICipher
+    public class Vigenere : CipherBase<char>, ICipher
     {
         public Vigenere(char[] Alphabet) : base(Alphabet)
         {

@@ -6,24 +6,24 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers.MultiGraph
 {
-    public class Rotation : ICipher
+    public class Rotation : CipherBase<string>, ICipher
     {
-        protected string[] alphabet;
         protected Dictionary<string, int> charIndexPositions = new Dictionary<string, int>();
-        public Rotation(string[] Alphabet)
+
+        public Rotation(string[] Alphabet) : base(Alphabet)
         {
             alphabet = Alphabet;
-            Rotate = 0;
+            Key = 0;
 
             for (int i = 0; i < alphabet.Length; i++)
             {
                 charIndexPositions.Add(alphabet[i], i);
             }
         }
-        public Rotation(string[] Alphabet, int rotation)
+        public Rotation(string[] Alphabet, int rotation) : base(Alphabet)
         {
             alphabet = Alphabet;
-            Rotate = rotation;
+            Key = rotation;
 
             for (int i = 0; i < alphabet.Length; i++)
             {
@@ -31,39 +31,41 @@ namespace CryptSharp.Ciphers.MultiGraph
             }
         }
 
-        public int Rotate { get; set; }
+        public int Key { get; set; }
 
-        public string Encrypt(string[] clearText)
+        public string[] Encrypt(string[] clearText)
         {
             int alphabetLength = alphabet.Length;
+            int key = Key % alphabetLength;
 
-            StringBuilder cipher = new StringBuilder();
+            List<string> cipher = new List<string>();
             foreach (string c in clearText)
             {
-                cipher.Append(alphabet[(charIndexPositions[c] + Rotate) % alphabetLength]);
+                cipher.Add(alphabet[(charIndexPositions[c] + key) % alphabetLength]);
             }
 
-            return cipher.ToString();
+            return cipher.ToArray();
         }
-        public string Encrypt(string clearText, char wordSeparator, char charSeparator)
+        public string[] Encrypt(string clearText, char wordSeparator, char charSeparator)
         {
             string[] plainText = clearText.Replace("\r", "").Replace("\n", "").Split(new char[] { wordSeparator, charSeparator }, StringSplitOptions.RemoveEmptyEntries);
             return Encrypt(plainText);
         }
 
-        public string Decrypt(string[] cipherText)
+        public string[] Decrypt(string[] cipherText)
         {
             int alphabetLength = alphabet.Length;
+            int key = Key % alphabetLength;
 
-            StringBuilder cipher = new StringBuilder();
+            List<string> cipher = new List<string>();
             foreach (string c in cipherText)
             {
-                cipher.Append(alphabet[(charIndexPositions[c] - Rotate + alphabetLength) % alphabetLength]);
+                cipher.Add(alphabet[(charIndexPositions[c] - key + 2 * alphabetLength) % alphabetLength]);
             }
 
-            return cipher.ToString();
+            return cipher.ToArray();
         }
-        public string Decrypt(string cipherText, char wordSeparator, char charSeparator)
+        public string[] Decrypt(string cipherText, char wordSeparator, char charSeparator)
         {
             string[] plainText = cipherText.Replace("\r", "").Replace("\n", "").Split(new char[] { wordSeparator, charSeparator }, StringSplitOptions.RemoveEmptyEntries);
             return Decrypt(plainText);

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers
 {
-    public class Baconian : CipherBase, ICipher
+    public class Baconian : CipherBase<char>, ICipher
     {
         public Baconian(char[] Alphabet) : base(Alphabet)
         {

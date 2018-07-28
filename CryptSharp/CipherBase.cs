@@ -6,52 +6,71 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers
 {
-    public class CipherBase
+    public class CipherBase<T>
     {
-        public CipherBase()
-        {
-        }
-
-        public CipherBase(char[] Alphabet)
+        public CipherBase(T[] Alphabet)
         {
             alphabet = Alphabet;
         }
 
-        protected char[] alphabet;
+        protected T[] alphabet;
 
-        public bool IsInAlphabet(char c)
+        public bool IsInAlphabet(T c)
         {
             return alphabet.Contains(c);
         }
 
         public string GenerateRandomString(int length = 0)
         {
-            string generated = Utility.Random(1024).ToUpper();
+            StringBuilder toEncrypt = new StringBuilder();
+
+            T[] generated = Utility.Random<T>(1024);
             int i = length;
 
-            StringBuilder toEncrypt = new StringBuilder();
-            foreach (char c in generated)
+            foreach (T c in generated)
             {
                 if (IsInAlphabet(c))
                 {
                     toEncrypt.Append(c);
+                    i--;
                 }
                 if (length != 0 && i == 0)
                 {
                     break;
                 }
-                i--;
             }
 
             return toEncrypt.ToString();
         }
 
-        //Untested
-        public string ScrambledAlphabet()
+        public string[] GenerateRandomLetters(int length = 0)
         {
-            string copy = new string(alphabet);
+            List<T> toEncrypt = new List<T>();
 
-            StringBuilder sb = new StringBuilder();
+            T[] generated = Utility.Random<T>(1024);
+            int i = length;
+
+            foreach (T c in generated)
+            {
+                if (IsInAlphabet(c))
+                {
+                    toEncrypt.Add(c);
+                    i--;
+                }
+                if (length != 0 && i == 0)
+                {
+                    break;
+                }
+            }
+
+            return toEncrypt.ToArray() as string[];
+        }
+
+        public T[] ScrambledAlphabet()
+        {
+            List<T> copy = new List<T>(alphabet);
+
+            List<T> sb = new List<T>();
             byte[] tokenData = new byte[2];
             using (System.Security.Cryptography.RandomNumberGenerator rng = new System.Security.Cryptography.RNGCryptoServiceProvider())
             {
@@ -59,14 +78,14 @@ namespace CryptSharp.Ciphers
                 {
                     rng.GetBytes(tokenData);
 
-                    int value = (int)(BitConverter.ToUInt16(tokenData, 0) % copy.Length);
+                    int value = (int)(BitConverter.ToUInt16(tokenData, 0) % copy.Count);
 
-                    sb.Append(copy[value]);
+                    sb.Add(copy[value]);
 
-                    copy = copy.Replace(copy[value].ToString(), "");
+                    copy.RemoveAt(value);
                 }
             }
-            return sb.ToString();
+            return sb.ToArray();
         }
     }
 }

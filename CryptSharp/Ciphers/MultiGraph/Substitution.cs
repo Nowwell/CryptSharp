@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers.MultiGraph
 {
-    public class Substitution : ICipher
+    public class Substitution : CipherBase<string>, ICipher
     {
-        protected string[] alphabet;
         protected Dictionary<string, int> charIndexPositions = new Dictionary<string, int>();
-        public Substitution(string[] Alphabet)
+        public Substitution(string[] Alphabet) : base(Alphabet)
         {
             alphabet = Alphabet;
 
@@ -22,31 +21,43 @@ namespace CryptSharp.Ciphers.MultiGraph
 
         public string[] Key { get; set; }
 
-        public string Encrypt(string[] clearText)
+        public string[] Encrypt(string[] clearText)
         {
-            Dictionary<string, int> keyIndexPositions = new Dictionary<string, int>();
+            Dictionary<string, string> keyIndexPositions = new Dictionary<string, string>();
             for (int i = 0; i < Key.Length; i++)
             {
-                charIndexPositions.Add(Key[i], i);
+                keyIndexPositions.Add(alphabet[i], Key[i]);
             }
 
-            StringBuilder cipher = new StringBuilder();
+            List<string> cipher = new List<string>();
             foreach (string s in clearText)
             {
-                cipher.Append(alphabet[keyIndexPositions[s]]);
+                cipher.Add(keyIndexPositions[s]);
             }
-            return cipher.ToString();
+            return cipher.ToArray();
         }
-        public string Encrypt(string clearText, char wordSeparator, char charSeparator)
+        public string[] Encrypt(string clearText, char wordSeparator, char charSeparator)
         {
             throw new NotImplementedException();
         }
 
-        public string Decrypt(string[] cipherText)
+        public string[] Decrypt(string[] cipherText)
         {
-            throw new NotImplementedException();
+            List<string> output = new List<string>();
+
+            Dictionary<string, string> keyIndexPositions = new Dictionary<string, string>();
+            for (int i = 0; i < Key.Length; i++)
+            {
+                keyIndexPositions.Add(Key[i], alphabet[i]);
+            }
+
+            for (int i = 0; i < cipherText.Length; i++)
+            {
+                output.Add(keyIndexPositions[cipherText[i]]);
+            }
+            return output.ToArray();
         }
-        public string Decrypt(string cipherText, char wordSeparator, char charSeparator)
+        public string[] Decrypt(string cipherText, char wordSeparator, char charSeparator)
         {
             throw new NotImplementedException();
         }

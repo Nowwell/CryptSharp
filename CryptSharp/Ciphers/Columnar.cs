@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers
 {
-    public class Columnar : CipherBase, ICipher
+    public class Columnar : CipherBase<char>, ICipher
     {
         public Columnar(char[] Alphabet) : base(Alphabet)
         {

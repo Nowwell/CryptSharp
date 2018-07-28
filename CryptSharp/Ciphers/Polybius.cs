@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers
 {
-    public class Polybius : CipherBase, ICipher
+    public class Polybius : CipherBase<char>, ICipher
     {
         public Polybius(char[] Alphabet) : base(Alphabet)
         {

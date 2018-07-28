@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers
 {
-    public class FourSquare : CipherBase, ICipher
+    public class FourSquare : CipherBase<char>, ICipher
     {
         public FourSquare(char[] Alphabet) : base(Alphabet)
         {

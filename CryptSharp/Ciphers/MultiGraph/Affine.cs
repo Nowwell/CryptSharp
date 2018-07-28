@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers.MultiGraph
 {
-    public class Affine : ICipher
+    public class Affine : CipherBase<string>, ICipher
     {
-        protected string[] alphabet;
+        //protected string[] alphabet;
         protected Dictionary<string, int> charIndexPositions = new Dictionary<string, int>();
-        public Affine(string[] Alphabet)
+        public Affine(string[] Alphabet) : base(Alphabet)
         {
             alphabet = Alphabet;
             A = 3;
@@ -22,7 +22,8 @@ namespace CryptSharp.Ciphers.MultiGraph
                 charIndexPositions.Add(alphabet[i], i);
             }
         }
-        public Affine(string[] Alphabet, int a, int b, int m)
+
+        public Affine(string[] Alphabet, int a, int b, int m) : base(Alphabet)
         {
             alphabet = Alphabet;
             A = a;
@@ -39,37 +40,37 @@ namespace CryptSharp.Ciphers.MultiGraph
         public int B { get; set; }
         public int M { get; set; }
 
-        public string Encrypt(string[] clearText)
+        public string[] Encrypt(string[] clearText)
         {
-            StringBuilder cipher = new StringBuilder();
+            List<string> cipher = new List<string>();
             foreach (string c in clearText)
             {
-                cipher.Append(alphabet[(A * charIndexPositions[c] + B) % M]);
+                cipher.Add(alphabet[(A * charIndexPositions[c] + B) % M]);
             }
 
-            return cipher.ToString();
+            return cipher.ToArray();
         }
-        public string Encrypt(string clearText, char wordSeparator, char charSeparator)
+        public string[] Encrypt(string clearText, char wordSeparator, char charSeparator)
         {
             string[] plainText = clearText.Replace("\r", "").Replace("\n", "").Split(new char[] { wordSeparator, charSeparator }, StringSplitOptions.RemoveEmptyEntries);
             return Encrypt(plainText);
         }
 
-        public string Decrypt(string[] cipherText)
+        public string[] Decrypt(string[] cipherText)
         {
             int Ainv = Utility.ModInverse(A, M);
 
-            StringBuilder cipher = new StringBuilder();
+            List<string> cipher = new List<string>();
             foreach (string c in cipherText)
             {
                 int index = ((charIndexPositions[c] - B) * Ainv) % M;
                 if( index < 0 ) index += M;
-                cipher.Append(alphabet[index]);
+                cipher.Add(alphabet[index]);
             }
 
-            return cipher.ToString();
+            return cipher.ToArray();
         }
-        public string Decrypt(string cipherText, char wordSeparator, char charSeparator)
+        public string[] Decrypt(string cipherText, char wordSeparator, char charSeparator)
         {
             string[] plainText = cipherText.Replace("\r", "").Replace("\n", "").Split(new char[] { wordSeparator, charSeparator }, StringSplitOptions.RemoveEmptyEntries);
             return Decrypt(plainText);

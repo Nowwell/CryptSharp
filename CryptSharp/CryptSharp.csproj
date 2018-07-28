@@ -84,6 +84,7 @@
     <Compile Include="Ciphers\Xor.cs" />
     <Compile Include="Components\LinearFeedbackShiftRegister.cs" />
     <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="Matrix.cs" />
     <Compile Include="MersenneTwister.cs" />
     <Compile Include="OneToOne.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

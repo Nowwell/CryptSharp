@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers.MultiGraph
 {
-    public class Polybius : ICipher
+    public class Polybius : CipherBase<string>, ICipher
     {
-        protected string[] alphabet;
         protected Dictionary<string, int> charIndexPositions = new Dictionary<string, int>();
-        public Polybius(string[] Alphabet)
+        public Polybius(string[] Alphabet) : base(Alphabet)
         {
             alphabet = Alphabet;
 
@@ -24,36 +23,65 @@ namespace CryptSharp.Ciphers.MultiGraph
         public string[] ColumnHeaders { get; set; }
         public string[] RowHeaders { get; set; }
 
-        public string Encrypt(string[] clearText)
+        public string[] Encrypt(string[] clearText)
         {
-            StringBuilder cipher = new StringBuilder();
+            List<string> cipher = new List<string>();
             foreach (string s in clearText)
             {
                 for (int i = 0; i < Square.Length; i++)
                 {
                     if (Square[i] == s)
                     {
-                        int row = Square.Length / ColumnHeaders.Length;
-                        int col = Square.Length % ColumnHeaders.Length;
+                        int row = i / ColumnHeaders.Length;
+                        int col = i % ColumnHeaders.Length;
 
-                        cipher.Append(RowHeaders[row]);
-                        cipher.Append(ColumnHeaders[col]);
+                        cipher.Add(RowHeaders[row]);
+                        cipher.Add(ColumnHeaders[col]);
                         break;
                     }
                 }
             }
-            return cipher.ToString();
+            return cipher.ToArray();
         }
-        public string Encrypt(string clearText, char wordSeparator, char charSeparator)
+        public string[] Encrypt(string clearText, char wordSeparator, char charSeparator)
         {
             throw new NotImplementedException();
         }
 
-        public string Decrypt(string[] cipherText)
+        public string[] Decrypt(string[] cipherText)
         {
-            throw new NotImplementedException();
+            List<string> clear = new List<string>();
+
+            for (int i = 0; i < cipherText.Length; i += 2)
+            {
+                string row = cipherText[i];
+                string column = cipherText[i + 1];
+
+                int r = 0;
+                int c = 0;
+                for (int j = 0; j < RowHeaders.Length; j++)
+                {
+                    if (row == RowHeaders[j])
+                    {
+                        r = j;
+                        break;
+                    }
+                }
+                for (int j = 0; j < ColumnHeaders.Length; j++)
+                {
+                    if (column == ColumnHeaders[j])
+                    {
+                        c = j;
+                        break;
+                    }
+                }
+
+                clear.Add(Square[ColumnHeaders.Length * r + c]);
+            }
+
+            return clear.ToArray();
         }
-        public string Decrypt(string cipherText, char wordSeparator, char charSeparator)
+        public string[] Decrypt(string cipherText, char wordSeparator, char charSeparator)
         {
             throw new NotImplementedException();
         }

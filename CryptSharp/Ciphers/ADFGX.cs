@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers
 {
-    public class ADFGX : CipherBase, ICipher
+    public class ADFGX : CipherBase<char>, ICipher
     {
         public ADFGX(char[] Alphabet) : base(Alphabet)
         {

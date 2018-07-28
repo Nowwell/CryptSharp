@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers
 {
-    public class Beaufort : CipherBase, ICipher
+    public class Beaufort : CipherBase<char>, ICipher
     {
         public Beaufort(char[] Alphabet) : base(Alphabet)
         {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers.MultiGraph
 {
-    public class DES : ICipher
+    public class DES //: ICipher
     {
         public DES()
         {

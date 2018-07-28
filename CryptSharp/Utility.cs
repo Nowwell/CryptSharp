@@ -10,6 +10,10 @@ namespace CryptSharp
 {
     public class Utility
     {
+        protected static readonly RandomNumberGenerator rng = new RNGCryptoServiceProvider();
+
+        #region Text Utility
+
         public static string[] StringToStringArray(string str)
         {
             return str.ToCharArray().Select(c => c.ToString()).ToArray();
@@ -133,6 +137,108 @@ namespace CryptSharp
             return SubstitutionTable;
         }
 
+
+        //public static string ScrambleAlphabet(char[] alphabet)
+        //{
+        //    List<char> letters = new List<char>(alphabet);
+        //    StringBuilder scramble = new StringBuilder();
+        //    for (int i = 0; i < alphabet.Length - 1; i++)
+        //    {
+        //        int x = RandomInt();
+        //        scramble.Append(letters[x % letters.Count]);
+        //        letters.RemoveAt(x % letters.Count);
+        //    }
+        //    scramble.Append(letters[0]);
+
+        //    return scramble.ToString();
+        //}
+
+        public static Dictionary<char, List<string>> LoadDictionary(string filename = @"texts\dictionary.txt")
+        {
+            Dictionary<char, List<string>> dictionary = new Dictionary<char, List<string>>();
+            using (StreamReader file = new StreamReader(filename))
+            {
+                while (!file.EndOfStream)
+                {
+                    string line = file.ReadLine().ToUpper();
+                    if (line.Length <= 11 && line.Length > 0)
+                    {
+
+                        if (dictionary.ContainsKey(line[0]))
+                        {
+                            dictionary[line[0]].Add(line);
+                        }
+                        else
+                        {
+                            dictionary.Add(line[0], new List<string>());
+                            dictionary[line[0]].Add(line);
+                        }
+                    }
+                }
+            }
+            return dictionary;
+        }
+
+        #endregion
+
+        #region Random
+        public static string Random(int numBytes = 32)
+        {
+            string token = "";
+            byte[] tokenData = new byte[numBytes];
+            rng.GetBytes(tokenData);
+
+            token = Convert.ToBase64String(tokenData);
+            return token;
+        }
+
+        public static T[] Random<T>(int numBytes = 32)
+        {
+            if (typeof(T) != typeof(char) && typeof(T) != typeof(string) &&
+                typeof(T) != typeof(System.Char) && typeof(T) != typeof(System.String))
+            {
+                throw new Exception("Invalid generic type for function Utility.Random<T>: " + typeof(T).ToString());
+            }
+
+            T[] token = new T[numBytes];
+
+            byte[] tokenData = new byte[numBytes];
+            rng.GetBytes(tokenData);
+
+            string randomString = Convert.ToBase64String(tokenData);
+
+            char[] data = randomString.ToCharArray();
+            if (typeof(T) == typeof(char) || typeof(T) == typeof(Char))
+            {
+                token = data as T[];
+            }
+            else if (typeof(T) == typeof(string) || typeof(T) == typeof(String))
+            {
+                string[] tostr = new string[data.Length];
+                for (int i = 0; i < data.Length; i++)
+                {
+                    tostr[i] = data[i].ToString();
+                }
+
+                token = tostr as T[];
+            }
+
+            return token;
+        }
+
+        public static int RandomInt()
+        {
+            int token = 0;
+            byte[] tokenData = new byte[4];
+            rng.GetBytes(tokenData);
+
+            token = BitConverter.ToInt32(tokenData, 0);
+            return token;
+        }
+        #endregion
+
+        #region Numeric/Statistical Utility
+
         public static Dictionary<char, int> Frequencies(char[] cipher, char[] alphabet)
         {
             Dictionary<char, int> returnValue = new Dictionary<char, int>();
@@ -210,71 +316,6 @@ namespace CryptSharp
             return IndexOfCoincidence(cipher, alphabet) - 1.0 / (double)alphabet.Length;
         }
 
-        public static string Random(int numBytes = 32)
-        {
-            string token = "";
-            using (RandomNumberGenerator rng = new RNGCryptoServiceProvider())
-            {
-                byte[] tokenData = new byte[numBytes];
-                rng.GetBytes(tokenData);
-
-                token = Convert.ToBase64String(tokenData);
-            }
-            return token;
-        }
-        public static int RandomInt()
-        {
-            int token = 0;
-            using (RandomNumberGenerator rng = new RNGCryptoServiceProvider())
-            {
-                byte[] tokenData = new byte[4];
-                rng.GetBytes(tokenData);
-
-                token = BitConverter.ToInt32(tokenData, 0);
-            }
-            return token;
-        }
-
-        public static string ScrambleAlphabet(char[] alphabet)
-        {
-            List<char> letters = new List<char>(alphabet);
-            StringBuilder scramble = new StringBuilder();
-            for (int i = 0; i < alphabet.Length - 1; i++)
-            {
-                int x = RandomInt();
-                scramble.Append(letters[x % letters.Count]);
-                letters.RemoveAt(x % letters.Count);
-            }
-            scramble.Append(letters[0]);
-
-            return scramble.ToString();
-        }
-
-        public static Dictionary<char, List<string>> LoadDictionary(string filename = @"texts\dictionary.txt")
-        {
-            Dictionary<char, List<string>> dictionary = new Dictionary<char, List<string>>();
-            using (StreamReader file = new StreamReader(filename))
-            {
-                while (!file.EndOfStream)
-                {
-                    string line = file.ReadLine().ToUpper();
-                    if (line.Length <= 11 && line.Length > 0)
-                    {
-
-                        if (dictionary.ContainsKey(line[0]))
-                        {
-                            dictionary[line[0]].Add(line);
-                        }
-                        else
-                        {
-                            dictionary.Add(line[0], new List<string>());
-                            dictionary[line[0]].Add(line);
-                        }
-                    }
-                }
-            }
-            return dictionary;
-        }
 
         public static bool IsPrime(long n)
         {
@@ -583,6 +624,8 @@ namespace CryptSharp
             return phi[i * lower];
         }
 
+        #endregion
+        
         #endregion
     }
 }

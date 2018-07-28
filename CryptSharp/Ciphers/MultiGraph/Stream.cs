@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers.MultiGraph
 {
-    public class Stream : ICipher
+    public class Stream : CipherBase<string>, ICipher
     {
-        protected string[] alphabet;
         protected Dictionary<string, int> charIndexPositions = new Dictionary<string, int>();
 
-        public Stream(string[] Alphabet)
+        public Stream(string[] Alphabet) : base(Alphabet)
         {
             alphabet = Alphabet;
 
@@ -25,9 +24,9 @@ namespace CryptSharp.Ciphers.MultiGraph
         public byte[] Key { get; set; }
         public LinearFeedbackShiftRegister Registers {get;set;}
 
-        public string Encrypt(string[] clearText)
+        public string[] Encrypt(string[] clearText)
         {
-            StringBuilder cipher = new StringBuilder();
+            List<string> cipher = new List<string>();
             int bit = 1;
             int k = 0;
             foreach (string s in clearText)
@@ -48,20 +47,20 @@ namespace CryptSharp.Ciphers.MultiGraph
                     }
                 }
 
-                cipher.Append(UnicodeEncoding.Unicode.GetString(clear));
+                cipher.Add(UnicodeEncoding.Unicode.GetString(clear));
 
             }
 
-            return cipher.ToString();
+            return cipher.ToArray();
         }
-        public string Encrypt(string clearText, char wordSeparator, char charSeparator)
+        public string[] Encrypt(string clearText, char wordSeparator, char charSeparator)
         {
             throw new NotImplementedException();
         }
 
-        public string Decrypt(string[] cipherText)
+        public string[] Decrypt(string[] cipherText)
         {
-            StringBuilder clearText = new StringBuilder();
+            List<string> clearText = new List<string>();
             int bit = 1;
             int k = 0;
             foreach (string s in cipherText)
@@ -82,13 +81,13 @@ namespace CryptSharp.Ciphers.MultiGraph
                     }
                 }
 
-                clearText.Append(UnicodeEncoding.Unicode.GetString(clear));
+                clearText.Add(UnicodeEncoding.Unicode.GetString(clear));
 
             }
 
-            return clearText.ToString();
+            return clearText.ToArray();
         }
-        public string Decrypt(string cipherText, char wordSeparator, char charSeparator)
+        public string[] Decrypt(string cipherText, char wordSeparator, char charSeparator)
         {
             throw new NotImplementedException();
         }
