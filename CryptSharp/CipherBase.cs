@@ -43,11 +43,11 @@ namespace CryptSharp.Ciphers
             return toEncrypt.ToString();
         }
 
-        public string ScrambledAlphabet()
+        public T[] ScrambledAlphabet()
         {
-            T[] copy = alphabet.Clone() as T[];
+            List<T> copy = new List<T>(alphabet);
 
-            StringBuilder sb = new StringBuilder();
+            List<T> sb = new List<T>();
             byte[] tokenData = new byte[2];
             using (System.Security.Cryptography.RandomNumberGenerator rng = new System.Security.Cryptography.RNGCryptoServiceProvider())
             {
@@ -55,14 +55,14 @@ namespace CryptSharp.Ciphers
                 {
                     rng.GetBytes(tokenData);
 
-                    int value = (int)(BitConverter.ToUInt16(tokenData, 0) % copy.Length);
+                    int value = (int)(BitConverter.ToUInt16(tokenData, 0) % copy.Count);
 
-                    sb.Append(copy[value]);
+                    sb.Add(copy[value]);
 
-                    copy[value] = default(T);
+                    copy.RemoveAt(value);
                 }
             }
-            return sb.ToString();
+            return sb.ToArray();
         }
     }
 }

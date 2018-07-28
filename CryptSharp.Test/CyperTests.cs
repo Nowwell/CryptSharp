@@ -18,7 +18,7 @@ namespace CryptSharp.Test
         Dictionary<char, List<string>> dictionary = Utility.LoadDictionary();
 
         [TestMethod]
-        public void AffineTest()
+        public void Unigraph_AffineTest()
         {
             Affine affine = new Affine(Utility.KeyedEnglishAlphabet("KRYPTOS"));
             affine.A = 3;
@@ -39,7 +39,7 @@ namespace CryptSharp.Test
         }
 
         [TestMethod]
-        public void AtbashTest()
+        public void Unigraph_AtbashTest()
         {
             Atbash atbash = new Atbash(Utility.KeyedEnglishAlphabet("KRYPTOS"));
 
@@ -58,7 +58,7 @@ namespace CryptSharp.Test
         }
 
         [TestMethod]
-        public void BaconianTest()
+        public void Unigraph_BaconianTest()
         {
             Baconian baconian = new Baconian(Utility.EnglishAlphabet());
             baconian.GenerateGenericSubTable();
@@ -78,7 +78,7 @@ namespace CryptSharp.Test
         }
 
         [TestMethod]
-        public void BeaufortTest()
+        public void Unigraph_BeaufortTest()
         {
             Beaufort beaufort = new Beaufort(Utility.KeyedEnglishAlphabet("KRYPTOS"));
 
@@ -98,7 +98,7 @@ namespace CryptSharp.Test
         }
         
         [TestMethod]
-        public void BeaufortAutokeyTest()
+        public void Unigraph_BeaufortAutokeyTest()
         {
             Beaufort beaufort = new Beaufort(Utility.KeyedEnglishAlphabet("KRYPTOS"));
             beaufort.AutoKey = true;
@@ -119,7 +119,7 @@ namespace CryptSharp.Test
         }
 
         [TestMethod]
-        public void VigenereTest()
+        public void Unigraph_VigenereTest()
         {
             Vigenere vigenere = new Vigenere(Utility.KeyedEnglishAlphabet("KRYPTOS"));
 
@@ -140,7 +140,7 @@ namespace CryptSharp.Test
         }
 
         [TestMethod]
-        public void VigenereAutoKeyTest()
+        public void Unigraph_VigenereAutoKeyTest()
         {
             Vigenere vigenere = new Vigenere(Utility.KeyedEnglishAlphabet("KRYPTOS"));
             vigenere.Key = "ABSCISSA";
@@ -163,7 +163,7 @@ namespace CryptSharp.Test
         }
 
         [TestMethod]
-        public void ColumnarTest()
+        public void Unigraph_ColumnarTest()
         {
             Columnar columnar = new Columnar(Utility.EnglishAlphabet());
 
@@ -200,7 +200,7 @@ namespace CryptSharp.Test
         }
 
         [TestMethod]
-        public void PolybiusTest()
+        public void Unigraph_PolybiusTest()
         {
             Polybius polybius = new Polybius(Utility.EnglishAlphabet());
             polybius.RowHeaders = new char[] { 'A', 'B', 'C', 'D', 'E' };
@@ -208,7 +208,16 @@ namespace CryptSharp.Test
 
             for (int i = 0; i < 25; i++)
             {
-                polybius.Square = polybius.ScrambledAlphabet().Replace("J", "").ToCharArray();
+                List<char> scrambled = new List<char>(polybius.ScrambledAlphabet());
+                for (int j = 0; j < scrambled.Count; j++)
+                {
+                    if (scrambled[j] == 'J')
+                    {
+                        scrambled.RemoveAt(j);
+                        break;
+                    }
+                }
+                polybius.Square = scrambled.ToArray();
                 
                 //the letter J is not in the Polybius square.  Standard sub is J -> I
                 generated = polybius.GenerateRandomString().Replace("J", "I");
@@ -221,7 +230,7 @@ namespace CryptSharp.Test
         }
 
         [TestMethod]
-        public void RailFenceTest()
+        public void Unigraph_RailFenceTest()
         {
             RailFence railfence = new RailFence(Utility.KeyedEnglishAlphabet("KRYPTOS"));
 
@@ -249,7 +258,7 @@ namespace CryptSharp.Test
         }
 
         [TestMethod]
-        public void RotationTest()
+        public void Unigraph_RotationTest()
         {
             Rotation rotation = new Rotation(Utility.KeyedEnglishAlphabet("KRYPTOS"));
             
@@ -278,7 +287,7 @@ namespace CryptSharp.Test
         }
 
         [TestMethod]
-        public void SubstitutionTest()
+        public void Unigraph_SubstitutionTest()
         {
             Substitution substitution = new Substitution(Utility.KeyedEnglishAlphabet("KRYPTOS"));
 
@@ -287,7 +296,7 @@ namespace CryptSharp.Test
             generated = "";
             for (int i = 0; i < 25; i++)
             {
-                substitution.Key = substitution.ScrambledAlphabet().ToCharArray();
+                substitution.Key = substitution.ScrambledAlphabet();
                 generated = substitution.GenerateRandomString();
 
                 cipher = substitution.Encrypt(generated);
@@ -298,7 +307,7 @@ namespace CryptSharp.Test
         }
 
         [TestMethod]
-        public void PortaTest()
+        public void Unigraph_PortaTest()
         {
             Porta porta = new Porta(Utility.KeyedEnglishAlphabet("KRYPTOS"));
             porta.Key = "KRYPTOS";
@@ -319,7 +328,7 @@ namespace CryptSharp.Test
         }
 
         [TestMethod]
-        public void HomophonicTest()
+        public void Unigraph_HomophonicTest()
         {
             Homophonic homophonic = new Homophonic();
             homophonic.GenerateGenericAlphabet();
@@ -339,7 +348,7 @@ namespace CryptSharp.Test
         }
 
         [TestMethod]
-        public void AmscoTest()
+        public void Unigraph_AmscoTest()
         {
             Amsco amsco = new Amsco(Utility.KeyedEnglishAlphabet("KRYPTOS"));
             amsco.Key = new int[5] { 3, 0, 2, 1, 4 };// { 2, 4, 0, 1, 3 };
@@ -362,7 +371,7 @@ namespace CryptSharp.Test
         }
 
         [TestMethod]
-        public void XorTest()
+        public void Unigraph_XorTest()
         {
             Xor xor = new Xor(Utility.EnglishAlphabet());// KeyedEnglishAlphabet("KRYPTOS"));
 
@@ -382,7 +391,7 @@ namespace CryptSharp.Test
         }
 
         [TestMethod]
-        public void FourSquareTest()
+        public void Unigraph_FourSquareTest()
         {
             char[] ab = Utility.EnglishAlphabet();
             Array.Resize(ref ab, ab.Length - 1);
@@ -393,8 +402,8 @@ namespace CryptSharp.Test
             generated = "";
             for (int i = 0; i < 25; i++)
             {
-                foursquare.KeySquare1 = foursquare.ScrambledAlphabet();
-                foursquare.KeySquare2 = foursquare.ScrambledAlphabet();
+                foursquare.KeySquare1 = new string(foursquare.ScrambledAlphabet());
+                foursquare.KeySquare2 = new string(foursquare.ScrambledAlphabet());
 
                 generated = foursquare.GenerateRandomString();
 
@@ -411,7 +420,7 @@ namespace CryptSharp.Test
         }
 
         [TestMethod]
-        public void HillTest()
+        public void Unigraph_HillTest()
         {
             Hill hill = new Hill(Utility.EnglishAlphabet());// Utility.KeyedEnglishAlphabet("KRYPTOS"));
             hill.Key = new double[,] { { 6, 24, 1 }, { 13, 16, 10 }, { 20, 17, 15 } };
@@ -433,7 +442,7 @@ namespace CryptSharp.Test
         }
 
         [TestMethod]
-        public void PlayfairTest()
+        public void Unigraph_PlayfairTest()
         {
             char[] ch = new string(Utility.KeyedEnglishAlphabet("KRYPTOS")).Replace("J","").ToCharArray();
             Playfair playfair = new Playfair(ch);
@@ -454,7 +463,7 @@ namespace CryptSharp.Test
         }
 
         [TestMethod]
-        public void ADFGVXTest()
+        public void Unigraph_ADFGVXTest()
         {
             ADFGVX adfgvx = new ADFGVX(Utility.EnglishAlphabet());
             adfgvx.Square = "phqg0iu7me4ay5lno8jfd9xk6rc2vs4tz1wb3".ToUpper().ToCharArray();
@@ -472,7 +481,7 @@ namespace CryptSharp.Test
         }
 
         [TestMethod]
-        public void ADFGXTest()
+        public void Unigraph_ADFGXTest()
         {
             char[] ch = new string(Utility.KeyedEnglishAlphabet("KRYPTOS")).Replace("J", "").ToCharArray();
             ADFGX adfgx = new ADFGX(ch);
@@ -491,7 +500,7 @@ namespace CryptSharp.Test
         }
 
         [TestMethod]
-        public void BifidTest()
+        public void Unigraph_BifidTest()
         {
             char[] ch = new string(Utility.EnglishAlphabet()).Replace("J", "").ToCharArray();
             Bifid bifid = new Bifid(ch);
@@ -501,7 +510,7 @@ namespace CryptSharp.Test
 
                 for (int i = 0; i < 25; i++)
                 {
-                    bifid.Square = bifid.ScrambledAlphabet().ToCharArray();
+                    bifid.Square = bifid.ScrambledAlphabet();
                     generated = bifid.GenerateRandomString().Replace("J", "I");
 
                     cipher = bifid.Encrypt(generated);
@@ -513,7 +522,7 @@ namespace CryptSharp.Test
         }
 
         [TestMethod]
-        public void TrifidTest()
+        public void Unigraph_TrifidTest()
         {
             char[] ch = (new string(Utility.EnglishAlphabet()) + '.').ToCharArray();
             Trifid trifid = new Trifid(ch);
@@ -522,7 +531,7 @@ namespace CryptSharp.Test
             {
                 for (int i = 0; i < 25; i++)
                 {
-                    trifid.Squares = trifid.ScrambledAlphabet().ToCharArray();
+                    trifid.Squares = trifid.ScrambledAlphabet();
                     generated = trifid.GenerateRandomString();
 
                     cipher = trifid.Encrypt(generated);

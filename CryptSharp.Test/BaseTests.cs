@@ -13,7 +13,7 @@ namespace CryptSharp.Test
     public class BaseTests
     {
         [TestMethod]
-        public void GenerateRandomStringTest()
+        public void Base_GenerateRandomStringTest()
         {
             Affine affine = new Affine(Utility.KeyedEnglishAlphabet("KRYPTOS"));
             affine.A = 3;
@@ -29,7 +29,7 @@ namespace CryptSharp.Test
         }
 
         [TestMethod]
-        public void ScrambledAlphabetTest()
+        public void Base_ScrambledAlphabetTest()
         {
             char[] alphabet = Utility.KeyedEnglishAlphabet("KRYPTOS");
             Affine affine = new Affine(alphabet);
@@ -37,7 +37,7 @@ namespace CryptSharp.Test
             affine.B = 7;
 
             //scramble the alphabet
-            char[] scrambled = affine.ScrambledAlphabet().ToCharArray();
+            char[] scrambled = affine.ScrambledAlphabet();
             Dictionary<char, int> counts = new Dictionary<char, int>();
 
             //ensure the scrambled alphabet contains one and only one of each letter

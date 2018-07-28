@@ -10,6 +10,8 @@ namespace CryptSharp
 {
     public class Utility
     {
+        protected static readonly RandomNumberGenerator rng = new RNGCryptoServiceProvider();
+
         #region Text Utility
 
         public static string[] StringToStringArray(string str)
@@ -179,68 +181,62 @@ namespace CryptSharp
 
         #endregion
 
-        #region Numeric/Statistical Utility
-
+        #region Random
         public static string Random(int numBytes = 32)
         {
             string token = "";
-            using (RandomNumberGenerator rng = new RNGCryptoServiceProvider())
-            {
-                byte[] tokenData = new byte[numBytes];
-                rng.GetBytes(tokenData);
+            byte[] tokenData = new byte[numBytes];
+            rng.GetBytes(tokenData);
 
-                token = Convert.ToBase64String(tokenData);
-            }
+            token = Convert.ToBase64String(tokenData);
             return token;
         }
-        
+
         public static T[] Random<T>(int numBytes = 32)
         {
-            if(typeof(T) != typeof(char) && typeof(T) == typeof(string))
+            if (typeof(T) != typeof(char) && typeof(T) == typeof(string))
             {
                 throw new Exception("Invalid generic type for function Utility.Random<T>: " + typeof(T).ToString());
             }
 
             T[] token = new T[numBytes];
-            using (RandomNumberGenerator rng = new RNGCryptoServiceProvider())
+
+            byte[] tokenData = new byte[numBytes];
+            rng.GetBytes(tokenData);
+
+            string randomString = Convert.ToBase64String(tokenData);
+
+            char[] data = randomString.ToCharArray();
+            if (typeof(T) == typeof(char))
             {
-                byte[] tokenData = new byte[numBytes];
-                rng.GetBytes(tokenData);
-
-                string randomString = Convert.ToBase64String(tokenData);
-
-                char[] data = randomString.ToCharArray();
-                if (typeof(T) == typeof(char))
-                {
-                    token = data as T[];
-                }
-                else if (typeof(T) == typeof(string))
-                {
-                    string[] tostr = new string[data.Length];
-                    for(int i=0; i<data.Length; i++)
-                    {
-                        tostr[i] = data[i].ToString();
-                    }
-
-                    token = tostr as T[];
-                }
+                token = data as T[];
             }
+            else if (typeof(T) == typeof(string))
+            {
+                string[] tostr = new string[data.Length];
+                for (int i = 0; i < data.Length; i++)
+                {
+                    tostr[i] = data[i].ToString();
+                }
+
+                token = tostr as T[];
+            }
+
             return token;
         }
 
         public static int RandomInt()
         {
             int token = 0;
-            using (RandomNumberGenerator rng = new RNGCryptoServiceProvider())
-            {
-                byte[] tokenData = new byte[4];
-                rng.GetBytes(tokenData);
+            byte[] tokenData = new byte[4];
+            rng.GetBytes(tokenData);
 
-                token = BitConverter.ToInt32(tokenData, 0);
-            }
+            token = BitConverter.ToInt32(tokenData, 0);
             return token;
         }
+        #endregion
 
+        #region Numeric/Statistical Utility
 
         public static Dictionary<char, int> Frequencies(char[] cipher, char[] alphabet)
         {
