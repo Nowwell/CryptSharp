@@ -57,6 +57,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="BaseTests.cs" />
+    <Compile Include="MatrixTests.cs" />
     <Compile Include="MultiGraphCyperTests.cs" />
     <Compile Include="UnigraphCyperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

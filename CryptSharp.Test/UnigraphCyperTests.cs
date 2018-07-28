@@ -422,8 +422,10 @@ namespace CryptSharp.Test
         [TestMethod]
         public void Unigraph_HillTest()
         {
+            //TODO This sometimes fails, it's missing the last letter
+
             Hill hill = new Hill(Utility.EnglishAlphabet());// Utility.KeyedEnglishAlphabet("KRYPTOS"));
-            hill.Key = new double[,] { { 6, 24, 1 }, { 13, 16, 10 }, { 20, 17, 15 } };
+            hill.Key = new Matrix(new double[,] { { 6, 24, 1 }, { 13, 16, 10 }, { 20, 17, 15 } });
             //hill.Key = new double[,] { { 2, 4, 5 }, { 9, 2, 1 }, { 3, 17, 7 } };
             //hill.Key = new double[,] { { 5, 17 }, { 4, 15 } };
 
@@ -432,10 +434,14 @@ namespace CryptSharp.Test
             generated = "";
             for (int i = 0; i < 25; i++)
             {
-                generated = hill.GenerateRandomString();
+                generated = hill.GenerateRandomString(552);
 
                 cipher = hill.Encrypt(generated);
                 clear = hill.Decrypt(cipher);
+
+                int x = generated.Length;
+                int y = cipher.Length;
+                int z = clear.Length;
 
                 Assert.AreEqual(generated, clear);
             }

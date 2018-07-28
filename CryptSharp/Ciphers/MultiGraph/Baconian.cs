@@ -70,10 +70,8 @@ namespace CryptSharp.Ciphers.MultiGraph
 
         public string[] Decrypt(string[] cipherText)
         {
-            int len = SubstitutionTable[alphabet[0]].Length;
-
             List<string> output = new List<string>();
-            for (int i = 0; i < cipherText.Length; i += len)
+            for (int i = 0; i < cipherText.Length; i ++)
             {
                 string code = cipherText[i];
 

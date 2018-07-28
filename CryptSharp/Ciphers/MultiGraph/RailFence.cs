@@ -39,7 +39,7 @@ namespace CryptSharp.Ciphers.MultiGraph
             int line;
             for (line = 0; line < Key - 1; line++)
             {
-                int skip = (Key - line - 1);
+                int skip = 2 * (Key - line - 1);
                 for (int i = line, j = 0; i < clearText.Length; j++)
                 {
                     cipher.Add(clearText[i]);

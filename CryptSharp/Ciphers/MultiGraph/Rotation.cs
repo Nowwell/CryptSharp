@@ -36,11 +36,12 @@ namespace CryptSharp.Ciphers.MultiGraph
         public string[] Encrypt(string[] clearText)
         {
             int alphabetLength = alphabet.Length;
+            int key = Key % alphabetLength;
 
             List<string> cipher = new List<string>();
             foreach (string c in clearText)
             {
-                cipher.Add(alphabet[(charIndexPositions[c] + Key) % alphabetLength]);
+                cipher.Add(alphabet[(charIndexPositions[c] + key) % alphabetLength]);
             }
 
             return cipher.ToArray();
@@ -54,11 +55,12 @@ namespace CryptSharp.Ciphers.MultiGraph
         public string[] Decrypt(string[] cipherText)
         {
             int alphabetLength = alphabet.Length;
+            int key = Key % alphabetLength;
 
             List<string> cipher = new List<string>();
             foreach (string c in cipherText)
             {
-                cipher.Add(alphabet[(charIndexPositions[c] - Key + alphabetLength) % alphabetLength]);
+                cipher.Add(alphabet[(charIndexPositions[c] - key + 2 * alphabetLength) % alphabetLength]);
             }
 
             return cipher.ToArray();

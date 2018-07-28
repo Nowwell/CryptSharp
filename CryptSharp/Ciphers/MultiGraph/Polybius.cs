@@ -32,8 +32,8 @@ namespace CryptSharp.Ciphers.MultiGraph
                 {
                     if (Square[i] == s)
                     {
-                        int row = Square.Length / ColumnHeaders.Length;
-                        int col = Square.Length % ColumnHeaders.Length;
+                        int row = i / ColumnHeaders.Length;
+                        int col = i % ColumnHeaders.Length;
 
                         cipher.Add(RowHeaders[row]);
                         cipher.Add(ColumnHeaders[col]);
@@ -50,7 +50,36 @@ namespace CryptSharp.Ciphers.MultiGraph
 
         public string[] Decrypt(string[] cipherText)
         {
-            throw new NotImplementedException();
+            List<string> clear = new List<string>();
+
+            for (int i = 0; i < cipherText.Length; i += 2)
+            {
+                string row = cipherText[i];
+                string column = cipherText[i + 1];
+
+                int r = 0;
+                int c = 0;
+                for (int j = 0; j < RowHeaders.Length; j++)
+                {
+                    if (row == RowHeaders[j])
+                    {
+                        r = j;
+                        break;
+                    }
+                }
+                for (int j = 0; j < ColumnHeaders.Length; j++)
+                {
+                    if (column == ColumnHeaders[j])
+                    {
+                        c = j;
+                        break;
+                    }
+                }
+
+                clear.Add(Square[ColumnHeaders.Length * r + c]);
+            }
+
+            return clear.ToArray();
         }
         public string[] Decrypt(string cipherText, char wordSeparator, char charSeparator)
         {

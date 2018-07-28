@@ -23,16 +23,16 @@ namespace CryptSharp.Ciphers.MultiGraph
 
         public string[] Encrypt(string[] clearText)
         {
-            Dictionary<string, int> keyIndexPositions = new Dictionary<string, int>();
+            Dictionary<string, string> keyIndexPositions = new Dictionary<string, string>();
             for (int i = 0; i < Key.Length; i++)
             {
-                charIndexPositions.Add(Key[i], i);
+                keyIndexPositions.Add(alphabet[i], Key[i]);
             }
 
             List<string> cipher = new List<string>();
             foreach (string s in clearText)
             {
-                cipher.Add(alphabet[keyIndexPositions[s]]);
+                cipher.Add(keyIndexPositions[s]);
             }
             return cipher.ToArray();
         }
@@ -43,7 +43,19 @@ namespace CryptSharp.Ciphers.MultiGraph
 
         public string[] Decrypt(string[] cipherText)
         {
-            throw new NotImplementedException();
+            List<string> output = new List<string>();
+
+            Dictionary<string, string> keyIndexPositions = new Dictionary<string, string>();
+            for (int i = 0; i < Key.Length; i++)
+            {
+                keyIndexPositions.Add(Key[i], alphabet[i]);
+            }
+
+            for (int i = 0; i < cipherText.Length; i++)
+            {
+                output.Add(keyIndexPositions[cipherText[i]]);
+            }
+            return output.ToArray();
         }
         public string[] Decrypt(string cipherText, char wordSeparator, char charSeparator)
         {
