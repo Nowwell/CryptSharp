@@ -7,7 +7,7 @@ namespace CryptSharp.Test
     public class MatrixTests
     {
         [TestMethod]
-        public void MakeIdentityTest()
+        public void Matrix_MakeIdentityTest()
         {
             Matrix m = new Matrix(5, 5);
             m.MakeIdentity();
@@ -29,7 +29,7 @@ namespace CryptSharp.Test
         }
 
         [TestMethod]
-        public void DeterminantTest()
+        public void Matrix_DeterminantTest()
         {
             Matrix m = new Matrix(5, 5);
             m.MakeIdentity();
@@ -48,7 +48,7 @@ namespace CryptSharp.Test
         }
 
         [TestMethod]
-        public void InversionTest()
+        public void Matrix_InversionTest()
         {
             Matrix m = new Matrix(new double[,] { { 1, 2 }, { 3, 4 } });
             m.Invert();
@@ -73,7 +73,24 @@ namespace CryptSharp.Test
         }
 
         [TestMethod]
-        public void TraceTest()
+        public void Matrix_ModInversionTest()
+        {
+            Matrix m = new Matrix(new double[,] { { 6, 24, 1 }, { 13, 16, 10 }, { 20, 17, 15 } });
+            m.ModInvert(26);
+
+            Assert.AreEqual(8, m[0, 0], 0.0000001);
+            Assert.AreEqual(5, m[0, 1], 0.0000001);
+            Assert.AreEqual(10, m[0, 2], 0.0000001);
+            Assert.AreEqual(21, m[1, 0], 0.0000001);
+            Assert.AreEqual(8, m[1, 1], 0.0000001);
+            Assert.AreEqual(21, m[1, 2], 0.0000001);
+            Assert.AreEqual(21, m[2, 0], 0.0000001);
+            Assert.AreEqual(12, m[2, 1], 0.0000001);
+            Assert.AreEqual(8, m[2, 2], 0.0000001);
+        }
+
+        [TestMethod]
+        public void Matrix_TraceTest()
         {
             Matrix m = new Matrix(5, 5);
             m.MakeIdentity();

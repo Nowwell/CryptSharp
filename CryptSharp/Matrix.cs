@@ -273,6 +273,53 @@ namespace CryptSharp
             }
         }
 
+        public void ModInvert(int mod)
+        {
+            if (Rows != Columns) throw new Exception("Not a square matrix, cannot take determinant");
+
+            if (Rows == 2 && Columns == 2)
+            {
+                double det = data[0, 0] * data[1, 1] - data[1, 0] * data[0, 1];
+                det = Utility.ModInverse((int)det, mod);
+
+                double temp = data[0, 0] * det;
+                data[0, 0] = (data[1, 1] * det) % mod;
+                data[1, 1] = temp % mod;
+
+                //temp = -data[0, 1] * (1.0 / det);
+                data[0, 1] = (-data[0, 1] * det) % mod;
+                data[1, 0] = (-data[1, 0] * det) % mod;// temp;
+            }
+            else
+            {
+                double inv = Utility.ModInverse((int)Determinant(), mod);
+
+                Matrix adj = Adjoint();
+                for (int i = 0; i < Rows; i++)
+                {
+                    for (int j = 0; j < Columns; j++)
+                    {
+                        data[i, j] = ((inv * adj[i, j]) % mod + mod) % mod;
+                    }
+                }
+
+            }
+        }
+
+        static int GCD(int a, int b)
+        {
+            int Remainder;
+
+            while (b != 0)
+            {
+                Remainder = a % b;
+                a = b;
+                b = Remainder;
+            }
+
+            return a;
+        }
+
         //aka are rows/columns mutually orthogonal
         public bool IsABasis()
         {
@@ -313,6 +360,17 @@ namespace CryptSharp
                 sum += data[i, i];
             }
             return sum;
+        }
+
+        public void Mod(int mod)
+        {
+            for (int i = 0; i < Rows; i++)
+            {
+                for (int j = 0; j < Columns; j++)
+                {
+                    data[i, j] = data[i, j] % mod;
+                }
+            }
         }
 
         public static Matrix operator +(Matrix c1, Matrix c2)
