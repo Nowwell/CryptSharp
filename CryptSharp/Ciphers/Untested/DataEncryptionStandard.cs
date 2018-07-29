@@ -21,22 +21,30 @@ namespace CryptSharp.Ciphers
 
         public byte[] Encrypt(byte[] clearText)
         {
+            //example http://page.math.tu-berlin.de/~kant/teaching/hess/krypto-ws2006/des.htm
+
+
+            //ulong key = 0x0101010100000000;
+            //ulong key = 0x0202020200000000;
             ulong key = 0x133457799BBCDFF1;
+            ulong message = 0x0123456789ABCDEF;
 
             ulong[] subkeys = new ulong[17];
             uint[] C = new uint[17];
             uint[] D = new uint[17];
 
-            for(int i = 0; i<=16; i++)
-            {
-                subkeys[i] = ((key << PC1[i]) /*| (key >> (sizeof(ulong) * 8 - PC1[i]))*/ ) & 0x00FFFFFFFFFFFFFF;
+            //get initial key permutation, PC1
+            subkeys[0] = DoPC1(key);
 
-                if(i == 0)
+            //permutate the Lo and Hi parts of the PC1 key
+            for (int i = 0; i <= 16; i++)
+            {
+                if (i == 0)
                 {
-                    C[0] = ((uint)(subkeys[0] & 0x00FFFFFFF0000000) >> 7*8);
+                    C[0] = (uint)((subkeys[0] & 0x00FFFFFFF0000000) >> 7 * 4);
                     D[0] = (uint)(subkeys[0] & 0x000000000FFFFFFF);
                 }
-                else if(i == 1 || i ==2 || i == 16 || i == 9)
+                else if (i == 1 || i == 2 || i == 16 || i == 9)
                 {
                     C[i] = (C[i - 1] << 1 | C[i - 1] >> 27) & 0x00FFFFFFF;
                     D[i] = (D[i - 1] << 1 | D[i - 1] >> 27) & 0x00FFFFFFF;
@@ -49,10 +57,65 @@ namespace CryptSharp.Ciphers
 
             }
 
+            //permutate the keys with PC2, putting the Lo and Hi parts back together again
+            for (int i = 1; i <= 16; i++)
+            {
+                subkeys[i] = DoPC2((((ulong)C[i]) << 7 * 4) | (ulong)D[i]);
+            }
+
+            //Do initial permutation (IP) on 64 bits of data
+            ulong ipmess = DoIP(message);
+
+
+
 
 
 
             return default(byte[]);
+        }
+
+        protected ulong DoPC1(ulong key)
+        {
+            ulong output = 0;
+            for (int i = 0; i < PC1.Length; i++)
+            {
+                output |= ((key >> (64 - PC1[i])) & 0x01) << (55 - i);
+            }
+
+            return output;
+        }
+
+        protected ulong DoPC2(ulong key)
+        {
+            ulong output = 0;
+            for (int i = 0; i < PC2.Length; i++)
+            {
+                output |= ((key >> (56 - PC2[i])) & 0x01) << (47 - i);
+            }
+
+            return output;
+        }
+
+        protected ulong DoIP(ulong message)
+        {
+            ulong output = 0;
+            for (int i = 0; i < IP.Length; i++)
+            {
+                output |= ((message >> (64 - IP[i])) & 0x01) << (63 - i);
+            }
+
+            return output;
+        }
+
+        protected ulong DoFIP(ulong message)
+        {
+            ulong output = 0;
+            for (int i = 0; i < FIP.Length; i++)
+            {
+                output |= ((message >> (64 - FIP[i])) & 0x01) << (63 - i);
+            }
+
+            return output;
         }
 
 
@@ -352,60 +415,6 @@ namespace CryptSharp.Ciphers
             {
                 output[i] = chunk[permutation[i] - 1];
             }
-            return output;
-        }
-
-        protected ulong DoIP(ulong chunk)
-        {
-            ulong output = 0;
-            ulong flag = 0x1;
-            for (int i = 0; i < 64; i++)
-            {
-                ulong bit = (chunk & (flag << (IP[i] - 1))) >> (IP[i] - 1);
-
-                output |= bit << i;
-            }
-
-            return output;
-        }
-        protected ulong DoFIP(ulong chunk)
-        {
-            ulong output = 0;
-            ulong flag = 0x1;
-            for (int i = 0; i < 64; i++)
-            {
-                ulong bit = (chunk & (flag << (FIP[i] - 1))) >> (FIP[i] - 1);
-
-                output |= bit << i;
-            }
-
-            return output;
-        }
-
-        protected ulong DoPC1(ulong key)
-        {
-            ulong output = 0;
-            ulong flag = 0x1;
-            for (int i = 0; i < 56; i++)
-            {
-                ulong bit = (key & (flag << (PC1[i] - 1))) >> (PC1[i] - 1);
-
-                output |= bit << (i + (1 < 28 ? 28 : 0));
-            }
-
-            return output;
-        }
-        protected ulong DoPC2(ulong key)
-        {
-            ulong output = 0;
-            ulong flag = 0x1;
-            for (int i = 0; i < 48; i++)
-            {
-                ulong bit = (key & (flag << (PC2[i] - 1))) >> (PC2[i] - 1);
-
-                output |= bit << i;
-            }
-
             return output;
         }
 
