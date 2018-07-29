@@ -554,45 +554,44 @@ namespace CryptSharp.Test
         }
         
         [TestMethod]
-        public void TestDES()
+        public void Advanced_TestDES()
         {
-            System.Security.Cryptography.DESCryptoServiceProvider des = new System.Security.Cryptography.DESCryptoServiceProvider();
-            try
-            {
-                des.BlockSize = 64;
-                des.Key = new byte[] { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-                des.IV = new byte[] { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-            }
-            catch (Exception ex)
-            {
-                string msg = ex.Message;
-            }
-            //des.Key = new byte[] { 0x0E, 0x32, 0x92, 0x32, 0xEA, 0x6D, 0x0D, 0x73 };
-            //des.Key = new byte[] { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77 };
-
-            //des.Mode = System.Security.Cryptography.CipherMode.ECB;
-
-            System.Security.Cryptography.ICryptoTransform desEncrypt = des.CreateEncryptor(des.Key, des.IV);
-
-            byte[] data = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x41 };
-            //byte[] data = new byte[] { 0x87, 0x87, 0x87, 0x87, 0x87, 0x87, 0x87, 0x87 };// ASCIIEncoding.ASCII.GetBytes("This is my text to be encrypted ");
-            byte[] cipher = new byte[data.Length];
-
-            desEncrypt.TransformBlock(data, 0, data.Length, cipher, 0);
-
-            string cipherText = Convert.ToBase64String(cipher);
-            string y = cipherText;
-
-            //Assert.Equals(cipherText, "ihWfAPOrOjc=");// "uh7BP5LU4J8YTol6JoNe5 /Q71PrnzHRgxjUwGtXbMdE=");
+            byte[] key = BitConverter.GetBytes(0x133457799BBCDFF1);
+            byte[] clear = BitConverter.GetBytes(0x0123456789ABCDEF);
 
             DES d = new DES();
-            d.Key = des.Key;
-            d.IV = des.IV;
-            cipher = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x41 };
-            cipherText = Convert.ToBase64String(d.Encrypt(cipher));
+            d.Mode = Mode.ElectronicCodeBook;
+            d.Key = key;
+            d.IV = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 };
+            byte[] cipherText = d.Encrypt(clear);
 
-            string x = cipherText;
+            ulong output = BitConverter.ToUInt64(cipherText, 0);
 
+            Assert.AreEqual(0x85E813540F0AB405, output);
+
+            output = BitConverter.ToUInt64(d.Decrypt(cipherText), 0);
+            Assert.AreEqual((ulong)0x0123456789ABCDEF, output);
+
+            d.Mode = Mode.ChainBlockCoding;
+            d.Key = key;
+            d.IV = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 };
+            cipherText = d.Encrypt(clear);
+
+            output = BitConverter.ToUInt64(cipherText, 0);
+
+            Assert.AreEqual(0x85E813540F0AB405, output);
+
+            d.Mode = Mode.ChainBlockCoding;
+            d.Key = key;
+            d.IV = clear;
+            cipherText = d.Encrypt(clear);
+
+            output = BitConverter.ToUInt64(cipherText, 0);
+
+            Assert.AreEqual(0x948A43F98A834F7E, output);
+
+            output = BitConverter.ToUInt64(d.Decrypt(cipherText), 0);
+            Assert.AreEqual((ulong)0x0123456789ABCDEF, output);
         }
 
         [TestMethod]

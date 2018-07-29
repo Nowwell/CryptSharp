@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers
 {
+    public enum Mode { ElectronicCodeBook, ChainBlockCoding/*, CipherFeedback*/ };
     public class DES
     {
         public DES()
@@ -19,24 +20,36 @@ namespace CryptSharp.Ciphers
 
         public byte[] IV { get; set; }
 
+        public Mode Mode { get; set; } = Mode.ElectronicCodeBook;
+
         public byte[] Encrypt(byte[] clearText)
         {
-            ulong key = 0x133457799BBCDFF1;
+            //example http://page.math.tu-berlin.de/~kant/teaching/hess/krypto-ws2006/des.htm
+
+            byte[] cipherText = new byte[clearText.Length + clearText.Length % 8];
+
+            //ulong key = 0x0101010100000000;
+            //ulong key = 0x0202020200000000;
+            ulong key = BitConverter.ToUInt64(Key, 0);//  0x133457799BBCDFF1;
+            ulong message = 0;// 0x0123456789ABCDEF;
+            ulong prevmessage = BitConverter.ToUInt64(IV, 0);
 
             ulong[] subkeys = new ulong[17];
             uint[] C = new uint[17];
             uint[] D = new uint[17];
 
-            for(int i = 0; i<=16; i++)
-            {
-                subkeys[i] = ((key << PC1[i]) /*| (key >> (sizeof(ulong) * 8 - PC1[i]))*/ ) & 0x00FFFFFFFFFFFFFF;
+            //get initial key permutation, PC1
+            subkeys[0] = DoPC1(key);
 
-                if(i == 0)
+            //permutate the Lo and Hi parts of the PC1 key
+            for (int i = 0; i <= 16; i++)
+            {
+                if (i == 0)
                 {
-                    C[0] = ((uint)(subkeys[0] & 0x00FFFFFFF0000000) >> 7*8);
+                    C[0] = (uint)((subkeys[0] & 0x00FFFFFFF0000000) >> 28);
                     D[0] = (uint)(subkeys[0] & 0x000000000FFFFFFF);
                 }
-                else if(i == 1 || i ==2 || i == 16 || i == 9)
+                else if (i == 1 || i == 2 || i == 16 || i == 9)
                 {
                     C[i] = (C[i - 1] << 1 | C[i - 1] >> 27) & 0x00FFFFFFF;
                     D[i] = (D[i - 1] << 1 | D[i - 1] >> 27) & 0x00FFFFFFF;
@@ -49,392 +62,209 @@ namespace CryptSharp.Ciphers
 
             }
 
-
-
-
-            return default(byte[]);
-        }
-
-
-        //public byte[] Encrypt(byte[] clearText)
-        //{
-        //    //64 bits at a time to encrypt, 8 bytes - ulong
-        //    //16 rounds
-        //    //ulong key = 0x0E329232EA6D0D73;//133457799BBCDFF1;//0x3b3898371520f75e
-        //    //clearText = BitConverter.GetBytes(0x8787878787878787);
-        //    ulong key = BitConverter.ToUInt64(Key, 0);
-
-        //    ulong flag = 0x01;
-        //    byte[] keyBits = new byte[64];
-        //    byte[] keyBytes = Key;
-        //    //byte[] keyBytes = BitConverter.GetBytes(key);
-        //    for (int i = 0, j = 8; i < 8; i ++)
-        //    {
-        //        while (j-- > 0)
-        //        {
-        //            keyBits[63 - (8 * i + j)] = (byte)((keyBytes[i] & (flag << j)) >> j);
-
-        //        }
-        //        j = 8;
-        //    }
-
-
-        //    byte[] chunk = new byte[64];
-        //    for (int i = 0; i < clearText.Length; i += 8)
-        //    {
-        //        for (int k = i, j = 8; k < i + 8; k++)
-        //        {
-        //            while (j-- > 0)
-        //            {
-        //                if (clearText.Length <= k)
-        //                {
-        //                    //pad with zeroes
-        //                    chunk[63 - (8 * (k - i) + j)] = 0;
-        //                }
-        //                else
-        //                {
-        //                    chunk[63 - (8 * (k - i) + j)] = (byte)((clearText[k] & (flag << j)) >> j);
-        //                }
-
-        //            }
-        //            j = 8;
-        //        }
-
-        //        byte[] next = Permutate(chunk, IP);
-
-        //        byte[] left = new byte[32];
-        //        byte[] right = new byte[32];
-
-        //        Array.Copy(next, 0, left, 0, 32);
-        //        Array.Copy(next, 32, right, 0, 32);
-
-        //        byte[][] keySchedule = new byte[16][];
-        //        byte[] subkey = new byte[56];
-
-        //        subkey = Permutate(keyBits, PC1);
-        //        byte[] c = new byte[28];
-        //        byte[] d = new byte[28];
-        //        Array.Copy(subkey, 0, c, 0, 28);
-        //        Array.Copy(subkey, 28, d, 0, 28);
-        //        for (int j = 0; j < 16; j++)
-        //        {
-        //            //rotate left shift once (upper 28 bits rotated independently of lower 28 bits)
-        //            byte temp = c[0];
-        //            for (int k = 1; k < c.Length; k++)
-        //            {
-        //                c[k - 1] = c[k];
-        //            }
-        //            c[c.Length - 1] = temp;
-
-        //            temp = d[0];
-        //            for (int k = 1; k < c.Length; k++)
-        //            {
-        //                d[k - 1] = d[k];
-        //            }
-        //            d[d.Length - 1] = temp;
-
-
-        //            if (!(j == 0 || j == 1 || j == 8 || j == 15))
-        //            {
-        //                //rotate left shift twice (upper 28 bits rotated independently of lower 28 bits)
-        //                temp = c[0];
-        //                for (int k = 1; k < c.Length; k++)
-        //                {
-        //                    c[k - 1] = c[k];
-        //                }
-        //                c[c.Length - 1] = temp;
-
-        //                temp = d[0];
-        //                for (int k = 1; k < c.Length; k++)
-        //                {
-        //                    d[k - 1] = d[k];
-        //                }
-        //                d[d.Length - 1] = temp;
-        //            }
-
-        //            Array.Copy(c, 0, subkey, 0, 28);
-        //            Array.Copy(d, 0, subkey, 28, 28);
-
-        //            keySchedule[j] = Permutate(subkey, PC2);
-        //        }
-
-
-        //        for (int j = 0; j < 16; j++)
-        //        {
-        //            byte[] e = Permutate(right, EXP);
-        //            for (int k = 0; k < 48; k++)
-        //            {
-        //                e[k] = (byte)(e[k] ^ keySchedule[j][k]);
-        //            }
-
-        //            byte[] sbox = new byte[32];
-        //            int z = 0;
-        //            for (int k = 0; k < 48; k += 6)
-        //            {
-        //                byte y = (byte)(e[k] << 1 | (e[k + 5]));
-        //                byte x = (byte)(e[k + 1] <<3 | (e[k + 2] << 2) | (e[k + 3] << 1) | (e[k + 4]));
-
-        //                byte val = 0;
-        //                if (k / 6 == 0) val = S1[16 * y + x];
-        //                if (k / 6 == 1) val = S2[16 * y + x];
-        //                if (k / 6 == 2) val = S3[16 * y + x];
-        //                if (k / 6 == 3) val = S4[16 * y + x];
-        //                if (k / 6 == 4) val = S5[16 * y + x];
-        //                if (k / 6 == 5) val = S6[16 * y + x];
-        //                if (k / 6 == 6) val = S7[16 * y + x];
-        //                if (k / 6 == 7) val = S8[16 * y + x];
-
-        //                sbox[z++] = (byte)((val & 0x08) >> 3);
-        //                sbox[z++] = (byte)((val & 0x04) >> 2);
-        //                sbox[z++] = (byte)((val & 0x02) >> 1);
-        //                sbox[z++] = (byte)(val & 0x01);
-        //            }
-
-        //            byte[] newR = Permutate(sbox, P);
-
-        //            for (int k = 0; k < 32; k++)
-        //            {
-        //                newR[k] = (byte)(newR[k] ^ left[k]);
-        //            }
-
-        //            Array.Copy(right, 0, left, 0, 32);
-        //            Array.Copy(newR, 0, right, 0, 32);
-        //        }
-
-        //        Array.Copy(left, 0, chunk, 32, 32);
-        //        Array.Copy(right, 0, chunk, 0, 32);
-
-        //        chunk = Permutate(chunk, FIP);
-
-        //        ulong output = 0;
-        //        for (int j = 0; j < 64; j++)
-        //        {
-        //            int shift = 63 - j;
-        //            ulong value = chunk[j];
-
-        //            output += value << shift;
-        //        }
-
-
-        //    }
-        //    //this works above...
-
-
-
-
-
-
-
-
-        //    for (int i = 0; i < clearText.Length; i += 8)
-        //    {
-        //        ulong next = DoIP(BitConverter.ToUInt64(clearText, i));
-
-        //        uint left = (uint)(next >> 32);
-        //        uint right = (uint)(next & 0xFFFFFFFF);
-        //        uint temp = 0;
-
-        //        ulong[] keySchedule = new ulong[16];
-        //        keySchedule[0] = KeySchedule(key, 1);
-        //        keySchedule[1] = KeySchedule(key, 2);
-        //        keySchedule[2] = KeySchedule(key, 3);
-        //        keySchedule[3] = KeySchedule(key, 4);
-        //        keySchedule[4] = KeySchedule(key, 5);
-        //        keySchedule[5] = KeySchedule(key, 6);
-        //        keySchedule[6] = KeySchedule(key, 7);
-        //        keySchedule[7] = KeySchedule(key, 8);
-        //        keySchedule[8] = KeySchedule(key, 9);
-        //        keySchedule[9] = KeySchedule(key, 10);
-        //        keySchedule[10] = KeySchedule(key, 11);
-        //        keySchedule[11] = KeySchedule(key, 12);
-        //        keySchedule[12] = KeySchedule(key, 13);
-        //        keySchedule[13] = KeySchedule(key, 14);
-        //        keySchedule[14] = KeySchedule(key, 15);
-        //        keySchedule[15] = KeySchedule(key, 16);
-
-
-        //        for (int j = 0; j < 16; j++)
-        //        {
-        //            //ulong subkey = KeySchedule(key, j);
-
-        //            temp = f(right, keySchedule[i]) ^ left;
-        //            left = right;
-        //            right = temp;
-        //        }
-
-        //        //TODO make sure these lo and hi values aren't switched.
-        //        ulong cipher = DoFIP((ulong)right + ((ulong)left << 32));
-        //        byte[] cipherBytes = BitConverter.GetBytes(cipher);
-        //        cipherBytes.CopyTo(clearText, i);
-        //    }
-
-        //    return clearText;
-        //}
-        //public string Encrypt(string[] clearText)
-        //{
-        //    //64 bits at a time to encrypt, 8 bytes - ulong
-        //    //16 rounds
-        //    ulong key = BitConverter.ToUInt64(Key, 0);
-        //    byte[] array = Encoding.ASCII.GetBytes(string.Join("", clearText));
-
-        //    for (int i = 0; i < array.Length; i += 4)
-        //    {
-        //        ulong next = DoIP(BitConverter.ToUInt64(array, i));
-
-        //        uint hi = (uint)(next >> 32);
-        //        uint lo = (uint)(next & 0xFFFFFFFF);
-        //        uint temp = 0;
-
-        //        for (int j = 1; j <= 16; j++)
-        //        {
-        //            key = KeySchedule(key, j);
-
-        //            temp = f(hi, key) ^ lo;
-        //            lo = hi;
-        //            hi = temp;
-        //        }
-
-        //        //TODO make sure these lo and hi values aren't switched.
-        //        ulong cipher = DoFIP((ulong)lo + ((ulong)hi << 32));
-        //        byte[] cipherBytes = BitConverter.GetBytes(cipher);
-        //        cipherBytes.CopyTo(array, i);
-        //    }
-
-        //    return ASCIIEncoding.ASCII.GetString(array);
-        //}
-        //public string Encrypt(string clearText, char wordSeparator, char charSeparator)
-        //{
-        //    //64 bits at a time to encrypt, 8 bytes - ulong
-        //    //16 rounds
-        //    ulong key = BitConverter.ToUInt64(Key, 0);
-        //    byte[] array = Encoding.ASCII.GetBytes(clearText);
-
-        //    for (int i = 0; i < array.Length; i += 4)
-        //    {
-        //        ulong next = DoIP(BitConverter.ToUInt64(array, i));
-
-        //        uint hi = (uint)(next >> 32);
-        //        uint lo = (uint)(next & 0xFFFFFFFF);
-        //        uint temp = 0;
-
-        //        for (int j = 16; j >= 1; j--)
-        //        //for (int j = 1; j <= 16; j++)
-        //        {
-        //            key = KeySchedule(key, j);
-
-        //            temp = f(hi, key) ^ lo;
-        //            lo = hi;
-        //            hi = temp;
-        //        }
-
-        //        //TODO make sure these lo and hi values aren't switched.
-        //        ulong cipher = DoFIP((ulong)lo + ((ulong)hi << 32));
-        //        byte[] cipherBytes = BitConverter.GetBytes(cipher);
-        //        cipherBytes.CopyTo(array, i);
-        //    }
-
-        //    return ASCIIEncoding.ASCII.GetString(array);
-        //}
-
-        //public string Decrypt(string[] cipherText)
-        //{
-        //    throw new NotImplementedException();
-        //}
-        //public string Decrypt(string cipherText, char wordSeparator, char charSeparator)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        protected byte[] Permutate(byte[] chunk, byte[] permutation)
-        {
-            byte[] output = new byte[permutation.Length];
-            for (int i = 0; i < permutation.Length; i++)
+            //permutate the keys with PC2, putting the Lo and Hi parts back together again
+            for (int i = 1; i <= 16; i++)
             {
-                output[i] = chunk[permutation[i] - 1];
-            }
-            return output;
-        }
-
-        protected ulong DoIP(ulong chunk)
-        {
-            ulong output = 0;
-            ulong flag = 0x1;
-            for (int i = 0; i < 64; i++)
-            {
-                ulong bit = (chunk & (flag << (IP[i] - 1))) >> (IP[i] - 1);
-
-                output |= bit << i;
+                subkeys[i] = DoPC2((((ulong)C[i]) << 28) | (ulong)D[i]);
             }
 
-            return output;
-        }
-        protected ulong DoFIP(ulong chunk)
-        {
-            ulong output = 0;
-            ulong flag = 0x1;
-            for (int i = 0; i < 64; i++)
-            {
-                ulong bit = (chunk & (flag << (FIP[i] - 1))) >> (FIP[i] - 1);
+            //Do initial permutation (IP) on 64 bits of data
 
-                output |= bit << i;
+            for (int index = 0; index < clearText.Length; index += 8)
+            {
+                message = BitConverter.ToUInt64(clearText, index);
+
+                if(Mode == Mode.ChainBlockCoding)
+                {
+                    message = message ^ prevmessage;
+                }
+
+                ulong ipmess = DoIP(message);
+
+                //previous L and R
+                ulong L = ((ipmess & 0xFFFFFFFF00000000) >> 32);
+                ulong R = (ipmess & 0x00000000FFFFFFFF);
+
+                ulong Ln = 0;//next L
+                ulong Rn = 0;//next R
+
+                //Do the feistel network
+                for (int i = 1; i <= 16; i++)
+                {
+                    Ln = R;
+
+                    Rn = L ^ f((uint)R, subkeys[i]);
+
+                    R = Rn;
+                    L = Ln;
+                }
+
+                message = (R << 32) | L;
+
+                message = DoFIP(message);
+
+                Array.Copy(BitConverter.GetBytes(message), 0, cipherText, index, 8);
+
+                prevmessage = message;
             }
 
-            return output;
+            return cipherText;
+        }
+
+        public byte[] Decrypt(byte[] cipherText)
+        {
+            //example http://page.math.tu-berlin.de/~kant/teaching/hess/krypto-ws2006/des.htm
+
+            byte[] clearText = new byte[cipherText.Length + cipherText.Length % 8];
+
+            //ulong key = 0x0101010100000000;
+            //ulong key = 0x0202020200000000;
+            ulong key = BitConverter.ToUInt64(Key, 0);//  0x133457799BBCDFF1;
+            ulong message = 0;// 0x0123456789ABCDEF;
+            ulong prevmessage = BitConverter.ToUInt64(IV, 0);
+
+            ulong[] subkeys = new ulong[17];
+            uint[] C = new uint[17];
+            uint[] D = new uint[17];
+
+            //get initial key permutation, PC1
+            subkeys[0] = DoPC1(key);
+
+            //permutate the Lo and Hi parts of the PC1 key
+            for (int i = 0; i <= 16; i++)
+            {
+                if (i == 0)
+                {
+                    C[0] = (uint)((subkeys[0] & 0x00FFFFFFF0000000) >> 28);
+                    D[0] = (uint)(subkeys[0] & 0x000000000FFFFFFF);
+                }
+                else if (i == 1 || i == 2 || i == 16 || i == 9)
+                {
+                    C[i] = (C[i - 1] << 1 | C[i - 1] >> 27) & 0x00FFFFFFF;
+                    D[i] = (D[i - 1] << 1 | D[i - 1] >> 27) & 0x00FFFFFFF;
+                }
+                else
+                {
+                    C[i] = (C[i - 1] << 2 | C[i - 1] >> 26) & 0x00FFFFFFF;
+                    D[i] = (D[i - 1] << 2 | D[i - 1] >> 26) & 0x00FFFFFFF;
+                }
+
+            }
+
+            //permutate the keys with PC2, putting the Lo and Hi parts back together again
+            for (int i = 1; i <= 16; i++)
+            {
+                subkeys[i] = DoPC2((((ulong)C[i]) << 28) | (ulong)D[i]);
+            }
+
+            //Do initial permutation (IP) on 64 bits of data
+
+            for (int index = 0; index < cipherText.Length; index += 8)
+            {
+                message = BitConverter.ToUInt64(cipherText, index);
+
+                ulong ipmess = DoIP(message);
+
+                //previous L and R
+                ulong L = ((ipmess & 0xFFFFFFFF00000000) >> 32);
+                ulong R = (ipmess & 0x00000000FFFFFFFF);
+
+                ulong Ln = 0;//next L
+                ulong Rn = 0;//next R
+
+                //Do the feistel network
+                for (int i = 1; i <= 16; i++)
+                {
+                    Ln = R;
+
+                    Rn = L ^ f((uint)R, subkeys[17 - i]);
+
+                    R = Rn;
+                    L = Ln;
+                }
+
+                message = (R << 32) | L;
+
+                message = DoFIP(message);
+
+
+                if (Mode == Mode.ChainBlockCoding)
+                {
+                    message = message ^ prevmessage;
+                }
+
+                Array.Copy(BitConverter.GetBytes(message), 0, clearText, index, 8);
+
+                prevmessage = message;
+            }
+
+            return clearText;
         }
 
         protected ulong DoPC1(ulong key)
         {
             ulong output = 0;
-            ulong flag = 0x1;
-            for (int i = 0; i < 56; i++)
+            for (int i = 0; i < PC1.Length; i++)
             {
-                ulong bit = (key & (flag << (PC1[i] - 1))) >> (PC1[i] - 1);
-
-                output |= bit << (i + (1 < 28 ? 28 : 0));
+                output |= ((key >> (64 - PC1[i])) & 0x01) << (55 - i);
             }
 
             return output;
         }
+
         protected ulong DoPC2(ulong key)
         {
             ulong output = 0;
-            ulong flag = 0x1;
-            for (int i = 0; i < 48; i++)
+            for (int i = 0; i < PC2.Length; i++)
             {
-                ulong bit = (key & (flag << (PC2[i] - 1))) >> (PC2[i] - 1);
-
-                output |= bit << i;
+                output |= ((key >> (56 - PC2[i])) & 0x01) << (47 - i);
             }
 
             return output;
         }
 
-        protected ulong KeySchedule(ulong key, int subkey)
+        protected ulong DoIP(ulong message)
         {
-            key = DoPC1(key);
-            ulong lo = (key & 0xFFFFFFF);
-            ulong hi = ((key & 0xFFFFFFF0000000) >> 28);
-
-            for (int i = 1; i <= subkey; i++)
+            ulong output = 0;
+            for (int i = 0; i < IP.Length; i++)
             {
-                if (i == 1 || i == 2 || i == 9 || i == 16)
-                {
-                    //rotate left shift once (upper 28 bits rotated independently of lower 28 bits)
-                    lo <<= 1;
-                    hi <<= 1;
-                }
-                else
-                {
-                    //rotate left shift twice (upper 28 bits rotated independently of lower 28 bits)
-                    lo <<= 2;
-                    hi <<= 2;
-                }
-                lo = (lo | (lo >> 28)) & 0xFFFFFFF;
-                hi = (hi | (hi >> 28)) & 0xFFFFFFF;
+                output |= ((message >> (64 - IP[i])) & 0x01) << (63 - i);
             }
-            key = lo | (hi << 28);
 
-            return DoPC2(key);
+            return output;
+        }
+
+        protected ulong DoFIP(ulong message)
+        {
+            ulong output = 0;
+            for (int i = 0; i < FIP.Length; i++)
+            {
+                output |= ((message >> (64 - FIP[i])) & 0x01) << (63 - i);
+            }
+
+            return output;
+        }
+
+        protected ulong DoEXP(ulong message)
+        {
+            ulong output = 0;
+            for (int i = 0; i < EXP.Length; i++)
+            {
+                output |= ((message >> (32 - EXP[i])) & 0x01) << (47 - i);
+            }
+
+            return output;
+        }
+
+        protected uint DoP(uint message)
+        {
+            uint output = 0;
+            for (int i = 0; i < P.Length; i++)
+            {
+                output |= ((message >> (32 - P[i])) & 0x01) << (31 - i);
+            }
+
+            return output;
         }
 
         protected uint f(uint L, ulong key)
@@ -443,73 +273,68 @@ namespace CryptSharp.Ciphers
             //L should be 32 bits
 
             //expand L from 32 to 48 bits.
-            ulong e = Expand(L);
+            ulong e = DoEXP(L);
 
-            //XOR expanded L and key
-            ulong forSBoxes = L ^ key;
+            //XOR expanded e and key
+            ulong forSBoxes = e ^ key;
 
             L = 0;
+            ulong temp = 0;
             //Make SBox subsitutions
-            ulong temp = forSBoxes & 0x3F;
+
+            //temp = forSBoxes & 0x3F;
+            temp = (forSBoxes >> 42) & 0x3F;
             byte lo = (byte)(((temp & 0x20) >> 4) + (temp & 0x1));
             byte hi = (byte)((temp & 0x1E) >> 1);
-            L |= S1[lo * 15 + hi];
+            L |= (uint)(S1[lo * 16 + hi] << 28);
 
-            temp = (forSBoxes >>6 )& 0x3F;
-            lo = (byte)(((temp & 0x20) >> 4) + (temp & 0x1));
-            hi = (byte)((temp & 0x1E) >> 1);
-            L |= ((uint)S2[lo * 15 + hi] << 4);
-
-            temp = (forSBoxes >> 12) & 0x3F;
-            lo = (byte)(((temp & 0x20) >> 4) + (temp & 0x1));
-            hi = (byte)((temp & 0x1E) >> 1);
-            L |= ((uint)S3[lo * 15 + hi] << 8);
-
-            temp = (forSBoxes >> 18) & 0x3F;
-            lo = (byte)(((temp & 0x20) >> 4) + (temp & 0x1));
-            hi = (byte)((temp & 0x1E) >> 1);
-            L |= ((uint)S4[lo * 15 + hi] << 12);
-
-            temp = (forSBoxes >> 24) & 0x3F;
-            lo = (byte)(((temp & 0x20) >> 4) + (temp & 0x1));
-            hi = (byte)((temp & 0x1E) >> 1);
-            L |= ((uint)S5[lo * 15 + hi] << 16);
-
-            temp = (forSBoxes >> 30) & 0x3F;
-            lo = (byte)(((temp & 0x20) >> 4) + (temp & 0x1));
-            hi = (byte)((temp & 0x1E) >> 1);
-            L |= ((uint)S6[lo * 15 + hi] << 20);
-
+            //temp = (forSBoxes >>6 )& 0x3F;
             temp = (forSBoxes >> 36) & 0x3F;
             lo = (byte)(((temp & 0x20) >> 4) + (temp & 0x1));
             hi = (byte)((temp & 0x1E) >> 1);
-            L |= ((uint)S7[lo * 15 + hi] << 24);
+            L |= ((uint)S2[lo * 16 + hi] << 24);
 
-            temp = (forSBoxes >> 42) & 0x3F;
+            temp = (forSBoxes >> 30) & 0x3F;
+            //temp = (forSBoxes >> 12) & 0x3F;
             lo = (byte)(((temp & 0x20) >> 4) + (temp & 0x1));
             hi = (byte)((temp & 0x1E) >> 1);
-            L |= ((uint)S8[lo * 15 + hi] << 28);
+            L |= ((uint)S3[lo * 16 + hi] << 20);
+
+            temp = (forSBoxes >> 24) & 0x3F;
+            //temp = (forSBoxes >> 18) & 0x3F;
+            lo = (byte)(((temp & 0x20) >> 4) + (temp & 0x1));
+            hi = (byte)((temp & 0x1E) >> 1);
+            L |= ((uint)S4[lo * 16 + hi] << 16);
+
+            temp = (forSBoxes >> 18) & 0x3F;
+            //temp = (forSBoxes >> 24) & 0x3F;
+            lo = (byte)(((temp & 0x20) >> 4) + (temp & 0x1));
+            hi = (byte)((temp & 0x1E) >> 1);
+            L |= ((uint)S5[lo * 16 + hi] << 12);
+
+            //temp = (forSBoxes >> 30) & 0x3F;
+            temp = (forSBoxes >> 12) & 0x3F;
+            lo = (byte)(((temp & 0x20) >> 4) + (temp & 0x1));
+            hi = (byte)((temp & 0x1E) >> 1);
+            L |= ((uint)S6[lo * 16 + hi] << 8);
+
+            temp = (forSBoxes >> 6) & 0x3F;
+            //temp = (forSBoxes >> 36) & 0x3F;
+            lo = (byte)(((temp & 0x20) >> 4) + (temp & 0x1));
+            hi = (byte)((temp & 0x1E) >> 1);
+            L |= ((uint)S7[lo * 16 + hi] << 4);
+
+            temp = forSBoxes & 0x3F;
+            //temp = (forSBoxes >> 42) & 0x3F;
+            lo = (byte)(((temp & 0x20) >> 4) + (temp & 0x1));
+            hi = (byte)((temp & 0x1E) >> 1);
+            L |= ((uint)S8[lo * 16 + hi]);
             
-            return L;
-        }
-        protected ulong Expand(uint L)
-        {
-            ulong output = 0;
-            ulong flag = 0x1;
-            for (int i = 0; i < 48; i++)
-            {
-                ulong bit = (L & (flag << (EXP[i] - 1))) >> (EXP[i] - 1);
-
-                output |= bit << i;
-            }
-
-            return output;
+            return DoP(L);
         }
 
         #region Static Tables
-        //all of these numbers might be reversed
         // http://page.math.tu-berlin.de/~kant/teaching/hess/krypto-ws2006/des.htm
-        //protected byte[] IP = { 58, 50, 42, 34, 26, 18, 10, 2, 60, 52, 44, 36, 28, 20, 12, 4, 62, 54, 46, 38, 30, 22, 14, 6, 64, 56, 48, 40, 32, 24, 16, 8, 57, 49, 41, 33, 25, 17, 9, 1, 59, 51, 43, 35, 27, 19, 11, 3, 61, 53, 45, 37, 29, 21, 13, 5, 63, 55, 47, 39, 31, 23, 15, 7 };
 
         //Initial Permutation
         protected byte[] IP = {58, 50, 42, 34, 26, 18, 10,  2,
