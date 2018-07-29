@@ -17,6 +17,8 @@ namespace CryptSharp.Ciphers.MultiGraph
         //this reduces the actual key to 56 bits
         public byte[] Key { get; set; }
 
+        public byte[] IV { get; set; }
+
         public byte[] Encrypt(byte[] clearText)
         {
             //64 bits at a time to encrypt, 8 bytes - ulong

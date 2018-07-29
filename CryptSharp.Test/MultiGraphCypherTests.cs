@@ -6,7 +6,7 @@ using CryptSharp.Ciphers.MultiGraph;
 namespace CryptSharp.Test
 {
     [TestClass]
-    public class MultiGraphCyperTests
+    public class MultiGraphCypherTests
     {
         string[] cipher;
         string[] clear;
