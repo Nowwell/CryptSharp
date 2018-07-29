@@ -5,7 +5,7 @@ using CryptSharp.Ciphers;
 namespace CryptSharp.Test
 {
     [TestClass]
-    public class ModernCypherTests
+    public class ModernCipherTests
     {
 
         [TestMethod]
