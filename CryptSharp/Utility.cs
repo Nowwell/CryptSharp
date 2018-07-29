@@ -52,7 +52,7 @@ namespace CryptSharp
                 alphabet = new StringBuilder(key.ToLower());
                 foreach (char c in "abcdefghijklmnopqrstuvwxyz".ToCharArray())
                 {
-                    if (!key.Contains(c))
+                    if (!key.ToLower().Contains(c))
                     {
                         alphabet.Append(c);
                     }
@@ -65,7 +65,7 @@ namespace CryptSharp
             alphabet = new StringBuilder(key.ToUpper());
             foreach (char c in "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray())
             {
-                if (!key.Contains(c))
+                if (!key.ToUpper().Contains(c))
                 {
                     alphabet.Append(c);
                 }
@@ -136,22 +136,6 @@ namespace CryptSharp
             SubstitutionTable.Add("Z", "babbb");
             return SubstitutionTable;
         }
-
-
-        //public static string ScrambleAlphabet(char[] alphabet)
-        //{
-        //    List<char> letters = new List<char>(alphabet);
-        //    StringBuilder scramble = new StringBuilder();
-        //    for (int i = 0; i < alphabet.Length - 1; i++)
-        //    {
-        //        int x = RandomInt();
-        //        scramble.Append(letters[x % letters.Count]);
-        //        letters.RemoveAt(x % letters.Count);
-        //    }
-        //    scramble.Append(letters[0]);
-
-        //    return scramble.ToString();
-        //}
 
         public static Dictionary<char, List<string>> LoadDictionary(string filename = @"texts\dictionary.txt")
         {
