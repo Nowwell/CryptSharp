@@ -556,77 +556,43 @@ namespace CryptSharp.Test
         [TestMethod]
         public void TestDES()
         {
-            //System.Security.Cryptography.DESCryptoServiceProvider des = new System.Security.Cryptography.DESCryptoServiceProvider();
-            //try
-            //{
-            //    des.BlockSize = 64;
-            //    des.Key = new byte[] { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-            //}
-            //catch (Exception ex)
-            //{
-            //    string msg = ex.Message;
-            //}
-            ////des.Key = new byte[] { 0x0E, 0x32, 0x92, 0x32, 0xEA, 0x6D, 0x0D, 0x73 };
-            ////des.Key = new byte[] { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77 };
+            System.Security.Cryptography.DESCryptoServiceProvider des = new System.Security.Cryptography.DESCryptoServiceProvider();
+            try
+            {
+                des.BlockSize = 64;
+                des.Key = new byte[] { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+                des.IV = new byte[] { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.Message;
+            }
+            //des.Key = new byte[] { 0x0E, 0x32, 0x92, 0x32, 0xEA, 0x6D, 0x0D, 0x73 };
+            //des.Key = new byte[] { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77 };
 
             //des.Mode = System.Security.Cryptography.CipherMode.ECB;
 
-            //System.Security.Cryptography.ICryptoTransform desEncrypt = des.CreateEncryptor();
-
-            //byte[] data = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x41 };
-            //byte[] data = new byte[] { 0x87, 0x87, 0x87, 0x87, 0x87, 0x87, 0x87, 0x87 };// ASCIIEncoding.ASCII.GetBytes("This is my text to be encrypted ");
-            //byte[] cipher = new byte[data.Length];
-
-            //desEncrypt.TransformBlock(data, 0, data.Length, cipher, 0);
-
-            //string cipherText = Convert.ToBase64String(cipher);
-
-            //Assert.Equals(cipherText, "uh7BP5LU4J8YTol6JoNe5/Q71PrnzHRgxjUwGtXbMdE=");
-
-            byte[] PC1 = {57, 49, 41, 33, 25, 17,  9,
-                                 1, 58, 50, 42, 34, 26, 18,
-                                10,  2, 59, 51, 43, 35, 27,
-                                19, 11,  3, 60, 52, 44, 36,
-                                63, 55, 47, 39, 31, 23, 15,
-                                 7, 62, 54, 46, 38, 30, 22,
-                                14,  6, 61, 53, 45, 37, 29,
-                                21, 13,  5, 28, 20, 12,  4};
-
-            byte[] reshuffle = new byte[64];
-            for (int i = 0; i < reshuffle.Length; i++)
-            {
-                reshuffle[i] = 255;
-            }
-
-
-            for (byte i = 0; i < (byte)PC1.Length; i++)
-            {
-                reshuffle[PC1[i] - 1] = i;
-            }
-
-
-
+            System.Security.Cryptography.ICryptoTransform desEncrypt = des.CreateEncryptor(des.Key, des.IV);
 
             byte[] data = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x41 };
-            DES myDes = new DES();
-            myDes.Key = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 };
+            //byte[] data = new byte[] { 0x87, 0x87, 0x87, 0x87, 0x87, 0x87, 0x87, 0x87 };// ASCIIEncoding.ASCII.GetBytes("This is my text to be encrypted ");
+            byte[] cipher = new byte[data.Length];
 
-            byte[] output = myDes.Encrypt(data);
+            desEncrypt.TransformBlock(data, 0, data.Length, cipher, 0);
 
-            data = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x41 };
-            myDes.Key = new byte[] { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-            output = myDes.Encrypt(data);
+            string cipherText = Convert.ToBase64String(cipher);
+            string y = cipherText;
 
-            data = new byte[] { 0x41, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-            myDes.Key = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 };
-            output = myDes.Encrypt(data);
+            //Assert.Equals(cipherText, "ihWfAPOrOjc=");// "uh7BP5LU4J8YTol6JoNe5 /Q71PrnzHRgxjUwGtXbMdE=");
 
-            data = new byte[] { 0x41, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-            myDes.Key = new byte[] { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-            output = myDes.Encrypt(data);
+            DES d = new DES();
+            d.Key = des.Key;
+            d.IV = des.IV;
+            cipher = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x41 };
+            cipherText = Convert.ToBase64String(d.Encrypt(cipher));
 
+            string x = cipherText;
 
-            //86fa100681eb8814
         }
 
         [TestMethod]
