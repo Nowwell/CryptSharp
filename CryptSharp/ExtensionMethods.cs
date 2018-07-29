@@ -19,13 +19,15 @@ namespace CryptSharp
 
         public static string[] ToStringArray(this char[] array)
         {
-            string[] ret = new string[array.Length];
-            for(int i=0; i<array.Length; i++)
-            {
-                ret[i] = array[i].ToString();
-            }
+            return array.Select(c => c.ToString()).ToArray();
 
-            return ret;
+            //string[] ret = new string[array.Length];
+            //for(int i=0; i<array.Length; i++)
+            //{
+            //    ret[i] = array[i].ToString();
+            //}
+
+            //return ret;
         }
     }
 

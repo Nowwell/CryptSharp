@@ -13,7 +13,6 @@ namespace CryptSharp
         protected static readonly RandomNumberGenerator rng = new RNGCryptoServiceProvider();
 
         #region Text Utility
-
         public static string[] StringToStringArray(string str)
         {
             return str.ToCharArray().Select(c => c.ToString()).ToArray();
@@ -52,7 +51,7 @@ namespace CryptSharp
                 alphabet = new StringBuilder(key.ToLower());
                 foreach (char c in "abcdefghijklmnopqrstuvwxyz".ToCharArray())
                 {
-                    if (!key.Contains(c))
+                    if (!key.ToLower().Contains(c))
                     {
                         alphabet.Append(c);
                     }
@@ -65,7 +64,7 @@ namespace CryptSharp
             alphabet = new StringBuilder(key.ToUpper());
             foreach (char c in "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray())
             {
-                if (!key.Contains(c))
+                if (!key.ToUpper().Contains(c))
                 {
                     alphabet.Append(c);
                 }
@@ -105,54 +104,6 @@ namespace CryptSharp
             return "F U TH O R C G W H N I J EO P X S T B E M L NG OE D A AE Y IA EA".Split(' ');
         }
 
-        public Dictionary<string, string> GenerateGenericBaconaianTableForEnglish()
-        {
-            Dictionary<string, string> SubstitutionTable = new Dictionary<string, string>();
-            SubstitutionTable.Add("A", "aaaaa");
-            SubstitutionTable.Add("B", "aaaab");
-            SubstitutionTable.Add("C", "aaaba");
-            SubstitutionTable.Add("D", "aaabb");
-            SubstitutionTable.Add("E", "aabaa");
-            SubstitutionTable.Add("F", "aabab");
-            SubstitutionTable.Add("G", "aabba");
-            SubstitutionTable.Add("H", "aabbb");
-            SubstitutionTable.Add("I", "abaaa");
-            SubstitutionTable.Add("J", "abaaa");
-            SubstitutionTable.Add("K", "abaab");
-            SubstitutionTable.Add("L", "ababa");
-            SubstitutionTable.Add("M", "ababb");
-            SubstitutionTable.Add("N", "abbaa");
-            SubstitutionTable.Add("O", "abbab");
-            SubstitutionTable.Add("P", "abbba");
-            SubstitutionTable.Add("Q", "abbbb");
-            SubstitutionTable.Add("R", "baaaa");
-            SubstitutionTable.Add("S", "baaab");
-            SubstitutionTable.Add("T", "baaba");
-            SubstitutionTable.Add("U", "baabb");
-            SubstitutionTable.Add("V", "baabb");
-            SubstitutionTable.Add("W", "babaa");
-            SubstitutionTable.Add("X", "babab");
-            SubstitutionTable.Add("Y", "babba");
-            SubstitutionTable.Add("Z", "babbb");
-            return SubstitutionTable;
-        }
-
-
-        //public static string ScrambleAlphabet(char[] alphabet)
-        //{
-        //    List<char> letters = new List<char>(alphabet);
-        //    StringBuilder scramble = new StringBuilder();
-        //    for (int i = 0; i < alphabet.Length - 1; i++)
-        //    {
-        //        int x = RandomInt();
-        //        scramble.Append(letters[x % letters.Count]);
-        //        letters.RemoveAt(x % letters.Count);
-        //    }
-        //    scramble.Append(letters[0]);
-
-        //    return scramble.ToString();
-        //}
-
         public static Dictionary<char, List<string>> LoadDictionary(string filename = @"texts\dictionary.txt")
         {
             Dictionary<char, List<string>> dictionary = new Dictionary<char, List<string>>();
@@ -178,7 +129,6 @@ namespace CryptSharp
             }
             return dictionary;
         }
-
         #endregion
 
         #region Random
