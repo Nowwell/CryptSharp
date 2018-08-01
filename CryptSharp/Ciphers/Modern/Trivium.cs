@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptSharp.Ciphers
+namespace CryptSharp.Ciphers.Modern
 {
     public class Trivium
     {
@@ -56,34 +56,20 @@ namespace CryptSharp.Ciphers
 
             for (int i = 0; i < 4 * 288; i++)
             {
-
+                t1 = (byte)(BitAtPosition(66) ^ (BitAtPosition(91) & BitAtPosition(92)) ^ BitAtPosition(66) ^ BitAtPosition(171));
+                t2 = (byte)(BitAtPosition(162) ^ (BitAtPosition(175) & BitAtPosition(176)) ^ BitAtPosition(177) ^ BitAtPosition(264));
+                t3 = (byte)(BitAtPosition(243) ^ (BitAtPosition(286) & BitAtPosition(287)) ^ BitAtPosition(288) ^ BitAtPosition(69));
 
                 state = ShiftLeft(state, t3);
-                state[11] |= (byte)(t1 << 5);
-                state[22] |= (byte)(t2 << 2);
+                state[11] |= (byte)(t1 << 4);
+                state[22] |= (byte)(t2 << 0);
             }
-
-
 
             return default(byte[]);
         }
 
         public byte[] RequestKeyStreamBits(int N)
         {
-            /*
-            for i = 1 to N do
-                t1 ← s66 + s93
-                t2 ← s162 + s177
-                t3 ← s243 + s288
-                zi ← t1 + t2 + t3
-                t1 ← t1 + s91 · s92 + s171
-                t2 ← t2 + s175 · s176 + s264
-                t3 ← t3 + s286 · s287 + s69
-                (s1, s2, . . . , s93) ← (t3, s1, . . . , s92)
-                (s94, s95, . . . , s177) ← (t1, s94, . . . , s176)
-                (s178, s279, . . . , s288) ← (t2, s178, . . . , s287)
-            end for            */
-
             if (N > Math.Pow(2, 64)) throw new Exception("Requested Key Stream bits must be N <= 2^64");
 
             byte[] keyStream = new byte[(int)Math.Ceiling(N / 8.0)];
@@ -92,21 +78,42 @@ namespace CryptSharp.Ciphers
             byte t3 = 0;
             for(int i=0; i<N; i++)
             {
-                t1 = (byte)(((state[7] >> 2) & 0x01) ^ ((state[11] >> 5) & 0x01));
+                t1 = (byte)(BitAtPosition(66) ^ BitAtPosition(93));
+                t2 = (byte)(BitAtPosition(162) ^ BitAtPosition(177));
+                t3 = (byte)(BitAtPosition(243) ^ BitAtPosition(288));
 
                 keyStream[i / 8] |= (byte)((t1 ^ t2 ^ t3) << (i - (i / 8) * 8));
 
-                t1 = (byte)(t1 ^ (((state[11] >> 3) & 0x01) & ((state[11] >> 4) & 0x01)) ^ ((state[20] >> 3) & 0x01));
-                t2 = (byte)(t2 ^ (((state[22] >> 0) & 0x01) & ((state[22] >> 1) & 0x01)) ^ ((state[32] >> 0) & 0x01));
-                t3 = (byte)(t3 ^ (((state[35] >> 6) & 0x01) & ((state[35] >> 7) & 0x01)) ^ ((state[ 7] >> 6) & 0x01));
+                t1 = (byte)(t1 ^ (BitAtPosition(91) & BitAtPosition(92)) ^ BitAtPosition(171));
+                t2 = (byte)(t2 ^ (BitAtPosition(175) & BitAtPosition(176)) ^ BitAtPosition(264));
+                t3 = (byte)(t3 ^ (BitAtPosition(286) & BitAtPosition(287)) ^ BitAtPosition(69));
 
                 state = ShiftLeft(state, t3);
-                state[11] |= (byte)(t1 << 5);
-                state[22] |= (byte)(t2 << 2);
+                state[11] |= (byte)(t1 << 4);
+                state[22] |= (byte)(t2 << 0);
             }
 
             return keyStream;
         }
 
+        protected int IndexFromBitPosition(int pos)
+        {
+            return (int)Math.Floor((pos - 1.0) / 8.0);
+        }
+
+        protected int ShiftFromBitPosition(int pos)
+        {
+            return (pos - 1) % 8;
+        }
+
+        protected byte BitAtPosition(int pos)
+        {
+            return (byte)((state[IndexFromBitPosition(pos)] >> ShiftFromBitPosition(pos)) & 0x01);
+        }
+
+        protected int PositionFromByteAndOffset(int b, int o)
+        {
+            return b * 8 + o + 1;
+        }
     }
 }

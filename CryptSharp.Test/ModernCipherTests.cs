@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CryptSharp.Ciphers;
+using CryptSharp.Ciphers.Modern;
 
 namespace CryptSharp.Test
 {
