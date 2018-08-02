@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers.Modern
 {
-    public class Trivium : ICipher
+    public class Trivium : IModernCipher
     {
         //http://www.ecrypt.eu.org/stream/p3ciphers/trivium/trivium_p3.pdf
 

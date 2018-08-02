@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptSharp.Ciphers
+namespace CryptSharp.Ciphers.Classical
 {
-    public class Bifid : CipherBase<char>, ICipher
+    public class Bifid : CipherBase<char>, IClassicalCipher
     {
         public Bifid(char[] Alphabet) : base(Alphabet)
         {

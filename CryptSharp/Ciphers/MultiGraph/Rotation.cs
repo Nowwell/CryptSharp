@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers.MultiGraph
 {
-    public class Rotation : CipherBase<string>, ICipher
+    public class Rotation : CipherBase<string>, IMultigraphCipher
     {
         protected Dictionary<string, int> charIndexPositions = new Dictionary<string, int>();
 

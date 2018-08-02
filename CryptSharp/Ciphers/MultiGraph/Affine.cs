@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers.MultiGraph
 {
-    public class Affine : CipherBase<string>, ICipher
+    public class Affine : CipherBase<string>, IMultigraphCipher
     {
         //protected string[] alphabet;
         protected Dictionary<string, int> charIndexPositions = new Dictionary<string, int>();
