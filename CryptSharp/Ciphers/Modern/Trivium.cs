@@ -11,8 +11,8 @@ namespace CryptSharp.Ciphers.Modern
         //http://www.ecrypt.eu.org/stream/p3ciphers/trivium/trivium_p3.pdf
 
         byte[] state = new byte[36];
-        byte[] IV = new byte[10];
-        byte[] key = new byte[10];
+        public byte[] IV = new byte[10];
+        public byte[] key = new byte[10];
 
         protected byte[] ShiftLeft(byte[] state, byte newBit)
         {
@@ -97,21 +97,20 @@ namespace CryptSharp.Ciphers.Modern
             return keyStream;
         }
 
+
+
         protected int IndexFromBitPosition(int pos)
         {
             return (int)Math.Floor((pos - 1.0) / 8.0);
         }
-
         protected int ShiftFromBitPosition(int pos)
         {
             return (pos - 1) % 8;
         }
-
         protected byte BitAtPosition(int pos)
         {
             return (byte)((state[IndexFromBitPosition(pos)] >> ShiftFromBitPosition(pos)) & 0x01);
         }
-
         protected int PositionFromByteAndOffset(int b, int o)
         {
             return b * 8 + o + 1;

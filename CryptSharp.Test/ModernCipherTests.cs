@@ -96,10 +96,12 @@ namespace CryptSharp.Test
         {
             Stream str = new Stream(Utility.EnglishAlphabetAsStrings());
 
-            str.Registers = new Components.LinearFeedbackShiftRegister(0xACE1, 16);
+            str.Registers = new Components.LinearFeedbackShiftRegister(0xACE1, 16);//key is effectively 0xACE1
             string[] cipher = str.Encrypt("A B C D E F".Split(' '));
 
-            str.Registers = new Components.LinearFeedbackShiftRegister(0xACE1, 16);
+            CollectionAssert.AreNotEqual("A B C D E F".Split(' '), cipher);
+
+            str.Registers = new Components.LinearFeedbackShiftRegister(0xACE1, 16);//key is effectively 0xACE1
             string[] clear = str.Decrypt(cipher);
 
             CollectionAssert.AreEqual("A B C D E F".Split(' '), clear);
@@ -112,10 +114,18 @@ namespace CryptSharp.Test
             str.Key = new byte[] { 0xC1, 0xF2, 0x03, 0xA4, 0x05, 0x06, 0xB7, 0x08 };
 
             string[] cipher = str.Encrypt("A B C D E F".Split(' '));
+
+            CollectionAssert.AreNotEqual("A B C D E F".Split(' '), cipher);
+
             string[] clear = str.Encrypt(cipher);
 
-
             CollectionAssert.AreEqual("A B C D E F".Split(' '), clear);
+        }
+
+        [TestMethod]
+        public void Modern_Trivium()
+        {
+
         }
     }
 }
