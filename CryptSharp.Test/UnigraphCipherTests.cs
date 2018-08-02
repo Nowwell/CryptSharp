@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using CryptSharp;
-using CryptSharp.Ciphers;
+using CryptSharp.Ciphers.Classical;
 using System.Text;
 using System.Collections.Generic;
 

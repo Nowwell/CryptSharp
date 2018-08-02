@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers.MultiGraph
 {
-    public class Baconian : CipherBase<string>, ICipher
+    public class Baconian : CipherBase<string>, IMultigraphCipher
     {
         protected Dictionary<string, int> charIndexPositions = new Dictionary<string, int>();
         public Baconian(string[] Alphabet) : base(Alphabet)

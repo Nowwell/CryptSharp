@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers.MultiGraph
 {
-    public class RailFence : CipherBase<string>, ICipher
+    public class RailFence : CipherBase<string>, IMultigraphCipher
     {
         protected Dictionary<string, int> charIndexPositions = new Dictionary<string, int>();
         public RailFence(string[] Alphabet) : base(Alphabet)

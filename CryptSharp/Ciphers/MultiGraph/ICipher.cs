@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers.MultiGraph
 {
-    public interface ICipher
+    public interface IMultigraphCipher
     {
         //string Encrypt(string clearText, string alphabet);
         //string Encrypt(string clearText, string alphabet);

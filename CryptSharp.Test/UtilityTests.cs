@@ -114,7 +114,7 @@ namespace CryptSharp.Test
         [TestMethod]
         public void Utility_StringToStringArray()
         {
-            CryptSharp.Ciphers.Affine affine = new CryptSharp.Ciphers.Affine(Utility.KeyedEnglishAlphabet("KRYPTOS"));
+            CryptSharp.Ciphers.Classical.Affine affine = new CryptSharp.Ciphers.Classical.Affine(Utility.KeyedEnglishAlphabet("KRYPTOS"));
             affine.A = 3;
             affine.B = 7;
 

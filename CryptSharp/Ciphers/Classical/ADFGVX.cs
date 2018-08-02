@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptSharp.Ciphers
+namespace CryptSharp.Ciphers.Classical
 {
-    public class ADFGX : CipherBase<char>, ICipher
+    public class ADFGVX : CipherBase<char>, IClassicalCipher
     {
-        public ADFGX(char[] Alphabet) : base(Alphabet)
+        public ADFGVX(char[] Alphabet) : base(Alphabet)
         {
             Key = alphabet[0].ToString();
         }
-        public ADFGX(char[] Alphabet, string key, char[] square) : base(Alphabet)
+        public ADFGVX(char[] Alphabet, string key, char[] square) : base(Alphabet)
         {
             Key = key;
             Square = square;
@@ -24,8 +24,8 @@ namespace CryptSharp.Ciphers
         public string Decrypt(string cipherText)
         {
             Polybius poly = new Polybius(alphabet);
-            poly.RowHeaders = new char[] { 'A', 'D', 'F', 'G', 'X' };
-            poly.ColumnHeaders = new char[] { 'A', 'D', 'F', 'G', 'X' };
+            poly.RowHeaders = new char[] { 'A', 'D', 'F', 'G', 'V', 'X' };
+            poly.ColumnHeaders = new char[] { 'A', 'D', 'F', 'G', 'V', 'X' };
             poly.Square = Square;
 
             Columnar column = new Columnar(alphabet);
@@ -42,8 +42,8 @@ namespace CryptSharp.Ciphers
         public string Encrypt(string clearText)
         {
             Polybius poly = new Polybius(alphabet);
-            poly.RowHeaders = new char[] { 'A', 'D', 'F', 'G', 'X' };
-            poly.ColumnHeaders = new char[] { 'A', 'D', 'F', 'G', 'X' };
+            poly.RowHeaders = new char[] { 'A', 'D', 'F', 'G', 'V', 'X' };
+            poly.ColumnHeaders = new char[] { 'A', 'D', 'F', 'G', 'V', 'X' };
             poly.Square = Square;
 
             Columnar column = new Columnar(alphabet);

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers.Modern
 {
-    public interface ICipher
+    public interface IModernCipher
     {
         byte[] Encrypt(byte[] clearText);
         byte[] Encrypt(string clearText, char wordSeparator, char charSeparator);
