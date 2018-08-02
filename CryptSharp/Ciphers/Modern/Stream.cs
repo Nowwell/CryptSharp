@@ -37,9 +37,15 @@ namespace CryptSharp.Ciphers.Modern
                 {
                     if (Registers != null)
                     {
-                        bit = Registers.Shift();
+                        //it's easier to block up the stream in 8 bit chunks
 
-                        clear[i] = (byte)(clear[i] ^ Key[((k++) % Key.Length)]);
+                        bit = 0;
+                        for(int j=0; j<8; j++)
+                            bit |= Registers.Shift(new byte[] { 11, 9, 1 }) << j;
+
+                        clear[i] = (byte)(clear[i] ^ bit);
+
+                        //clear[i] = (byte)(clear[i] ^ Key[((k++) % Key.Length)]);
                     }
                     else
                     {
@@ -71,9 +77,15 @@ namespace CryptSharp.Ciphers.Modern
                 {
                     if (Registers != null)
                     {
-                        bit = Registers.Shift();
+                        //it's easier to block up the stream in 8 bit chunks
 
-                        clear[i] = (byte)(clear[i] ^ Key[((k++) % Key.Length)]);
+                        bit = 0;
+                        for (int j = 0; j < 8; j++)
+                            bit |= Registers.Shift(new byte[] { 11, 9, 1 }) << j;
+
+                        clear[i] = (byte)(clear[i] ^ bit);
+
+                        //clear[i] = (byte)(clear[i] ^ Key[((k++) % Key.Length)]);
                     }
                     else
                     {

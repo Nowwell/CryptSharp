@@ -45,7 +45,8 @@ namespace CryptSharp.Ciphers.Modern
                 (s1, s2, . . . , s93) ← (t3, s1, . . . , s92)
                 (s94, s95, . . . , s177) ← (t1, s94, . . . , s176)
                 (s178, s279, . . . , s288) ← (t2, s178, . . . , s287)
-            end for            */
+            end for
+            */
             Array.Copy(key, state, 10);
             Array.Copy(iv, 0, state, 11, 10);//TODO Fix
             state[35] = 0xE0;

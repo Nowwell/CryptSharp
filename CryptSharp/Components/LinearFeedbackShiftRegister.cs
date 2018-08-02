@@ -39,7 +39,7 @@ namespace CryptSharp.Components
         }
 
         /// <summary>
-        /// Assumes 16 registers
+        /// Assumes 16 registers.
         /// </summary>
         /// <returns></returns>
         public byte GaloisShift()
@@ -51,11 +51,23 @@ namespace CryptSharp.Components
             return (byte)leastSigBit;
         }
 
-        public byte Shift()
+        /// <summary>
+        /// Shift.  Algorithm handles at most 64 registers
+        /// </summary>
+        /// <param name="polyomial">list of exponents that correspond to bit positions</param>
+        /// <returns></returns>
+        public byte Shift(byte[] polyomial)
         {
+            ulong ret = Registers >> polyomial[0];
+            for (int i = 1; i < polyomial.Length; i++)
+            {
+                ret = ret ^ (Registers >> polyomial[i]);
+            }
+            ret = ret & 1;
 
+            Registers = (Registers >> 1) | (ret << (NumberOfRegisters - 1));
 
-            return 0;
+            return (byte)ret;
         }
 
     }
