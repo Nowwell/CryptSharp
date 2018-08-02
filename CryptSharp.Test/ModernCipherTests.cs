@@ -1,13 +1,12 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CryptSharp.Ciphers;
+using CryptSharp.Ciphers.Modern;
 
 namespace CryptSharp.Test
 {
     [TestClass]
     public class ModernCipherTests
     {
-
         [TestMethod]
         public void Modern_DESTest()
         {
@@ -92,5 +91,57 @@ namespace CryptSharp.Test
 
         }
 
+        [TestMethod]
+        public void Modern_StreamTest_LFSR()
+        {
+            Stream str = new Stream(Utility.EnglishAlphabetAsStrings());
+
+            str.Registers = new Components.LinearFeedbackShiftRegister(0xACE1, 16);//key is effectively 0xACE1
+            string[] cipher = str.Encrypt("A B C D E F".Split(' '));
+
+            CollectionAssert.AreNotEqual("A B C D E F".Split(' '), cipher);
+
+            str.Registers = new Components.LinearFeedbackShiftRegister(0xACE1, 16);//key is effectively 0xACE1
+            string[] clear = str.Decrypt(cipher);
+
+            CollectionAssert.AreEqual("A B C D E F".Split(' '), clear);
+        }
+
+        [TestMethod]
+        public void Modern_StreamTest_Key()
+        {
+            Stream str = new Stream(Utility.EnglishAlphabetAsStrings());
+            str.Key = new byte[] { 0xC1, 0xF2, 0x03, 0xA4, 0x05, 0x06, 0xB7, 0x08 };
+
+            string[] cipher = str.Encrypt("A B C D E F".Split(' '));
+
+            CollectionAssert.AreNotEqual("A B C D E F".Split(' '), cipher);
+
+            string[] clear = str.Encrypt(cipher);
+
+            CollectionAssert.AreEqual("A B C D E F".Split(' '), clear);
+        }
+
+        [TestMethod]
+        public void Modern_Trivium()
+        {
+            byte[] Key = new byte[10];
+            byte[] IV = new byte[10];
+            for(int i=0; i<10; i++)
+            {
+                Key[i] = 0xEF;
+                IV[i] = 0xEF;
+            }
+            Trivium tri = new Trivium(Key, IV);
+
+            byte[] cipher = tri.Encrypt(new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06 });
+
+            CollectionAssert.AreNotEqual(new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06 }, cipher);
+
+            tri.ResetState();
+            byte[] clear = tri.Decrypt(cipher);
+
+            CollectionAssert.AreEqual(new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06 }, clear);
+        }
     }
 }
