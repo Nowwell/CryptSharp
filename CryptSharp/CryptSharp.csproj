@@ -55,6 +55,7 @@
     <Compile Include="Ciphers\Columnar.cs" />
     <Compile Include="Ciphers\FourSquare.cs" />
     <Compile Include="Ciphers\Hill.cs" />
+    <Compile Include="Ciphers\Modern\ICipher.cs" />
     <Compile Include="Ciphers\Playfair.cs" />
     <Compile Include="Ciphers\Skip.cs" />
     <Compile Include="Ciphers\Trifid.cs" />
@@ -66,7 +67,7 @@
     <Compile Include="Ciphers\MultiGraph\ICipher.cs" />
     <Compile Include="Ciphers\MultiGraph\Baconian.cs" />
     <Compile Include="Ciphers\MultiGraph\Polybius.cs" />
-    <Compile Include="Ciphers\MultiGraph\Stream.cs" />
+    <Compile Include="Ciphers\Modern\Stream.cs" />
     <Compile Include="Ciphers\MultiGraph\Substitution.cs" />
     <Compile Include="Ciphers\Polybius.cs" />
     <Compile Include="Ciphers\Porta.cs" />

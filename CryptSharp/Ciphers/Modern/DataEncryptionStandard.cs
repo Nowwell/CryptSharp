@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptSharp.Ciphers
+namespace CryptSharp.Ciphers.Modern
 {
     public enum Mode { ElectronicCodeBook, ChainBlockCoding/*, CipherFeedback*/ };
     public class DES
