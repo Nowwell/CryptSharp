@@ -55,6 +55,7 @@
     <Compile Include="Ciphers\Columnar.cs" />
     <Compile Include="Ciphers\FourSquare.cs" />
     <Compile Include="Ciphers\Hill.cs" />
+    <Compile Include="Ciphers\Modern\ICipher.cs" />
     <Compile Include="Ciphers\Playfair.cs" />
     <Compile Include="Ciphers\Skip.cs" />
     <Compile Include="Ciphers\Trifid.cs" />

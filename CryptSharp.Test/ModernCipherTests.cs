@@ -125,7 +125,23 @@ namespace CryptSharp.Test
         [TestMethod]
         public void Modern_Trivium()
         {
+            byte[] Key = new byte[10];
+            byte[] IV = new byte[10];
+            for(int i=0; i<10; i++)
+            {
+                Key[i] = 0xEF;
+                IV[i] = 0xEF;
+            }
+            Trivium tri = new Trivium(Key, IV);
 
+            byte[] cipher = tri.Encrypt(new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06 });
+
+            CollectionAssert.AreNotEqual(new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06 }, cipher);
+
+            tri.ResetState();
+            byte[] clear = tri.Decrypt(cipher);
+
+            CollectionAssert.AreEqual(new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06 }, clear);
         }
     }
 }
