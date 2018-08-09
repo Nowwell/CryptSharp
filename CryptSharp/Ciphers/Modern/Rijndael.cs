@@ -45,38 +45,70 @@ namespace CryptSharp.Ciphers.Modern
             int r = 4;
             int Nb = blockLength / 32;
 
+            int numberOfBlocks = input.Length / (r * Nb);
+
+            int padding = (r * Nb) - input.Length % (r * Nb);
+            if (padding == (r * Nb)) padding = 0;
+
+            if (padding != 0) numberOfBlocks++;
+
+            byte[] output = new byte[input.Length + padding];
+
             state = new byte[r, Nb];
 
-            for (int i = 0; i < r; i++)
+            //If we have an IV, seed the state with it
+            if (IV != null)
             {
-                for (int j = 0; j < Nb; j++)
+                for (int i = 0; i < r; i++)
                 {
-                    state[i, j] = input[i + 4 * j];
+                    for (int j = 0; j < Nb; j++)
+                    {
+                        state[i, j] = IV[i + 4 * j];
+                    }
                 }
             }
 
-            state = AddRoundKey(state, r, Nb, 0);
-
-            for (int i = 1; i < Nr; i++)
+            //state = new byte[r, Nb];
+            for (int block = 0; block < numberOfBlocks; block++)
             {
+                for (int i = 0; i < r; i++)
+                {
+                    for (int j = 0; j < Nb; j++)
+                    {
+                        //If we have an IV, XOR the output with the new input block
+                        if (i + 4 * j + (r * Nb * block) >= input.Length)
+                        {
+                            state[i, j] = (byte)(padding ^ (IV == null ? 0 : state[i, j]));
+                        }
+                        else
+                        {
+                            state[i, j] = (byte)(input[i + 4 * j + (r * Nb * block)] ^ (IV == null ? 0 : state[i, j]));
+                        }
+                    }
+                }
+
+                state = AddRoundKey(state, r, Nb, 0);
+
+                for (int i = 1; i < Nr; i++)
+                {
+                    state = SubBytes(state, r, Nb);
+                    state = ShiftRows(state, r, Nb);
+                    state = MixColumns(state, r, Nb);
+                    state = AddRoundKey(state, r, Nb, i);
+                }
+
                 state = SubBytes(state, r, Nb);
                 state = ShiftRows(state, r, Nb);
-                state = MixColumns(state, r, Nb);
-                state = AddRoundKey(state, r, Nb, i);
-            }
-
-            state = SubBytes(state, r, Nb);
-            state = ShiftRows(state, r, Nb);
-            state = AddRoundKey(state, r, Nb, Nr);
+                state = AddRoundKey(state, r, Nb, Nr);
 
 
-            byte[] output = new byte[r * Nb];
 
-            for (int i = 0; i < r; i++)
-            {
-                for (int j = 0; j < Nb; j++)
+                for (int i = 0; i < r; i++)
                 {
-                    output[i + 4 * j] = state[i, j];
+                    for (int j = 0; j < Nb; j++)
+                    {
+                        output[i + 4 * j + (r * Nb * block)] = state[i, j];
+                    }
                 }
             }
 
