@@ -30,6 +30,7 @@ namespace CryptSharp.Ciphers.Modern
 
             }
         }
+        public byte[] IV { get; set; }
 
         int Nk;//=Key.Length in bits / 32 bits
         int Nb = 4;//constant for AES spec
