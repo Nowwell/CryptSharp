@@ -50,9 +50,9 @@ namespace CryptSharp.Ciphers.Modern
 
         public byte[] IV { get; set; }
 
-        int Nk;//=Key.Length in bits / 32 bits
-        int Nb = 4;//constant for AES spec
-        int Nr = 10;//128 keysize = 10, 192=12, 256=14 - number of rounds
+        int Nk = 0;//=Key.Length in bits / 32 bits
+        int Nb = 0;//constant for AES spec
+        int Nr = 0;//128 keysize = 10, 192=12, 256=14 - number of rounds
 
         uint[] w;
 
@@ -60,8 +60,10 @@ namespace CryptSharp.Ciphers.Modern
 
         public byte[] Encrypt(byte[] input)
         {
-            int r = 4;
+            int r = 4;//height in bytes of state matrix
             int Nb = blockLength / 32;
+
+            if (input.Length != blockLength / 8) throw new Exception("Input length not equal to block length");
 
             Nr = 10;
             if (Nb == 6 || Nk == 6) Nr = 12;
@@ -242,24 +244,9 @@ namespace CryptSharp.Ciphers.Modern
                     x = (x << 1);
                     x = x ^ 0x00;
                 }
-                //fprintf(stdout, "%02i: 0x%02x 0x%02x\n", i, val, x);
             }
 
             return (uint)(x << 24);
-
-            //int rcon = 0x1000000;
-            //for (int i = 0; i < v - 1;  i++)
-            //{
-            //    int tmp = (0x11b & -(rcon >> 7));
-            //    rcon = (rcon << 1) ^ tmp;
-            //}
-            //return (uint)rcon;
-
-            ////BROKEN...
-            ////int temp = 1 << (v - 1);
-            ////if (temp > 255) temp ^= 0x1b;
-            ////v+=11;
-            ////return (uint)(temp << 24);
         }
 
         public byte[,] AddRoundKey(byte[,] state, int r, int Nb, int round)
@@ -312,10 +299,15 @@ namespace CryptSharp.Ciphers.Modern
             byte[,] shift = new byte[r, Nb];
             for (int c = 0; c < Nb; c++)
             {
-                shift[0, c] = (byte)(Multiply(0x02, state[0, c]) ^ Multiply(0x03, state[1, c]) ^ state[2, c] ^ state[3, c]);
-                shift[1, c] = (byte)(Multiply(0x02, state[1, c]) ^ Multiply(0x03, state[2, c]) ^ state[3, c] ^ state[0, c]);
-                shift[2, c] = (byte)(Multiply(0x02, state[2, c]) ^ Multiply(0x03, state[3, c]) ^ state[0, c] ^ state[1, c]);
-                shift[3, c] = (byte)(Multiply(0x02, state[3, c]) ^ Multiply(0x03, state[0, c]) ^ state[1, c] ^ state[2, c]);
+                for(int x = 0; x < r; x++)
+                {
+                    shift[x % r, c] = (byte)(Multiply(0x02, state[x % r, c]) ^ Multiply(0x03, state[(x + 1) % r, c]) ^ state[(x + 2) % r, c] ^ state[(x + 3) % r, c]);
+
+                }
+                //shift[0, c] = (byte)(Multiply(0x02, state[0, c]) ^ Multiply(0x03, state[1, c]) ^ state[2, c] ^ state[3, c]);
+                //shift[1, c] = (byte)(Multiply(0x02, state[1, c]) ^ Multiply(0x03, state[2, c]) ^ state[3, c] ^ state[0, c]);
+                //shift[2, c] = (byte)(Multiply(0x02, state[2, c]) ^ Multiply(0x03, state[3, c]) ^ state[0, c] ^ state[1, c]);
+                //shift[3, c] = (byte)(Multiply(0x02, state[3, c]) ^ Multiply(0x03, state[0, c]) ^ state[1, c] ^ state[2, c]);
             }
 
             return shift;
