@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers.Modern
 {
-    public class Rijndael
+    public class AES
     {
         private byte[] key;
         public byte[] Key
@@ -18,54 +18,33 @@ namespace CryptSharp.Ciphers.Modern
 
             set
             {
-                if (value.Length % 32 != 0 || value.Length < 128 || value.Length > 256)
+                if (value.Length != 16 && value.Length != 24 && value.Length != 32)
                 {
-                    throw new Exception(string.Format("Invliad key length, must be between 128 and 256 bits in 32 bit increments, length={0}", value.Length * 8));
+                    throw new Exception(string.Format("Invalid key length: {0} bits, {1} bytes", 8 * value.Length, value.Length));
                 }
 
                 key = value;
+                Nr = 10 + (key.Length / 4 - 4);
                 Nk = Key.Length / 4;
                 w = new uint[(Nr + 1) * Nb];
                 w = KeyExpansion(key, Nk);
+
             }
         }
-
-        private int blockLength = 128;
-        public int BlockLength
-        {
-            get
-            {
-                return blockLength;
-            }
-            set
-            {
-                if (value % 32 != 0 || value < 128 || value > 256)
-                {
-                    throw new Exception(string.Format("Invliad block length, must be between 128 and 256 bits in 32 bit increments, length={0}", value));
-                }
-
-                blockLength = value;
-            }
-        }
-
         public byte[] IV { get; set; }
 
         int Nk;//=Key.Length in bits / 32 bits
         int Nb = 4;//constant for AES spec
         int Nr = 10;//128 keysize = 10, 192=12, 256=14 - number of rounds
 
-        uint[] w;
-
+        uint[] w;// = new uint[256];
+        int blockLength = 128;//const by spec
         byte[,] state;
 
         public byte[] Encrypt(byte[] input)
         {
             int r = 4;
             int Nb = blockLength / 32;
-
-            Nr = 10;
-            if (Nb == 6 || Nk == 6) Nr = 12;
-            if (Nb == 8 || Nk == 8) Nr = 14;
 
             int numberOfBlocks = input.Length / (r * Nb);
 
@@ -502,7 +481,6 @@ namespace CryptSharp.Ciphers.Modern
                 0x60, 0x51, 0x7F, 0xA9, 0x19, 0xB5, 0x4A, 0x0D, 0x2D, 0xE5, 0x7A, 0x9F, 0x93, 0xC9, 0x9C, 0xEF, //D
                 0xA0, 0xE0, 0x3B, 0x4D, 0xAE, 0x2A, 0xF5, 0xB0, 0xC8, 0xEB, 0xBB, 0x3C, 0x83, 0x53, 0x99, 0x61, //E
                 0x17, 0x2B, 0x04, 0x7E, 0xBA, 0x77, 0xD6, 0x26, 0xE1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0C, 0x7D }; //F
-
 
     }
 }
