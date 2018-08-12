@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers.Modern
 {
+    public class DataEncryptionStandard : DES
+    {
+
+    }
+
     public enum Mode { ElectronicCodeBook, ChainBlockCoding/*, CipherFeedback*/ };
     public class DES
     {
