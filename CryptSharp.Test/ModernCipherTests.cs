@@ -216,6 +216,10 @@ namespace CryptSharp.Test
             }
 
             CollectionAssert.AreEqual(checkcipher, cipher);
+
+            byte[] clear = a.Decrypt(cipher);
+
+            CollectionAssert.AreEqual(test, clear);
         }
 
         [TestMethod]
@@ -248,8 +252,10 @@ namespace CryptSharp.Test
             }
 
             CollectionAssert.AreEqual(checkcipher, cipher);
+
+            byte[] clear = a.Decrypt(cipher);
+
+            CollectionAssert.AreEqual(test, clear);
         }
-
-
     }
 }

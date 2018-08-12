@@ -111,21 +111,19 @@ namespace CryptSharp.Ciphers.Modern
                     }
                 }
 
-                state = AddRoundKey(state, r, Nb, 0);
+                state = AddRoundKey(state, r, Nb, 0, w);
 
                 for (int i = 1; i < Nr; i++)
                 {
                     state = SubBytes(state, r, Nb);
                     state = ShiftRows(state, r, Nb);
                     state = MixColumns(state, r, Nb);
-                    state = AddRoundKey(state, r, Nb, i);
+                    state = AddRoundKey(state, r, Nb, i, w);
                 }
 
                 state = SubBytes(state, r, Nb);
                 state = ShiftRows(state, r, Nb);
-                state = AddRoundKey(state, r, Nb, Nr);
-
-
+                state = AddRoundKey(state, r, Nb, Nr, w);
 
                 for (int i = 0; i < r; i++)
                 {
@@ -142,40 +140,88 @@ namespace CryptSharp.Ciphers.Modern
         public byte[] Decrypt(byte[] input)
         {
             int r = 4;
-            int Nb = blockLength / 32;
+
+            int numberOfBlocks = input.Length / (r * Nb);
+
+            int padding = (r * Nb) - input.Length % (r * Nb);
+            if (padding == (r * Nb)) padding = 0;
+
+            if (padding != 0) numberOfBlocks++;
+
+            byte[] output = new byte[input.Length + padding];
 
             state = new byte[r, Nb];
+            byte[,] prevstate = new byte[r, Nb];
 
-            for (int i = 0; i < r; i++)
+            //If we have an IV, XOR the state with it
+            if (IV != null)
             {
-                for (int j = 0; j < Nb; j++)
+                for (int i = 0; i < r; i++)
                 {
-                    state[i, j] = input[i + 4 * j];
+                    for (int j = 0; j < Nb; j++)
+                    {
+                        prevstate[i, j] = IV[i + 4 * j];
+                    }
                 }
             }
 
-            state = AddRoundKey(state, r, Nb, 0);
-
-            for (int i = 1; i < Nr; i++)
+            for (int block = 0; block < numberOfBlocks; block++)
             {
-                state = SubBytes(state, r, Nb);
-                state = ShiftRows(state, r, Nb);
-                state = MixColumns(state, r, Nb);
-                state = AddRoundKey(state, r, Nb, i);
-            }
-
-            state = SubBytes(state, r, Nb);
-            state = ShiftRows(state, r, Nb);
-            state = AddRoundKey(state, r, Nb, Nr);
-
-
-            byte[] output = new byte[r * Nb];
-
-            for (int i = 0; i < r; i++)
-            {
-                for (int j = 0; j < Nb; j++)
+                for (int i = 0; i < r; i++)
                 {
-                    output[i + 4 * j] = state[i, j];
+                    for (int j = 0; j < Nb; j++)
+                    {
+                        //If we have an IV, XOR the output with the new input block
+                        if (i + 4 * j + (r * Nb * block) >= input.Length)
+                        {
+                            state[i, j] = (byte)(padding);// ^ (IV == null ? 0 : state[i, j]));
+                        }
+                        else
+                        {
+                            state[i, j] = (byte)(input[i + 4 * j + (r * Nb * block)]);// ^ (IV == null ? 0 : state[i, j]));
+                        }
+                    }
+                }
+
+                state = AddRoundKey(state, r, Nb, Nr, w);
+
+                for (int i = Nr - 1; i > 0; i--)
+                {
+                    state = ShiftRowsInv(state, r, Nb);
+                    state = SubBytesInv(state, r, Nb);
+                    state = AddRoundKey(state, r, Nb, i, w);
+                    state = MixColumnsInv(state, r, Nb);
+                }
+
+                state = ShiftRowsInv(state, r, Nb);
+                state = SubBytesInv(state, r, Nb);
+                state = AddRoundKey(state, r, Nb, 0, w);
+
+                for (int i = 0; i < r; i++)
+                {
+                    for (int j = 0; j < Nb; j++)
+                    {
+                        if (i + 4 * j + (r * Nb * block) >= input.Length)
+                        {
+                            byte o = (byte)(padding ^ (IV == null ? 0 : prevstate[i, j]));
+                            output[i + 4 * j + (r * Nb * block)] = o;
+                            //state[i, j] = o;
+                        }
+                        else
+                        {
+                            byte o = (byte)(state[i, j] ^ (IV == null ? 0 : prevstate[i, j]));
+                            output[i + 4 * j + (r * Nb * block)] = o;
+                            //state[i, j] = o;
+                        }
+                    }
+                }
+
+                for (int i = 0; i < r; i++)
+                {
+                    for (int j = 0; j < Nb; j++)
+                    {
+                        prevstate[i, j] = input[i + 4 * j + (r * Nb * block)];
+                    }
                 }
             }
 
@@ -223,6 +269,11 @@ namespace CryptSharp.Ciphers.Modern
             return (uint)((SBox[(v >> 24) & 0xFF] << 24) | (SBox[(v >> 16) & 0xFF] << 16) | (SBox[(v >> 8) & 0xFF] << 8) | SBox[v & 0xFF]);
         }
 
+        public uint SubWordInv(uint v)
+        {
+            return (uint)((SBoxInv[(v >> 24) & 0xFF] << 24) | (SBoxInv[(v >> 16) & 0xFF] << 16) | (SBoxInv[(v >> 8) & 0xFF] << 8) | SBoxInv[v & 0xFF]);
+        }
+
         public uint RotWord(uint v)
         {
             uint temp = v << 8;
@@ -249,7 +300,7 @@ namespace CryptSharp.Ciphers.Modern
             return (uint)(x << 24);
         }
 
-        public byte[,] AddRoundKey(byte[,] state, int r, int Nb, int round)
+        public byte[,] AddRoundKey(byte[,] state, int r, int Nb, int round, uint[] w)
         {
             byte[,] shift = new byte[r, Nb];
             for (int c = 0; c < Nb; c++)
@@ -278,6 +329,19 @@ namespace CryptSharp.Ciphers.Modern
             return state;
         }
 
+        public byte[,] SubBytesInv(byte[,] state, int r, int Nb)
+        {
+            for (int i = 0; i < r; i++)
+            {
+                for (int j = 0; j < Nb; j++)
+                {
+                    state[i, j] = SBoxInv[state[i, j]];
+                }
+            }
+
+            return state;
+        }
+
         public byte[,] ShiftRows(byte[,] state, int r, int Nb)
         {
             byte[,] shift = new byte[r, Nb];
@@ -287,6 +351,23 @@ namespace CryptSharp.Ciphers.Modern
                 for (int j = 0; j < Nb; j++)
                 {
                     shift[i, j] = state[i, (j + i) % Nb];
+                }
+            }
+
+            return shift;
+        }
+
+        public byte[,] ShiftRowsInv(byte[,] state, int r, int Nb)
+        {
+            byte[,] shift = new byte[r, Nb];
+
+            for (int i = 0; i < r; i++)
+            {
+                for (int j = 0; j < Nb; j++)
+                {
+                    int index = ((j - i) % Nb + Nb) % Nb;
+
+                    shift[i, j] = state[i, index];
                 }
             }
 
@@ -308,6 +389,20 @@ namespace CryptSharp.Ciphers.Modern
                 //shift[1, c] = (byte)(Multiply(0x02, state[1, c]) ^ Multiply(0x03, state[2, c]) ^ state[3, c] ^ state[0, c]);
                 //shift[2, c] = (byte)(Multiply(0x02, state[2, c]) ^ Multiply(0x03, state[3, c]) ^ state[0, c] ^ state[1, c]);
                 //shift[3, c] = (byte)(Multiply(0x02, state[3, c]) ^ Multiply(0x03, state[0, c]) ^ state[1, c] ^ state[2, c]);
+            }
+
+            return shift;
+        }
+
+        public byte[,] MixColumnsInv(byte[,] state, int r, int Nb)
+        {
+            byte[,] shift = new byte[r, Nb];
+            for (int c = 0; c < Nb; c++)
+            {
+                shift[0, c] = (byte)(Multiply(0x0e, state[0, c]) ^ Multiply(0x0b, state[1, c]) ^ Multiply(0x0d, state[2, c]) ^ Multiply(0x09, state[3, c]));
+                shift[1, c] = (byte)(Multiply(0x09, state[0, c]) ^ Multiply(0x0e, state[1, c]) ^ Multiply(0x0b, state[2, c]) ^ Multiply(0x0d, state[3, c]));
+                shift[2, c] = (byte)(Multiply(0x0d, state[0, c]) ^ Multiply(0x09, state[1, c]) ^ Multiply(0x0e, state[2, c]) ^ Multiply(0x0b, state[3, c]));
+                shift[3, c] = (byte)(Multiply(0x0b, state[0, c]) ^ Multiply(0x0d, state[1, c]) ^ Multiply(0x09, state[2, c]) ^ Multiply(0x0e, state[3, c]));
             }
 
             return shift;

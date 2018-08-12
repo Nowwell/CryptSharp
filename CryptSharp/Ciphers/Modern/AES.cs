@@ -27,7 +27,7 @@ namespace CryptSharp.Ciphers.Modern
                 Nr = 10 + (key.Length / 4 - 4);
                 Nk = Key.Length / 4;
                 w = new uint[(Nr + 1) * Nb];
-                dw = new uint[(Nr + 1) * Nb];
+                //dw = new uint[(Nr + 1) * Nb];
                 w = KeyExpansion(key, Nk);
 
                 //Array.Copy(w, dw, w.Length);
@@ -200,18 +200,26 @@ namespace CryptSharp.Ciphers.Modern
                     {
                         if (i + 4 * j + (r * Nb * block) >= input.Length)
                         {
-                            output[i + 4 * j + (r * Nb * block)] = (byte)(padding ^ (IV == null ? 0 : prevstate[i, j]));
-                            state[i, j] = (byte)(padding ^ (IV == null ? 0 : prevstate[i, j]));
+                            byte o = (byte)(padding ^ (IV == null ? 0 : prevstate[i, j]));
+                            output[i + 4 * j + (r * Nb * block)] = o;
+                            //state[i, j] = o;
                         }
                         else
                         {
-                            output[i + 4 * j + (r * Nb * block)] = (byte)(state[i, j] ^ (IV == null ? 0 : prevstate[i, j]));
-                            state[i, j] = (byte)(state[i, j] ^ (IV == null ? 0 : prevstate[i, j]));
+                            byte o = (byte)(state[i, j] ^ (IV == null ? 0 : prevstate[i, j]));
+                            output[i + 4 * j + (r * Nb * block)] = o;
+                            //state[i, j] = o;
                         }
                     }
                 }
 
-                Array.Copy(state, prevstate, r * Nb);
+                for (int i = 0; i < r; i++)
+                {
+                    for (int j = 0; j < Nb; j++)
+                    {
+                        prevstate[i, j] = input[i + 4 * j + (r * Nb * block)];
+                    }
+                }
             }
 
             return output;
