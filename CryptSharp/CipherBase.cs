@@ -24,7 +24,7 @@ namespace CryptSharp.Ciphers
         {
             StringBuilder toEncrypt = new StringBuilder();
 
-            T[] generated = Utility.Random<T>(1024);
+            T[] generated = Utility.Random<T>(alphabet, 1024);
             int i = length;
 
             foreach (T c in generated)
