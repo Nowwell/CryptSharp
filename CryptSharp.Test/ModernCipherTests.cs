@@ -50,6 +50,49 @@ namespace CryptSharp.Test
         }
 
         [TestMethod]
+        public void Modern_TripleDESTest()
+        {
+            byte[] key = BitConverter.GetBytes(0x133457799BBCDFF1);
+            byte[] key2 = BitConverter.GetBytes(0x233457799BBCDFF2);
+            byte[] clear = BitConverter.GetBytes(0x0123456789ABCDEF);
+
+            Ciphers.Modern.TripleDES d = new Ciphers.Modern.TripleDES();
+            d.Mode = Mode.ElectronicCodeBook;
+            d.Key = key;
+            d.Key2 = key2;
+            d.IV = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 };
+            byte[] cipherText = d.Encrypt(clear);
+
+            ulong output = BitConverter.ToUInt64(cipherText, 0);
+
+            Assert.AreEqual(0x85E813540F0AB405, output);
+
+            output = BitConverter.ToUInt64(d.Decrypt(cipherText), 0);
+            Assert.AreEqual((ulong)0x0123456789ABCDEF, output);
+
+            d.Mode = Mode.ChainBlockCoding;
+            d.Key = key;
+            d.IV = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 };
+            cipherText = d.Encrypt(clear);
+
+            output = BitConverter.ToUInt64(cipherText, 0);
+
+            Assert.AreEqual(0x85E813540F0AB405, output);
+
+            d.Mode = Mode.ChainBlockCoding;
+            d.Key = key;
+            d.IV = clear;
+            cipherText = d.Encrypt(clear);
+
+            output = BitConverter.ToUInt64(cipherText, 0);
+
+            Assert.AreEqual(0x948A43F98A834F7E, output);
+
+            output = BitConverter.ToUInt64(d.Decrypt(cipherText), 0);
+            Assert.AreEqual((ulong)0x0123456789ABCDEF, output);
+        }
+
+        [TestMethod]
         public void Modern_DESTest_Kryptos()
         {
             byte[] key = new byte[8];
