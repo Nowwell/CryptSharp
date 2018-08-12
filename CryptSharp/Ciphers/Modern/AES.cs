@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers.Modern
 {
-    public class Rijndael
+    public class AES
     {
         private byte[] key;
         public byte[] Key
@@ -18,58 +18,52 @@ namespace CryptSharp.Ciphers.Modern
 
             set
             {
-                if (value.Length % 4 != 0 || value.Length < 16 || value.Length > 32)
+                if (value.Length != 16 && value.Length != 24 && value.Length != 32)
                 {
-                    throw new Exception(string.Format("Invliad key length, must be between 128 and 256 bits in 32 bit increments, length={0}", value.Length * 8));
+                    throw new Exception(string.Format("Invalid key length: {0} bits, {1} bytes", 8 * value.Length, value.Length));
                 }
 
                 key = value;
+                Nr = 10 + (key.Length / 4 - 4);
                 Nk = Key.Length / 4;
-
-                Nr = 10;//using AES standards for rounds...
-                if (Nb == 6 || Nk == 6) Nr = 12;
-                if (Nb == 8 || Nk == 8) Nr = 14;
-
                 w = new uint[(Nr + 1) * Nb];
+                //dw = new uint[(Nr + 1) * Nb];
                 w = KeyExpansion(key, Nk);
+
+                //Array.Copy(w, dw, w.Length);
+                //byte[,] mixer = new byte[4, w.Length];
+                //for (int i = 0; i < w.Length; i++)
+                //{
+                //    mixer[0, i] = (byte)((w[i] >> 24) & 0xFF);
+                //    mixer[1, i] = (byte)((w[i] >> 16) & 0xFF);
+                //    mixer[2, i] = (byte)((w[i] >> 8) & 0xFF);
+                //    mixer[3, i] = (byte)(w[i] & 0xFF);
+                //}
+
+                //for (int i=0; i<Nr - 1; i++)
+                //{
+                //    mixer = MixColumnsInv(mixer, 4, w.Length);
+                //}
+
+                //for (int i = 0; i < w.Length; i++)
+                //{
+                //    dw[i] = (uint)(mixer[0, i] << 24 | mixer[1, i] << 16 | mixer[2, i] << 8 | mixer[3, i] << 0);
+                //}
+
             }
         }
-
-        private int blockLength = 128;
-        public int BlockLength
-        {
-            get
-            {
-                return blockLength;
-            }
-            set
-            {
-                if (value % 32 != 0 || value < 128 || value > 256)
-                {
-                    throw new Exception(string.Format("Invliad block length, must be between 128 and 256 bits in 32 bit increments, length={0}", value));
-                }
-
-                blockLength = value;
-                Nb = blockLength / 32;
-            }
-        }
-
         public byte[] IV { get; set; }
 
-        int Nk = 0;//=Key.Length in bits / 32 bits
-        int Nb = 0;//constant for AES spec
-        int Nr = 0;//128 keysize = 10, 192=12, 256=14 - number of rounds
+        int Nk;//=Key.Length in bits / 32 bits
+        int Nb = 4;//constant for AES spec
+        int Nr = 10;//128 keysize = 10, 192=12, 256=14 - number of rounds
 
         uint[] w;
-
         byte[,] state;
 
         public byte[] Encrypt(byte[] input)
         {
-            int r = 4;//height in bytes of state matrix
-            //int Nb = blockLength / 32;
-
-            //if (input.Length != blockLength / 8) throw new Exception("Input length not equal to block length");
+            int r = 4;
 
             int numberOfBlocks = input.Length / (r * Nb);
 
@@ -94,7 +88,6 @@ namespace CryptSharp.Ciphers.Modern
                 }
             }
 
-            //state = new byte[r, Nb];
             for (int block = 0; block < numberOfBlocks; block++)
             {
                 for (int i = 0; i < r; i++)
@@ -270,7 +263,6 @@ namespace CryptSharp.Ciphers.Modern
         {
             return (uint)((SBox[(v >> 24) & 0xFF] << 24) | (SBox[(v >> 16) & 0xFF] << 16) | (SBox[(v >> 8) & 0xFF] << 8) | SBox[v & 0xFF]);
         }
-
         public uint SubWordInv(uint v)
         {
             return (uint)((SBoxInv[(v >> 24) & 0xFF] << 24) | (SBoxInv[(v >> 16) & 0xFF] << 16) | (SBoxInv[(v >> 8) & 0xFF] << 8) | SBoxInv[v & 0xFF]);
@@ -297,17 +289,33 @@ namespace CryptSharp.Ciphers.Modern
                     x = (x << 1);
                     x = x ^ 0x00;
                 }
+                //fprintf(stdout, "%02i: 0x%02x 0x%02x\n", i, val, x);
             }
 
             return (uint)(x << 24);
+
+            //int rcon = 0x1000000;
+            //for (int i = 0; i < v - 1;  i++)
+            //{
+            //    int tmp = (0x11b & -(rcon >> 7));
+            //    rcon = (rcon << 1) ^ tmp;
+            //}
+            //return (uint)rcon;
+
+            ////BROKEN...
+            ////int temp = 1 << (v - 1);
+            ////if (temp > 255) temp ^= 0x1b;
+            ////v+=11;
+            ////return (uint)(temp << 24);
         }
 
-        public byte[,] AddRoundKey(byte[,] state, int r, int Nb, int round, uint[] w)
+        public byte[,] AddRoundKey(byte[,] state, int r, int Nb, int round, uint[] keys)
         {
             byte[,] shift = new byte[r, Nb];
             for (int c = 0; c < Nb; c++)
             {
-                ulong xform = (ulong)(((state[0, c] << 24) | (state[1, c] << 16) | (state[2, c] << 8) | state[3, c]) ^ w[round * Nb + c]);
+                uint currentKey = keys[round * Nb + c];
+                ulong xform = (ulong)(((state[0, c] << 24) | (state[1, c] << 16) | (state[2, c] << 8) | state[3, c]) ^ currentKey);
 
                 shift[0, c] = (byte)(xform >> 24);
                 shift[1, c] = (byte)(xform >> 16);
@@ -378,19 +386,13 @@ namespace CryptSharp.Ciphers.Modern
 
         public byte[,] MixColumns(byte[,] state, int r, int Nb)
         {
-            //this is incorrect... might have fixed, check
             byte[,] shift = new byte[r, Nb];
             for (int c = 0; c < Nb; c++)
             {
-                for(int x = 0; x < r; x++)
-                {
-                    shift[x % r, c] = (byte)(Multiply(0x02, state[x % r, c]) ^ Multiply(0x03, state[(x + 1) % r, c]) ^ state[(x + 2) % r, c] ^ state[(x + 3) % r, c]);
-
-                }
-                //shift[0, c] = (byte)(Multiply(0x02, state[0, c]) ^ Multiply(0x03, state[1, c]) ^ state[2, c] ^ state[3, c]);
-                //shift[1, c] = (byte)(Multiply(0x02, state[1, c]) ^ Multiply(0x03, state[2, c]) ^ state[3, c] ^ state[0, c]);
-                //shift[2, c] = (byte)(Multiply(0x02, state[2, c]) ^ Multiply(0x03, state[3, c]) ^ state[0, c] ^ state[1, c]);
-                //shift[3, c] = (byte)(Multiply(0x02, state[3, c]) ^ Multiply(0x03, state[0, c]) ^ state[1, c] ^ state[2, c]);
+                shift[0, c] = (byte)(Multiply(0x02, state[0, c]) ^ Multiply(0x03, state[1, c]) ^ state[2, c] ^ state[3, c]);
+                shift[1, c] = (byte)(Multiply(0x02, state[1, c]) ^ Multiply(0x03, state[2, c]) ^ state[3, c] ^ state[0, c]);
+                shift[2, c] = (byte)(Multiply(0x02, state[2, c]) ^ Multiply(0x03, state[3, c]) ^ state[0, c] ^ state[1, c]);
+                shift[3, c] = (byte)(Multiply(0x02, state[3, c]) ^ Multiply(0x03, state[0, c]) ^ state[1, c] ^ state[2, c]);
             }
 
             return shift;
@@ -591,7 +593,6 @@ namespace CryptSharp.Ciphers.Modern
                 0x60, 0x51, 0x7F, 0xA9, 0x19, 0xB5, 0x4A, 0x0D, 0x2D, 0xE5, 0x7A, 0x9F, 0x93, 0xC9, 0x9C, 0xEF, //D
                 0xA0, 0xE0, 0x3B, 0x4D, 0xAE, 0x2A, 0xF5, 0xB0, 0xC8, 0xEB, 0xBB, 0x3C, 0x83, 0x53, 0x99, 0x61, //E
                 0x17, 0x2B, 0x04, 0x7E, 0xBA, 0x77, 0xD6, 0x26, 0xE1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0C, 0x7D }; //F
-
 
     }
 }
