@@ -47,7 +47,7 @@ namespace CryptSharp.Ciphers
         {
             List<T> toEncrypt = new List<T>();
 
-            T[] generated = Utility.Random<T>(1024);
+            T[] generated = Utility.Random<T>(alphabet, 1024);
             int i = length;
 
             foreach (T c in generated)
