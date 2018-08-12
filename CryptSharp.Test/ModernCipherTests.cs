@@ -257,5 +257,54 @@ namespace CryptSharp.Test
 
             CollectionAssert.AreEqual(test, clear);
         }
+
+        [TestMethod]
+        public void Modern_Rijndael()
+        {
+
+            Random r = new Random();
+            byte[] key;
+            byte[] iv;
+
+            for (int keylen = 16; keylen < 32; keylen += 8)
+            {
+                for(int blocklen = 128; blocklen < 256; blocklen += 64)
+                {
+                    key = new byte[keylen];
+                    iv = new byte[blocklen / 8];
+                    r.NextBytes(key);
+                    r.NextBytes(iv);
+
+                    Ciphers.Modern.Rijndael rij = new Ciphers.Modern.Rijndael();
+                    rij.BlockLength = blocklen;
+                    rij.Key = key;
+                    rij.IV = iv;
+
+                    byte[] test = new byte[blocklen / 8];
+                    r.NextBytes(test);
+
+                    byte[] cipher = rij.Encrypt(test);
+                    byte[] checkcipher = new byte[test.Length];
+
+                    using (RijndaelManaged rm = new RijndaelManaged())
+                    {
+                        rm.BlockSize = blocklen;
+                        rm.Key = key;
+                        rm.IV = iv;
+
+                        ICryptoTransform encryptor = rm.CreateEncryptor(key, iv);
+
+                        encryptor.TransformBlock(test, 0, test.Length, checkcipher, 0);
+                    }
+
+                    CollectionAssert.AreEqual(checkcipher, cipher);
+
+                    byte[] clear = rij.Decrypt(cipher);
+
+                    CollectionAssert.AreEqual(test, clear);
+                }
+            }
+
+        }
     }
 }

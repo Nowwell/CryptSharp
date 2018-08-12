@@ -18,13 +18,18 @@ namespace CryptSharp.Ciphers.Modern
 
             set
             {
-                if (value.Length % 32 != 0 || value.Length < 128 || value.Length > 256)
+                if (value.Length % 4 != 0 || value.Length < 16 || value.Length > 32)
                 {
                     throw new Exception(string.Format("Invliad key length, must be between 128 and 256 bits in 32 bit increments, length={0}", value.Length * 8));
                 }
 
                 key = value;
                 Nk = Key.Length / 4;
+
+                Nr = 10;//using AES standards for rounds...
+                if (Nb == 6 || Nk == 6) Nr = 12;
+                if (Nb == 8 || Nk == 8) Nr = 14;
+
                 w = new uint[(Nr + 1) * Nb];
                 w = KeyExpansion(key, Nk);
             }
@@ -45,6 +50,7 @@ namespace CryptSharp.Ciphers.Modern
                 }
 
                 blockLength = value;
+                Nb = blockLength / 32;
             }
         }
 
@@ -61,13 +67,9 @@ namespace CryptSharp.Ciphers.Modern
         public byte[] Encrypt(byte[] input)
         {
             int r = 4;//height in bytes of state matrix
-            int Nb = blockLength / 32;
+            //int Nb = blockLength / 32;
 
-            if (input.Length != blockLength / 8) throw new Exception("Input length not equal to block length");
-
-            Nr = 10;
-            if (Nb == 6 || Nk == 6) Nr = 12;
-            if (Nb == 8 || Nk == 8) Nr = 14;
+            //if (input.Length != blockLength / 8) throw new Exception("Input length not equal to block length");
 
             int numberOfBlocks = input.Length / (r * Nb);
 

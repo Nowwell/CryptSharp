@@ -59,8 +59,6 @@ namespace CryptSharp.Ciphers.Modern
         int Nr = 10;//128 keysize = 10, 192=12, 256=14 - number of rounds
 
         uint[] w;
-        uint[] dw;
-        int blockLength = 128;//const by spec
         byte[,] state;
 
         public byte[] Encrypt(byte[] input)
