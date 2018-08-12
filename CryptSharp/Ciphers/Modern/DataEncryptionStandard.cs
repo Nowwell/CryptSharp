@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers.Modern
 {
+    public class DataEncryptionStandard : DES
+    {
+
+    }
+
     public enum Mode { ElectronicCodeBook, ChainBlockCoding/*, CipherFeedback*/ };
     public class DES
     {
@@ -22,7 +27,7 @@ namespace CryptSharp.Ciphers.Modern
 
         public Mode Mode { get; set; } = Mode.ElectronicCodeBook;
 
-        public byte[] Encrypt(byte[] clearText)
+        public virtual byte[] Encrypt(byte[] clearText)
         {
             //example http://page.math.tu-berlin.de/~kant/teaching/hess/krypto-ws2006/des.htm
 
@@ -111,7 +116,7 @@ namespace CryptSharp.Ciphers.Modern
             return cipherText;
         }
 
-        public byte[] Decrypt(byte[] cipherText)
+        public virtual byte[] Decrypt(byte[] cipherText)
         {
             //example http://page.math.tu-berlin.de/~kant/teaching/hess/krypto-ws2006/des.htm
 
