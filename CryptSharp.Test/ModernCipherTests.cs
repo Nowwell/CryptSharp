@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CryptSharp.Ciphers.Modern;
+using System.Security.Cryptography;
 
 namespace CryptSharp.Test
 {
@@ -13,7 +14,7 @@ namespace CryptSharp.Test
             byte[] key = BitConverter.GetBytes(0x133457799BBCDFF1);
             byte[] clear = BitConverter.GetBytes(0x0123456789ABCDEF);
 
-            DES d = new DES();
+            Ciphers.Modern.DES d = new Ciphers.Modern.DES();
             d.Mode = Mode.ElectronicCodeBook;
             d.Key = key;
             d.IV = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -142,6 +143,168 @@ namespace CryptSharp.Test
             byte[] clear = tri.Decrypt(cipher);
 
             CollectionAssert.AreEqual(new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06 }, clear);
+        }
+
+        [TestMethod]
+        public void Modern_AES_128()
+        {
+            //a.Key = new byte[] { 0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c };
+            //byte[] key = new byte[] { 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA };
+            byte[] key = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+            byte[] iv = new byte[] { 0x01, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
+
+            AES a = new AES();
+            a.Key=key;
+            a.IV = iv;
+
+            //byte[] test = new byte[16] {0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF};
+            //byte[] test = new byte[16] {0x32, 0x43, 0xf6, 0xa8, 0x88, 0x5a, 0x30, 0x8d, 0x31, 0x31, 0x98, 0xa2, 0xe0, 0x37, 0x07, 0x34};
+            byte[] test = new byte[48] { 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+                                         0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55,
+                                         0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66};
+
+            byte[] cipher = a.Encrypt(test);
+            byte[] checkcipher = new byte[test.Length];
+
+            using (Aes check = Aes.Create())
+            {
+                check.Key = key;
+                check.IV = iv;
+
+                ICryptoTransform encryptor = check.CreateEncryptor(check.Key, check.IV);
+
+                encryptor.TransformBlock(test, 0, test.Length, checkcipher, 0);
+            }
+
+            CollectionAssert.AreEqual(checkcipher, cipher);
+
+            byte[] clear = a.Decrypt(cipher);
+
+            CollectionAssert.AreEqual(test, clear);
+        }
+
+        [TestMethod]
+        public void Modern_AES_192()
+        {
+            byte[] key = new byte[] { 0x8e, 0x73, 0xb0, 0xf7, 0xda, 0x0e, 0x64, 0x52, 0xc8, 0x10, 0xf3, 0x2b,
+                                      0x80, 0x90, 0x79, 0xe5, 0x62, 0xf8, 0xea, 0xd2, 0x52, 0x2c, 0x6b, 0x7b};
+            byte[] iv = new byte[] { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, //0x0, 0x0, 0x0, 0x0, 0x0, 0x0 
+                                     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };//, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
+
+            AES a = new AES();
+            a.Key = key;
+            a.IV = iv;
+            //byte[] test = new byte[32] { 0x32, 0x43, 0xf6, 0xa8, 0x88, 0x5a, 0x30, 0x8d, 0x31, 0x31, 0x98, 0xa2, 0xe0, 0x37, 0x07, 0x34,
+            //                             0x32, 0x43, 0xf6, 0xa8, 0x88, 0x5a, 0x30, 0x8d, 0x31, 0x31, 0x98, 0xa2, 0xe0, 0x37, 0x07, 0x34};
+
+            byte[] test = new byte[48] { 0x32, 0x43, 0xf6, 0xa8, 0x88, 0x5a, 0x30, 0x8d, 0x31, 0x31, 0x98, 0xa2, 0xe0, 0x37, 0x07, 0x34,
+                                         0x32, 0x43, 0xf6, 0xa8, 0x88, 0x5a, 0x30, 0x8d, 0x31, 0x31, 0x98, 0xa2, 0xe0, 0x37, 0x07, 0x34,
+                                         0x32, 0x43, 0xf6, 0xa8, 0x88, 0x5a, 0x30, 0x8d, 0x31, 0x31, 0x98, 0xa2, 0xe0, 0x37, 0x07, 0x34};
+
+
+            byte[] cipher = a.Encrypt(test);
+            byte[] checkcipher = new byte[test.Length];
+
+            using (Aes check = Aes.Create())
+            {
+                check.Key = a.Key;
+                check.IV = iv;
+
+                ICryptoTransform encryptor = check.CreateEncryptor(check.Key, check.IV);
+
+                encryptor.TransformBlock(test, 0, test.Length, checkcipher, 0);
+            }
+
+            CollectionAssert.AreEqual(checkcipher, cipher);
+
+            byte[] clear = a.Decrypt(cipher);
+
+            CollectionAssert.AreEqual(test, clear);
+        }
+
+        [TestMethod]
+        public void Modern_AES_256()
+        {
+            byte[] key = new byte[] { 0x60, 0x3d, 0xeb, 0x10, 0x15, 0xca, 0x71, 0xbe, 0x2b, 0x73, 0xae,
+                                      0xf0, 0x85, 0x7d, 0x77, 0x81, 0x1f, 0x35, 0x2c, 0x07, 0x3b, 0x61,
+                                      0x08, 0xd7, 0x2d, 0x98, 0x10, 0xa3, 0x09, 0x14, 0xdf, 0xf4};
+            byte[] iv = new byte[] { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, //0x0, 0x0, 0x0, 0x0, 0x0, 0x0 
+                                     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };//, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
+
+            AES a = new AES();
+            a.Key = key;
+            a.IV = iv;
+            byte[] test = new byte[48] { 0x32, 0x43, 0xf6, 0xa8, 0x88, 0x5a, 0x30, 0x8d, 0x31, 0x31, 0x98, 0xa2, 0xe0, 0x37, 0x07, 0x34,
+                                         0x32, 0x43, 0xf6, 0xa8, 0x88, 0x5a, 0x30, 0x8d, 0x31, 0x31, 0x98, 0xa2, 0xe0, 0x37, 0x07, 0x34,
+                                         0x32, 0x43, 0xf6, 0xa8, 0x88, 0x5a, 0x30, 0x8d, 0x31, 0x31, 0x98, 0xa2, 0xe0, 0x37, 0x07, 0x34};
+
+            byte[] cipher = a.Encrypt(test);
+            byte[] checkcipher = new byte[test.Length];
+
+            using (Aes check = Aes.Create())
+            {
+                check.Key = a.Key;
+                check.IV = iv;
+
+                ICryptoTransform encryptor = check.CreateEncryptor(check.Key, check.IV);
+
+                encryptor.TransformBlock(test, 0, test.Length, checkcipher, 0);
+            }
+
+            CollectionAssert.AreEqual(checkcipher, cipher);
+
+            byte[] clear = a.Decrypt(cipher);
+
+            CollectionAssert.AreEqual(test, clear);
+        }
+
+        [TestMethod]
+        public void Modern_Rijndael()
+        {
+
+            Random r = new Random();
+            byte[] key;
+            byte[] iv;
+
+            for (int keylen = 16; keylen < 32; keylen += 8)
+            {
+                for(int blocklen = 128; blocklen < 256; blocklen += 64)
+                {
+                    key = new byte[keylen];
+                    iv = new byte[blocklen / 8];
+                    r.NextBytes(key);
+                    r.NextBytes(iv);
+
+                    Ciphers.Modern.Rijndael rij = new Ciphers.Modern.Rijndael();
+                    rij.BlockLength = blocklen;
+                    rij.Key = key;
+                    rij.IV = iv;
+
+                    byte[] test = new byte[blocklen / 8];
+                    r.NextBytes(test);
+
+                    byte[] cipher = rij.Encrypt(test);
+                    byte[] checkcipher = new byte[test.Length];
+
+                    using (RijndaelManaged rm = new RijndaelManaged())
+                    {
+                        rm.BlockSize = blocklen;
+                        rm.Key = key;
+                        rm.IV = iv;
+
+                        ICryptoTransform encryptor = rm.CreateEncryptor(key, iv);
+
+                        encryptor.TransformBlock(test, 0, test.Length, checkcipher, 0);
+                    }
+
+                    CollectionAssert.AreEqual(checkcipher, cipher);
+
+                    byte[] clear = rij.Decrypt(cipher);
+
+                    CollectionAssert.AreEqual(test, clear);
+                }
+            }
+
         }
     }
 }
