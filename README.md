@@ -1,5 +1,5 @@
 # CryptSharp
-Classical ciphers for C#
+Some Classical and modern ciphers for C#
 
 Among the implemented Ciphers are FourSquare, Hill, Vigenere and many others
 
@@ -7,6 +7,8 @@ There are 3 (incomplete) projects within this solution.
 - CryptSharp - a dll that contains some classical ciphers
 - CryptSharp.Test- a project to test the ciphers
 - Cryptalize - a desktop app to analyze classical ciphers and hopefully be a game to generate some cipher text for fun to break
+
+Note: This is not intended to be a professionally used tool.
 
 Utility
 -------
@@ -23,4 +25,4 @@ string cipherText = variableName.Encrypt(clearText);
 string clearText = variableName.Decrypt(cipherText);
 ```
 
-Not all ciphers have a "Key", some have arrays and other such things.
+Not all ciphers have a "Key", some have arrays and other such things.  Look in the tests to see usage.
