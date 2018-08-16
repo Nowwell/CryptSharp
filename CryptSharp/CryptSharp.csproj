@@ -56,6 +56,7 @@
     <Compile Include="Ciphers\Classical\FourSquare.cs" />
     <Compile Include="Ciphers\Classical\Hill.cs" />
     <Compile Include="Ciphers\Generic\GenericBlockCipher.cs" />
+    <Compile Include="Ciphers\Generic\GenericClassical.cs" />
     <Compile Include="Ciphers\Modern\AES.cs" />
     <Compile Include="Ciphers\Modern\ICipher.cs" />
     <Compile Include="Ciphers\Classical\Playfair.cs" />

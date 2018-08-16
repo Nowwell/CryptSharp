@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CryptSharp.Ciphers.Generic;
+using System.Text;
 
 namespace CryptSharp.Test
 {
@@ -32,7 +33,7 @@ namespace CryptSharp.Test
 
         public byte[] diff(byte[] block, GenericBlockCipher cipher)
         {
-            for(int j = 0; j < block.Length; j++)
+            for (int j = 0; j < block.Length; j++)
             {
                 block[j] = (byte)(block[j] ^ cipher.Key[j % cipher.Key.Length]);
             }
@@ -42,10 +43,40 @@ namespace CryptSharp.Test
 
         public byte[] conf(byte[] block, GenericBlockCipher cipher)
         {
-            Array.Reverse(block); 
+            Array.Reverse(block);
 
             return block;
         }
 
+        [TestMethod]
+        public void Generic_GenericClassical()
+        {
+            GenericClassicalCipher<int, int, int, char> cipher = new GenericClassicalCipher<int, int, int, char>();
+            cipher.Alphabet = Utility.EnglishAlphabet();
+
+            cipher.DiffuseFunction = diffuse;
+            cipher.InverseDiffuseFunction = diffuse;
+
+
+            char[] encrypted = cipher.Encrypt("this is a test".ToUpper().ToCharArray());
+
+            string clear = new string(cipher.Decrypt(encrypted));
+
+            Assert.AreEqual("THISISATEST", clear);
+        }
+
+        public char[] diffuse(char[] block, GenericClassicalCipher<int, int, int, char> cipher)
+        {
+            int alphabetLength = cipher.Alphabet.Length - 1;
+
+            StringBuilder encrypted = new StringBuilder();
+            foreach (char c in block)
+            {
+                if (c == ' ') continue;
+                encrypted.Append(cipher.Alphabet[alphabetLength - cipher.Alphabet.IndexOf(c)]);
+            }
+
+            return encrypted.ToString().ToCharArray();
+        }
     }
 }
