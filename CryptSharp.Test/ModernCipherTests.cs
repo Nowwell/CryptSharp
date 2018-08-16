@@ -349,5 +349,14 @@ namespace CryptSharp.Test
             }
 
         }
+
+        [TestMethod]
+        public void Modern_RSA()
+        {
+            Ciphers.Modern.RSA rsa = new Ciphers.Modern.RSA();
+
+
+            Assert.Fail();
+        }
     }
 }
