@@ -78,5 +78,11 @@ namespace CryptSharp.Test
 
             return encrypted.ToString().ToCharArray();
         }
+
+        [TestMethod]
+        public void Generic_GenericStream()
+        {
+            Assert.Fail();
+        }
     }
 }

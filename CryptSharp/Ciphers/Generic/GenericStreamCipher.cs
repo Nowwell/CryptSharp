@@ -9,8 +9,10 @@ namespace CryptSharp.Ciphers.Generic
     class GenericStreamCipher
     {
         public delegate byte[] GenerateKeyStream(uint numBytes, GenericStreamCipher cipher);
+        public delegate void ResetState(GenericStreamCipher cipher);
 
         public GenerateKeyStream KeystreamFunction { get; set; }
+        public ResetState ResetStateFunction { get; set; }
 
         public byte[] state = new byte[36];
         public byte[] IV { get; private set; }
