@@ -22,7 +22,7 @@ namespace CryptSharp.Ciphers.Modern
         }
 
         public byte[] Key { get; set; }
-        public LinearFeedbackShiftRegister Registers {get;set;}
+        public LinearFeedbackShiftRegister Registers { get; set; }
 
         public string[] Encrypt(string[] clearText)
         {
