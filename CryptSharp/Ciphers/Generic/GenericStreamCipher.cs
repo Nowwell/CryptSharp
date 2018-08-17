@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers.Generic
 {
-    class GenericStreamCipher
+    public class GenericStreamCipher
     {
         public delegate byte[] GenerateKeyStream(uint numBytes, GenericStreamCipher cipher);
         public delegate void ResetState(GenericStreamCipher cipher);
@@ -15,8 +15,8 @@ namespace CryptSharp.Ciphers.Generic
         public ResetState ResetStateFunction { get; set; }
 
         public byte[] state = new byte[36];
-        public byte[] IV { get; private set; }
-        public byte[] Key { get; private set; }
+        public byte[] IV { get; set; }
+        public byte[] Key { get; set; }
 
         public byte[] Encrypt(byte[] clearText)
         {
@@ -43,6 +43,5 @@ namespace CryptSharp.Ciphers.Generic
 
             return clear;
         }
-
     }
 }

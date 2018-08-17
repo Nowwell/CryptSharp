@@ -66,6 +66,7 @@
     <Compile Include="Ciphers\Modern\DataEncryptionStandard.cs" />
     <Compile Include="Ciphers\Classical\Homophonic.cs" />
     <Compile Include="Ciphers\Classical\ICipher.cs" />
+    <Compile Include="Ciphers\Modern\RSA.cs" />
     <Compile Include="Ciphers\Modern\TripleDES.cs" />
     <Compile Include="Ciphers\MultiGraph\Affine.cs" />
     <Compile Include="Ciphers\MultiGraph\Atbash.cs" />

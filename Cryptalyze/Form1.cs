@@ -139,5 +139,26 @@ namespace Cryptalyze
                 lvICByKeyLength.Items.Add(item);
             }
         }
+
+        private void btnAttempt_Click(object sender, EventArgs e)
+        {
+            switch(cbCiphers.SelectedItem.ToString())
+            {
+                case "Vigenere":
+                    CryptSharp.Ciphers.Classical.Vigenere v = new CryptSharp.Ciphers.Classical.Vigenere(tbUsedAlphabet.Text.ToCharArray());
+                    v.Key = tbKey.Text;
+                    tbClear.Text = v.Decrypt(tbCipher.Text);
+                    break;
+
+                case "Beaufort":
+                    CryptSharp.Ciphers.Classical.Beaufort b = new CryptSharp.Ciphers.Classical.Beaufort(tbUsedAlphabet.Text.ToCharArray());
+                    b.Key = tbKey.Text;
+                    tbClear.Text = b.Decrypt(tbCipher.Text);
+                    break;
+
+                default:
+                    break;
+            }
+        }
     }
 }
