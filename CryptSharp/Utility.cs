@@ -176,6 +176,19 @@ namespace CryptSharp
             return token;
         }
 
+        public static T[] Random<T>(T[] alphabet, int numBytes = 32)
+        {
+            T[] token = new T[numBytes];
+            byte[] tokenData = new byte[numBytes];
+            rng.GetBytes(tokenData);
+            for (int i = 0; i < numBytes; i++)
+            {
+                token[i] = alphabet[tokenData[i] % alphabet.Length];
+            }
+
+            return token;
+        }
+
         public static int RandomInt()
         {
             int token = 0;

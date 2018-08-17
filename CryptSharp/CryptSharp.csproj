@@ -55,6 +55,9 @@
     <Compile Include="Ciphers\Classical\Columnar.cs" />
     <Compile Include="Ciphers\Classical\FourSquare.cs" />
     <Compile Include="Ciphers\Classical\Hill.cs" />
+    <Compile Include="Ciphers\Generic\GenericBlockCipher.cs" />
+    <Compile Include="Ciphers\Generic\GenericClassical.cs" />
+    <Compile Include="Ciphers\Generic\GenericStreamCipher.cs" />
     <Compile Include="Ciphers\Modern\AES.cs" />
     <Compile Include="Ciphers\Modern\ICipher.cs" />
     <Compile Include="Ciphers\Classical\Playfair.cs" />
@@ -63,6 +66,7 @@
     <Compile Include="Ciphers\Modern\DataEncryptionStandard.cs" />
     <Compile Include="Ciphers\Classical\Homophonic.cs" />
     <Compile Include="Ciphers\Classical\ICipher.cs" />
+    <Compile Include="Ciphers\Modern\RSA.cs" />
     <Compile Include="Ciphers\Modern\TripleDES.cs" />
     <Compile Include="Ciphers\MultiGraph\Affine.cs" />
     <Compile Include="Ciphers\MultiGraph\Atbash.cs" />

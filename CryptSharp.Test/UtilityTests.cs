@@ -172,5 +172,27 @@ namespace CryptSharp.Test
 
             Assert.IsTrue(stuff.Keys.Count > 0);
         }
+
+        [TestMethod]
+        public void Kryptos()
+        {
+            string lastSection = "OBKRUOXOGHULBSOLIFBBWFLRVQQPRNGKSSOTWTQSJQSSEKZZWATJKLUDIAWINFBNYPVTTMZFPKWGDKZXTJCDIGKUHUAUEKCAR";
+            char[] kryptosalphabet = Utility.KeyedEnglishAlphabet("KRYPTOS");
+            char[] alphabet = Utility.EnglishAlphabet();
+
+            int l = 0;
+            foreach(char c in lastSection)
+            {
+                int i = alphabet.IndexOf(c);
+                int k = kryptosalphabet.IndexOf(c);
+
+
+
+
+                l++;
+            }
+
+
+        }
     }
 }

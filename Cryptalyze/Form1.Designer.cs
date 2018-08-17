@@ -62,6 +62,9 @@
             this.label19 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
+            this.tbClear = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.btnAttempt = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -70,7 +73,7 @@
             this.label1.Location = new System.Drawing.Point(13, 9);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(81, 20);
+            this.label1.Size = new System.Drawing.Size(106, 24);
             this.label1.TabIndex = 0;
             this.label1.Text = "Alphabet";
             // 
@@ -79,7 +82,7 @@
             this.tbAlphabet.Location = new System.Drawing.Point(17, 35);
             this.tbAlphabet.Margin = new System.Windows.Forms.Padding(4);
             this.tbAlphabet.Name = "tbAlphabet";
-            this.tbAlphabet.Size = new System.Drawing.Size(299, 27);
+            this.tbAlphabet.Size = new System.Drawing.Size(299, 31);
             this.tbAlphabet.TabIndex = 1;
             this.tbAlphabet.Text = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             this.tbAlphabet.TextChanged += new System.EventHandler(this.tbAlphabet_TextChanged);
@@ -89,7 +92,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(13, 83);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(63, 20);
+            this.label2.Size = new System.Drawing.Size(82, 24);
             this.label2.TabIndex = 2;
             this.label2.Text = "Cipher";
             // 
@@ -99,7 +102,7 @@
             this.tbCipher.Margin = new System.Windows.Forms.Padding(4);
             this.tbCipher.Multiline = true;
             this.tbCipher.Name = "tbCipher";
-            this.tbCipher.Size = new System.Drawing.Size(808, 203);
+            this.tbCipher.Size = new System.Drawing.Size(415, 203);
             this.tbCipher.TabIndex = 3;
             this.tbCipher.TextChanged += new System.EventHandler(this.tbCipher_TextChanged);
             // 
@@ -108,7 +111,7 @@
             this.tbKey.Location = new System.Drawing.Point(17, 348);
             this.tbKey.Margin = new System.Windows.Forms.Padding(4);
             this.tbKey.Name = "tbKey";
-            this.tbKey.Size = new System.Drawing.Size(222, 27);
+            this.tbKey.Size = new System.Drawing.Size(248, 31);
             this.tbKey.TabIndex = 7;
             // 
             // label3
@@ -117,7 +120,7 @@
             this.label3.Location = new System.Drawing.Point(13, 322);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(36, 20);
+            this.label3.Size = new System.Drawing.Size(46, 24);
             this.label3.TabIndex = 6;
             this.label3.Text = "Key";
             // 
@@ -127,7 +130,7 @@
             this.label4.Location = new System.Drawing.Point(13, 381);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(225, 20);
+            this.label4.Size = new System.Drawing.Size(298, 24);
             this.label4.TabIndex = 8;
             this.label4.Text = "I think this cipher is a";
             // 
@@ -136,39 +139,39 @@
             this.cbCiphers.FormattingEnabled = true;
             this.cbCiphers.Location = new System.Drawing.Point(17, 407);
             this.cbCiphers.Name = "cbCiphers";
-            this.cbCiphers.Size = new System.Drawing.Size(248, 28);
+            this.cbCiphers.Size = new System.Drawing.Size(248, 31);
             this.cbCiphers.TabIndex = 9;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(348, 318);
+            this.label5.Location = new System.Drawing.Point(416, 318);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(18, 20);
+            this.label5.Size = new System.Drawing.Size(22, 24);
             this.label5.TabIndex = 10;
             this.label5.Text = "N";
             // 
             // tbCount
             // 
-            this.tbCount.Location = new System.Drawing.Point(372, 315);
+            this.tbCount.Location = new System.Drawing.Point(440, 315);
             this.tbCount.Name = "tbCount";
-            this.tbCount.Size = new System.Drawing.Size(100, 27);
+            this.tbCount.Size = new System.Drawing.Size(100, 31);
             this.tbCount.TabIndex = 11;
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(339, 388);
+            this.label6.Location = new System.Drawing.Point(407, 388);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(27, 20);
+            this.label6.Size = new System.Drawing.Size(34, 24);
             this.label6.TabIndex = 12;
             this.label6.Text = "IC";
             // 
             // tbIC
             // 
-            this.tbIC.Location = new System.Drawing.Point(372, 381);
+            this.tbIC.Location = new System.Drawing.Point(440, 381);
             this.tbIC.Name = "tbIC";
-            this.tbIC.Size = new System.Drawing.Size(100, 27);
+            this.tbIC.Size = new System.Drawing.Size(100, 31);
             this.tbIC.TabIndex = 13;
             // 
             // lvFrequencies
@@ -204,49 +207,49 @@
             // 
             // tbHasJ
             // 
-            this.tbHasJ.Location = new System.Drawing.Point(372, 414);
+            this.tbHasJ.Location = new System.Drawing.Point(440, 414);
             this.tbHasJ.Name = "tbHasJ";
-            this.tbHasJ.Size = new System.Drawing.Size(100, 27);
+            this.tbHasJ.Size = new System.Drawing.Size(100, 31);
             this.tbHasJ.TabIndex = 17;
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(312, 417);
+            this.label8.Location = new System.Drawing.Point(380, 417);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(54, 20);
+            this.label8.Size = new System.Drawing.Size(70, 24);
             this.label8.TabIndex = 16;
             this.label8.Text = "Has J";
             // 
             // tbHasPound
             // 
-            this.tbHasPound.Location = new System.Drawing.Point(372, 447);
+            this.tbHasPound.Location = new System.Drawing.Point(440, 447);
             this.tbHasPound.Name = "tbHasPound";
-            this.tbHasPound.Size = new System.Drawing.Size(100, 27);
+            this.tbHasPound.Size = new System.Drawing.Size(100, 31);
             this.tbHasPound.TabIndex = 19;
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(312, 450);
+            this.label9.Location = new System.Drawing.Point(380, 450);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(54, 20);
+            this.label9.Size = new System.Drawing.Size(70, 24);
             this.label9.TabIndex = 18;
             this.label9.Text = "Has #";
             // 
             // tbHasNumbers
             // 
-            this.tbHasNumbers.Location = new System.Drawing.Point(372, 480);
+            this.tbHasNumbers.Location = new System.Drawing.Point(440, 480);
             this.tbHasNumbers.Name = "tbHasNumbers";
-            this.tbHasNumbers.Size = new System.Drawing.Size(100, 27);
+            this.tbHasNumbers.Size = new System.Drawing.Size(100, 31);
             this.tbHasNumbers.TabIndex = 21;
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(294, 483);
+            this.label10.Location = new System.Drawing.Point(362, 483);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(72, 20);
+            this.label10.Size = new System.Drawing.Size(94, 24);
             this.label10.TabIndex = 20;
             this.label10.Text = "Has #\'s";
             // 
@@ -255,7 +258,7 @@
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(998, 83);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(153, 20);
+            this.label11.Size = new System.Drawing.Size(202, 24);
             this.label11.TabIndex = 23;
             this.label11.Text = "IC by Key Length";
             // 
@@ -283,9 +286,9 @@
             // 
             // tbFactors
             // 
-            this.tbFactors.Location = new System.Drawing.Point(372, 348);
+            this.tbFactors.Location = new System.Drawing.Point(440, 348);
             this.tbFactors.Name = "tbFactors";
-            this.tbFactors.Size = new System.Drawing.Size(100, 27);
+            this.tbFactors.Size = new System.Drawing.Size(100, 31);
             this.tbFactors.TabIndex = 25;
             // 
             // label20
@@ -300,7 +303,7 @@
             this.tbAlphabetKey.Location = new System.Drawing.Point(324, 35);
             this.tbAlphabetKey.Margin = new System.Windows.Forms.Padding(4);
             this.tbAlphabetKey.Name = "tbAlphabetKey";
-            this.tbAlphabetKey.Size = new System.Drawing.Size(299, 27);
+            this.tbAlphabetKey.Size = new System.Drawing.Size(299, 31);
             this.tbAlphabetKey.TabIndex = 17;
             this.tbAlphabetKey.TextChanged += new System.EventHandler(this.tbAlphabetKey_TextChanged);
             // 
@@ -310,7 +313,7 @@
             this.label18.Location = new System.Drawing.Point(320, 9);
             this.label18.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(117, 20);
+            this.label18.Size = new System.Drawing.Size(154, 24);
             this.label18.TabIndex = 16;
             this.label18.Text = "Alphabet Key";
             // 
@@ -319,7 +322,7 @@
             this.tbUsedAlphabet.Location = new System.Drawing.Point(631, 35);
             this.tbUsedAlphabet.Name = "tbUsedAlphabet";
             this.tbUsedAlphabet.ReadOnly = true;
-            this.tbUsedAlphabet.Size = new System.Drawing.Size(358, 27);
+            this.tbUsedAlphabet.Size = new System.Drawing.Size(358, 31);
             this.tbUsedAlphabet.TabIndex = 0;
             this.tbUsedAlphabet.Text = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             // 
@@ -329,7 +332,7 @@
             this.label19.Location = new System.Drawing.Point(627, 9);
             this.label19.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(126, 20);
+            this.label19.Size = new System.Drawing.Size(166, 24);
             this.label19.TabIndex = 18;
             this.label19.Text = "Used Alphabet";
             // 
@@ -338,24 +341,55 @@
             this.label13.AutoSize = true;
             this.label13.Location = new System.Drawing.Point(831, 83);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(108, 20);
+            this.label13.Size = new System.Drawing.Size(142, 24);
             this.label13.TabIndex = 27;
             this.label13.Text = "Frequencies";
             // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(249, 351);
+            this.label12.Location = new System.Drawing.Point(317, 351);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(117, 20);
+            this.label12.Size = new System.Drawing.Size(154, 24);
             this.label12.TabIndex = 28;
             this.label12.Text = "Factors of N";
             // 
+            // tbClear
+            // 
+            this.tbClear.Location = new System.Drawing.Point(440, 105);
+            this.tbClear.Margin = new System.Windows.Forms.Padding(4);
+            this.tbClear.Multiline = true;
+            this.tbClear.Name = "tbClear";
+            this.tbClear.Size = new System.Drawing.Size(384, 203);
+            this.tbClear.TabIndex = 29;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(439, 81);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(70, 24);
+            this.label14.TabIndex = 30;
+            this.label14.Text = "Clear";
+            // 
+            // btnAttempt
+            // 
+            this.btnAttempt.Location = new System.Drawing.Point(17, 455);
+            this.btnAttempt.Name = "btnAttempt";
+            this.btnAttempt.Size = new System.Drawing.Size(244, 48);
+            this.btnAttempt.TabIndex = 31;
+            this.btnAttempt.Text = "Attempt";
+            this.btnAttempt.UseVisualStyleBackColor = true;
+            this.btnAttempt.Click += new System.EventHandler(this.btnAttempt_Click);
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1165, 523);
+            this.Controls.Add(this.btnAttempt);
+            this.Controls.Add(this.label14);
+            this.Controls.Add(this.tbClear);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.label13);
             this.Controls.Add(this.tbUsedAlphabet);
@@ -431,6 +465,9 @@
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox tbClear;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Button btnAttempt;
     }
 }
 

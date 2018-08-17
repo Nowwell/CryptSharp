@@ -32,6 +32,11 @@ namespace Cryptalyze
             cbCiphers.Items.Add("Skip");
             cbCiphers.Items.Add("Substitution");
             cbCiphers.Items.Add("Vigenere");
+
+            
+
+
+
         }
 
         private void tbAlphabet_TextChanged(object sender, EventArgs e)
@@ -137,6 +142,27 @@ namespace Cryptalyze
                 item.SubItems.Add(CryptSharp.Utility.AvgVigenereIndexOfCoincidence(tbCipher.Text.Trim(), tbUsedAlphabet.Text, i).ToString());
 
                 lvICByKeyLength.Items.Add(item);
+            }
+        }
+
+        private void btnAttempt_Click(object sender, EventArgs e)
+        {
+            switch(cbCiphers.SelectedItem.ToString())
+            {
+                case "Vigenere":
+                    CryptSharp.Ciphers.Classical.Vigenere v = new CryptSharp.Ciphers.Classical.Vigenere(tbUsedAlphabet.Text.ToCharArray());
+                    v.Key = tbKey.Text;
+                    tbClear.Text = v.Decrypt(tbCipher.Text);
+                    break;
+
+                case "Beaufort":
+                    CryptSharp.Ciphers.Classical.Beaufort b = new CryptSharp.Ciphers.Classical.Beaufort(tbUsedAlphabet.Text.ToCharArray());
+                    b.Key = tbKey.Text;
+                    tbClear.Text = b.Decrypt(tbCipher.Text);
+                    break;
+
+                default:
+                    break;
             }
         }
     }
