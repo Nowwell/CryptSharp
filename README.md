@@ -71,6 +71,6 @@ Modern
 - Stream
 - Trivium
 
-There is also an implementation of a LinearFeedbackShiftREgister that allows you to Fibonacci Shift, Galois Shift, or a general Polynomial Shift.
+There is also an implementation of a LinearFeedbackShiftRegister that allows you to Fibonacci Shift, Galois Shift, or a general Polynomial Shift.
 
 I have included a version of Mersenne Twiser as a random number generator, but I typically use the cryptographically secure random number generator included with .NET
