@@ -31,45 +31,45 @@ Ciphers Included
 ----------------
 
 Classical (monograph)
--ADFGVX
--ADFGX
--Affine
--Amsco
--Atbash
--Baconain
--Baaufort
--Bifid
--Columnar
--FourSquare
--Hill
--Homophonic
--Playfair
--Polybius
--Porta
--RailFence
--Rotation
--Skip
--Substitution
--Trifid
--Xor
+- ADFGVX
+- ADFGX
+- Affine
+- Amsco
+- Atbash
+- Baconain
+- Baaufort
+- Bifid
+- Columnar
+- FourSquare
+- Hill
+- Homophonic
+- Playfair
+- Polybius
+- Porta
+- RailFence
+- Rotation
+- Skip
+- Substitution
+- Trifid
+- Xor
 
 Classic (multigraph)
--Affine
--Atbash
--Baconian
--Polybius
--RailFence
--Rotation
--Substitution
+- Affine
+- Atbash
+- Baconian
+- Polybius
+- RailFence
+- Rotation
+- Substitution
 
 Modern
--AES
--Rijndael
--DES
--Triple DES
--RSA
--Stream
--Trivium
+- AES
+- Rijndael
+- DES
+- Triple DES
+- RSA
+- Stream
+- Trivium
 
 There is also an implementation of a LinearFeedbackShiftREgister that allows you to Fibonacci Shift, Galois Shift, or a general Polynomial Shift.
 
