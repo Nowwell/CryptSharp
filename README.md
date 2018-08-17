@@ -86,16 +86,16 @@ These generic ciphers contain delegates where you can plug in functions and keys
 
 The names of the generic functions are takan from Shannon saying that cryptography is about diffusion and confusion.
 
-*Generic Classical*
+#### Generic Classical
 You can have any of 3 types of keys and associated initialization vectors (keep in mind that even though it's called a key, it can be a state, table, etc.).  There are four functions you may set.
 - DiffuseFunction
 - InverseDiffuse
 - ConfuseFunction
-- InverConfuse
+- InverseConfuse
 
 And then there's an alphabet to supply it.
 
-*Generic Stream*
+#### Generic Stream
 The generic stream cipher has two functions to supply it.
 - KeystreamFunction
 - ResetStateFunction
@@ -104,11 +104,11 @@ Keystream is to generate your stream bits used for encryption and decryption, an
 
 The state, key, and initialization vector are all available for use as well.
 
-*Generic Block*
+#### Generic Block
 You can have up to 2 keys and an associated initialization vectors, and there are four functions you may set.  Included with this cipher is also a block size that is defaulted to 128 bits.
 - DiffuseFunction
 - InverseDiffuse
 - ConfuseFunction
-- InverConfuse
+- InverseConfuse
 
 To see how to use each of these generic ciphers, see the Generic Cipher Tests in the test project.
