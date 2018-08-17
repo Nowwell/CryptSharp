@@ -32,6 +32,11 @@ namespace Cryptalyze
             cbCiphers.Items.Add("Skip");
             cbCiphers.Items.Add("Substitution");
             cbCiphers.Items.Add("Vigenere");
+
+            
+
+
+
         }
 
         private void tbAlphabet_TextChanged(object sender, EventArgs e)
