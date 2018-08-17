@@ -1,5 +1,5 @@
 # CryptSharp
-Some Classical and modern ciphers for C#
+Some classical and modern ciphers for C#
 
 Among the implemented Ciphers are FourSquare, Hill, Vigenere and many others
 
@@ -53,7 +53,7 @@ Classical (monograph)
 - Trifid
 - Xor
 
-Classic (multigraph)
+Classical (multigraph)
 - Affine
 - Atbash
 - Baconian
@@ -74,3 +74,41 @@ Modern
 There is also an implementation of a LinearFeedbackShiftRegister that allows you to Fibonacci Shift, Galois Shift, or a general Polynomial Shift.
 
 I have included a version of Mersenne Twiser as a random number generator, but I typically use the cryptographically secure random number generator included with .NET
+
+Generic Ciphers
+---------------
+I have attempted to create some generic ciphers:
+- Classical
+- Block
+- Stream
+
+These generic ciphers contain delegates where you can plug in functions and keys of any type you want and not have to worry about the rote setup of each cipher.  Instead you can focus on the algorithm of the cipher itself.
+
+The names of the generic functions are takan from Shannon saying that cryptography is about diffusion and confusion.
+
+*Generic Classical*
+You can have any of 3 types of keys and associated initialization vectors (keep in mind that even though it's called a key, it can be a state, table, etc.).  There are four functions you may set.
+- DiffuseFunction
+- InverseDiffuse
+- ConfuseFunction
+- InverConfuse
+
+And then there's an alphabet to supply it.
+
+*Generic Stream*
+The generic stream cipher has two functions to supply it.
+- KeystreamFunction
+- ResetStateFunction
+
+Keystream is to generate your stream bits used for encryption and decryption, and Reset state is so you can encrypt something, reset the state, and then decrypt that same thing.
+
+The state, key, and initialization vector are all available for use as well.
+
+*Generic Block*
+You can have up to 2 keys and an associated initialization vectors, and there are four functions you may set.  Included with this cipher is also a block size that is defaulted to 128 bits.
+- DiffuseFunction
+- InverseDiffuse
+- ConfuseFunction
+- InverConfuse
+
+To see how to use each of these generic ciphers, see the Generic Cipher Tests in the test project.
