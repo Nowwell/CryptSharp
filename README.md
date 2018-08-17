@@ -26,3 +26,51 @@ string clearText = variableName.Decrypt(cipherText);
 ```
 
 Not all ciphers have a "Key", some have arrays and other such things.  Look in the tests to see usage.
+
+Ciphers Included
+----------------
+
+Classical (monograph)
+-ADFGVX
+-ADFGX
+-Affine
+-Amsco
+-Atbash
+-Baconain
+-Baaufort
+-Bifid
+-Columnar
+-FourSquare
+-Hill
+-Homophonic
+-Playfair
+-Polybius
+-Porta
+-RailFence
+-Rotation
+-Skip
+-Substitution
+-Trifid
+-Xor
+
+Classic (multigraph)
+-Affine
+-Atbash
+-Baconian
+-Polybius
+-RailFence
+-Rotation
+-Substitution
+
+Modern
+-AES
+-Rijndael
+-DES
+-Triple DES
+-RSA
+-Stream
+-Trivium
+
+There is also an implementation of a LinearFeedbackShiftREgister that allows you to Fibonacci Shift, Galois Shift, or a general Polynomial Shift.
+
+I have included a version of Mersenne Twiser as a random number generator, but I typically use the cryptographically secure random number generator included with .NET
