@@ -14,7 +14,7 @@ There are 3 (incomplete) projects within this solution.
 
 |   | Build & Test |
 |---|:-----:|
-| **Windows**|[![Build & Test][win-build-badge]]| 
+| **Windows**|![Build & Test][win-build-badge]|
 
 [win-build-badge]: https://fife.visualstudio.com/cryptsharp/_apis/build/status/CryptSharp-.NET%20Desktop-CI?branchName=master
 
