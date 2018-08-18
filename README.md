@@ -10,16 +10,6 @@ There are 3 (incomplete) projects within this solution.
 
 **Note:** This is not intended to be a professionally used tool.
 
-## Status
-
-|   | Build & Test |
-|---|:-----:|
-|**Windows**|[![Build & Test][win-build-badge]][win-build]| 
-
-[win-build-badge]: https://fife.visualstudio.com/cryptsharp/_apis/build/status/CryptSharp-.NET%20Desktop-CI?branchName=develop
-[win-build]: https://fife.visualstudio.com/cryptsharp/_build?_a=completed&definitionId=1
-
-
 Utility
 -------
 In CryptSharp there is a class called Utility.  Within this class are several functions to help with generic tasks associated with ciphers and cryptanalysis.
