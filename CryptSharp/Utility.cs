@@ -12,6 +12,33 @@ namespace CryptSharp
     {
         protected static readonly RandomNumberGenerator rng = new RNGCryptoServiceProvider();
 
+        public bool Compare(string x, string y)
+        {
+            if (x.Length == 0 && y.Length != 0) return false;
+            if (x.Length != 0 && y.Length == 0) return false;
+
+            int len = x.Length;
+            if (y.Length > x.Length) len = y.Length;
+
+            //introduce some randomness into the comparison
+            byte[] rand = new byte[1];
+            rng.GetBytes(rand);
+
+            bool equals = x.Length == y.Length;
+
+            char xc = x[0];
+            char yc = y[0];
+            for (int i = 0; i < len + rand[0]; i++)
+            {
+                if (i < x.Length) { xc = x[i]; } else { if (i < len) equals = false; }
+                if (i < y.Length) { yc = y[i]; } else { if (i < len) equals = false; }
+
+                equals &= (xc == yc);
+            }
+
+            return equals;
+        }
+
         #region Text Utility
         public static string[] StringToStringArray(string str)
         {

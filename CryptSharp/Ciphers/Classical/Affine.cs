@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptSharp.Ciphers.Classical
 {
+    //Testing changes
     public class Affine : CipherBase<char>, IClassicalCipher
     {
         public Affine(char[] Alphabet) : base(Alphabet)
