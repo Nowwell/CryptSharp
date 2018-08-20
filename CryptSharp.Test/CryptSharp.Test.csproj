@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="BaseTests.cs" />
     <Compile Include="GenericCipherTests.cs" />
+    <Compile Include="HashTest.cs" />
     <Compile Include="MatrixTests.cs" />
     <Compile Include="ModernCipherTests.cs" />
     <Compile Include="MultiGraphCipherTests.cs" />
