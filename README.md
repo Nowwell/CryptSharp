@@ -8,6 +8,8 @@ There are 3 (incomplete) projects within this solution.
 - CryptSharp.Test- a project to test the ciphers
 - Cryptalize - a desktop app to analyze classical ciphers and hopefully be a game to generate some cipher text for fun to break
 
+NOTE: This is not for production use.
+
 Utility
 -------
 In CryptSharp there is a class called Utility.  Within this class are several functions to help with generic tasks associated with ciphers and cryptanalysis.
