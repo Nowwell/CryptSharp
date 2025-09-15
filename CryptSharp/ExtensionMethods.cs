@@ -35,6 +35,7 @@ namespace CryptSharp
     {
         public static string Left(this string str, int count)
         {
+            if (String.IsNullOrEmpty(str)) return string.Empty;
             if (str.Length < count) return str;
 
             return str.Substring(0, count);
@@ -42,9 +43,10 @@ namespace CryptSharp
 
         public static string Right(this string str, int count)
         {
+            if (String.IsNullOrEmpty(str)) return string.Empty;
             if (str.Length < count) return str;
 
-            return str.Substring(-count, count);
+            return str.Substring(str.Length - count);
         }
 
     }

@@ -39,6 +39,57 @@ namespace CryptSharp
             return equals;
         }
 
+        //OK, AI, giving you a chance...
+        public static int LevenshteinDistance(string s, string t)
+        {
+            if (string.IsNullOrEmpty(s)) return (t ?? "").Length;
+            if (string.IsNullOrEmpty(t)) return s.Length;
+
+            // Ensure shorter string is 's' for optimization
+            if (s.Length > t.Length)
+            {
+                var temp = s;
+                s = t;
+                t = temp;
+            }
+
+            int sLen = s.Length;
+            int tLen = t.Length;
+
+            // Initialize the previous row with distances for an empty string matching prefixes of 't'
+            var previousRow = new int[tLen + 1];
+            for (int j = 0; j <= tLen; j++)
+            {
+                previousRow[j] = j;
+            }
+
+            // Iterate through 's'
+            for (int i = 1; i <= sLen; i++)
+            {
+                // Store the value from the previous diagonal (previousRow[j-1] from the last iteration)
+                int previousDiagonal = previousRow[0];
+                // The first element of the current row (distance of s[0..i-1] to empty string)
+                int currentRowFirstElement = i;
+                previousRow[0] = currentRowFirstElement;
+
+                // Iterate through 't' for the current row
+                for (int j = 1; j <= tLen; j++)
+                {
+                    int cost = (s[i - 1] == t[j - 1]) ? 0 : 1;
+
+                    int insertion = previousRow[j] + 1; // Deletion from 's' perspective
+                    int deletion = currentRowFirstElement + 1; // Insertion from 's' perspective
+                    int substitution = previousDiagonal + cost;
+
+                    previousDiagonal = previousRow[j]; // Store for the next diagonal calculation
+                    previousRow[j] = Math.Min(insertion, Math.Min(deletion, substitution));
+                    currentRowFirstElement = previousRow[j]; // Update for the next deletion calculation
+                }
+            }
+
+            return previousRow[tLen];
+        }
+
         #region Text Utility
         public static string[] StringToStringArray(string str)
         {
@@ -69,38 +120,61 @@ namespace CryptSharp
         {
             return "0123456789".ToCharArray();
         }
-
         public static char[] KeyedEnglishAlphabet(string key, bool lowerCase = false)
         {
-            StringBuilder alphabet;
-            if (lowerCase)
+            string uniquekey = "";
+            foreach (char c in key.Trim().ToUpper())
             {
-                alphabet = new StringBuilder(key.ToLower());
-                foreach (char c in "abcdefghijklmnopqrstuvwxyz".ToCharArray())
+                if (char.IsLetter(c) && !uniquekey.Contains(c))
                 {
-                    if (!key.ToLower().Contains(c))
-                    {
-                        alphabet.Append(c);
-                    }
-
+                    uniquekey += c;
                 }
-
-                return alphabet.ToString().ToCharArray();
             }
 
-            alphabet = new StringBuilder(key.ToUpper());
+            StringBuilder alphabet = new StringBuilder(uniquekey);
             foreach (char c in "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray())
             {
-                if (!key.ToUpper().Contains(c))
+                if (!uniquekey.ToUpper().Contains(c))
                 {
                     alphabet.Append(c);
                 }
 
             }
 
+            if (lowerCase)
+            {
+                return alphabet.ToString().ToLower().ToCharArray();
+            }
             return alphabet.ToString().ToCharArray();
         }
+        public static string KeyedEnglishAlphabetString(string key, bool lowerCase = false)
+        {
+            string uniquekey = "";
+            foreach (char c in key.Trim().ToUpper())
+            {
+                if (char.IsLetter(c) && !uniquekey.Contains(c))
+                {
+                    uniquekey += c;
+                }
+            }
 
+            StringBuilder alphabet = new StringBuilder(uniquekey);
+            foreach (char c in "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray())
+            {
+                if (!uniquekey.ToUpper().Contains(c))
+                {
+                    alphabet.Append(c);
+                }
+
+            }
+
+            if (lowerCase)
+            {
+                return alphabet.ToString().ToLower();
+            }
+
+            return alphabet.ToString();
+        }
         public static string[] EnglishAlphabetAsStrings(bool lowerCase = false)
         {
             if (lowerCase)
@@ -525,7 +599,7 @@ namespace CryptSharp
         /// </summary>
         /// <param name="a"></param>
         /// <param name="m"></param>
-        /// <returns>x, the multiplicative mudular inverse</returns>
+        /// <returns>x, the multiplicative modular inverse</returns>
         public static int ModInverse(int a, int m)
         {
             int x = GCD(a, m);

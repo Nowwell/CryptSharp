@@ -29,20 +29,42 @@ namespace CryptSharp.Ciphers.Classical
             {
                 for (int i = 0; i < Key.Length; i++)
                 {
-                    output[i] = alphabet[(alphabet.IndexOf(output[i]) + alphabet.IndexOf(Key[i % Key.Length])) % alphabet.Length];
+                    if (Key[i % Key.Length] == '_' || output[i] == '_')
+                    {
+                        output[i] = '_';
+                    }
+                    else
+                    {
+                        output[i] = alphabet[(alphabet.IndexOf(output[i]) + alphabet.IndexOf(Key[i % Key.Length])) % alphabet.Length];
+                    }
                 }
                 for (int i = Key.Length; i < clearText.Length; i++)
                 {
-                    output[i] = alphabet[(alphabet.IndexOf(output[i]) + alphabet.IndexOf(clearText[i - Key.Length])) % alphabet.Length];
+                    if (clearText[i - Key.Length] == '_' || output[i] == '_')
+                    {
+                        output[i] = '_';
+                    }
+                    else
+                    {
+                        output[i] = alphabet[(alphabet.IndexOf(output[i]) + alphabet.IndexOf(clearText[i - Key.Length])) % alphabet.Length];
+                    }
                 }
             }
             else
             {
                 for (int i = 0; i < clearText.Length; i++)
                 {
-                    output[i] = alphabet[(alphabet.IndexOf(output[i]) + alphabet.IndexOf(Key[i % Key.Length])) % alphabet.Length];
+                    if (clearText[i] == '_' || Key[i % Key.Length] == '_')
+                    {
+                        output[i] = '_';
+                    }
+                    else
+                    {
+                        output[i] = alphabet[(alphabet.IndexOf(output[i]) + alphabet.IndexOf(Key[i % Key.Length])) % alphabet.Length];
+                    }
                 }
             }
+                
             return output.ToString();
         }
 
@@ -58,18 +80,41 @@ namespace CryptSharp.Ciphers.Classical
             {
                 for (int i = 0; i < Key.Length; i++)
                 {
-                    output[i] = alphabet[(alphabet.IndexOf(output[i]) - alphabet.IndexOf(Key[i % Key.Length]) + alphabet.Length) % alphabet.Length];
+                    if (Key[i % Key.Length] == '_' || output[i] == '_')
+                    {
+                        output[i] = '_';
+                    }
+                    else
+                    {
+                        output[i] = alphabet[(alphabet.IndexOf(output[i]) - alphabet.IndexOf(Key[i % Key.Length]) + alphabet.Length) % alphabet.Length];
+                    }
                 }
                 for (int i = Key.Length; i < cipherText.Length; i++)
                 {
-                    output[i] = alphabet[(alphabet.IndexOf(output[i]) - alphabet.IndexOf(output[i - Key.Length]) + alphabet.Length) % alphabet.Length];
+                    if (cipherText[i - Key.Length] == '_' || output[i] == '_')
+                    {
+                        output[i] = '_';
+                    }
+                    else
+                    {
+                        output[i] = alphabet[(alphabet.IndexOf(output[i]) - alphabet.IndexOf(output[i - Key.Length]) + alphabet.Length) % alphabet.Length];
+                    }
                 }
             }
             else
             {
                 for (int i = 0; i < cipherText.Length; i++)
                 {
-                    output[i] = alphabet[(alphabet.IndexOf(output[i]) - alphabet.IndexOf(Key[i % Key.Length]) + alphabet.Length) % alphabet.Length];
+                    if (Key[i % Key.Length] == '_' || cipherText[i] == '_')
+                    {
+                        output[i] = '_';
+                    }
+                    else
+                    {
+                        int keyIndex = alphabet.IndexOf(Key[i % Key.Length]);
+                        int index = (alphabet.IndexOf(output[i]) - keyIndex + alphabet.Length) % alphabet.Length;
+                        output[i] = alphabet[index];
+                    }
                 }
             }
             return output.ToString();

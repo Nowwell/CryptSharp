@@ -19,7 +19,7 @@ namespace CryptSharp.Ciphers.Classical
             char c = alphabet[0];
             char d = alphabet[0];
 
-            for (int i = 0; i < cipherText.Length; i += 2)
+            for (int i = 0; i < cipherText.Length - 1; i += 2)
             {
                 char a = cipherText[i];
                 char b = cipherText[i + 1];

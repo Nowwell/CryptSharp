@@ -10,6 +10,8 @@ namespace CryptSharp.Ciphers.Classical
     {
         public Polybius(char[] Alphabet) : base(Alphabet)
         {
+            //ColumnHeaders = new char[] { '1', '2', '3', '4', '5' };
+            //RowHeaders = new char[] { '1', '2', '3', '4', '5' };
         }
 
         public char[] Square { get; set; }
